@@ -40,6 +40,7 @@ import { useAtom } from "jotai/react"
 import capitalize from "lodash/capitalize"
 import React from "react"
 import { UseFormReturn } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { BiDonateHeart } from "react-icons/bi"
 import { CgMediaPodcast } from "react-icons/cg"
 import { FaDiscord } from "react-icons/fa"
@@ -76,6 +77,7 @@ const tabContentClass = cn(
 
 
 export default function Page() {
+    const { t } = useTranslation()
     const status = useServerStatus()
     const { isFeatureDisabled, showFeatureWarning } = useServerDisabledFeatures()
     const setServerStatus = useSetServerStatus()
@@ -168,7 +170,7 @@ export default function Page() {
 
                                 <Card className="lg:p-2 contents lg:block border-0 bg-transparent lg:border lg:bg-gray-950/80">
                                     <div className="space-y-2 p-4 w-full">
-                                        <h4 className="text-center text-xl font-bold">Settings</h4>
+                                        <h4 className="text-center text-xl font-bold">{t("settings.title")}</h4>
                                         <div className="space-y-1">
                                             <p className="text-[--muted] text-sm text-center w-full">
                                                 {status?.version} {status?.versionName}
@@ -184,7 +186,7 @@ export default function Page() {
                                     <TabsTrigger
                                         value="seanime"
                                         className="group"
-                                    ><LuWandSparkles className="text-xl mr-3 transition-transform duration-200" /> App</TabsTrigger>
+                                    ><LuWandSparkles className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.app")}</TabsTrigger>
                                     {/* <TabsTrigger
                                      value="local"
                                      className="group"
@@ -192,11 +194,11 @@ export default function Page() {
                                     <TabsTrigger
                                         value="library"
                                         className="group"
-                                    ><LuLibrary className="text-xl mr-3 transition-transform duration-200" /> Local Anime Library</TabsTrigger>
+                                    ><LuLibrary className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.localAnimeLibrary")}</TabsTrigger>
                                     <TabsTrigger
                                         value="playback"
                                         className="group"
-                                    ><LuCirclePlay className="text-xl mr-3 transition-transform duration-200" /> Video Playback</TabsTrigger>
+                                    ><LuCirclePlay className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.videoPlayback")}</TabsTrigger>
                                 </Card>
 
                                 {/*<div className="text-xs lg:text-[--muted] text-center py-1.5 uppercase px-3 border-gray-800 tracking-wide font-medium">*/}
@@ -208,17 +210,15 @@ export default function Page() {
                                     <TabsTrigger
                                         value="media-player"
                                         className="group"
-                                    ><LuMonitorPlay className="text-xl mr-3 transition-transform duration-200" /> Desktop Media Player</TabsTrigger>
+                                    ><LuMonitorPlay className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.desktopMediaPlayer")}</TabsTrigger>
                                     <TabsTrigger
                                         value="external-player-link"
                                         className="group"
-                                    ><LuCircleArrowOutUpRight className="text-xl mr-3 transition-transform duration-200" /> External Player
-                                                                                                                            Link</TabsTrigger>
+                                    ><LuCircleArrowOutUpRight className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.externalPlayerLink")}</TabsTrigger>
                                     <TabsTrigger
                                         value="mediastream"
                                         className="relative group"
-                                    ><LuTabletSmartphone className="text-xl mr-3 transition-transform duration-200" /> Transcoding / Direct
-                                                                                                                       Play</TabsTrigger>
+                                    ><LuTabletSmartphone className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.transcodingDirectPlay")}</TabsTrigger>
                                 </Card>
 
                                 {/*<div className="text-xs lg:text-[--muted] text-center py-1.5 uppercase px-3 border-gray-800 tracking-wide font-medium">*/}
@@ -229,19 +229,19 @@ export default function Page() {
                                     <TabsTrigger
                                         value="torrent"
                                         className="group"
-                                    ><LuFileSearch className="text-xl mr-3 transition-transform duration-200" /> Torrent Provider</TabsTrigger>
+                                    ><LuFileSearch className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.torrentProvider")}</TabsTrigger>
                                     <TabsTrigger
                                         value="torrent-client"
                                         className="group"
-                                    ><MdOutlineDownloading className="text-xl mr-3 transition-transform duration-200" /> Torrent Client</TabsTrigger>
+                                    ><MdOutlineDownloading className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.torrentClient")}</TabsTrigger>
                                     <TabsTrigger
                                         value="torrentstream"
                                         className="relative group"
-                                    ><SiBittorrent className="text-xl mr-3 transition-transform duration-200" /> Torrent Streaming</TabsTrigger>
+                                    ><SiBittorrent className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.torrentStreaming")}</TabsTrigger>
                                     <TabsTrigger
                                         value="debrid"
                                         className="group"
-                                    ><HiOutlineServerStack className="text-xl mr-3 transition-transform duration-200" /> Debrid Service</TabsTrigger>
+                                    ><HiOutlineServerStack className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.debridService")}</TabsTrigger>
                                 </Card>
 
                                 {/*<div className="text-xs lg:text-[--muted] text-center py-1.5 uppercase px-3 border-gray-800 tracking-wide font-medium">*/}
@@ -252,20 +252,20 @@ export default function Page() {
                                     <TabsTrigger
                                         value="onlinestream"
                                         className="group"
-                                    ><CgMediaPodcast className="text-xl mr-3 transition-transform duration-200" /> Online Streaming</TabsTrigger>
+                                    ><CgMediaPodcast className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.onlineStreaming")}</TabsTrigger>
 
                                     <TabsTrigger
                                         value="manga"
                                         className="group"
-                                    ><LuBookOpen className="text-xl mr-3 transition-transform duration-200" /> Manga</TabsTrigger>
+                                    ><LuBookOpen className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.manga")}</TabsTrigger>
                                     <TabsTrigger
                                         value="nakama"
                                         className="group relative"
-                                    ><MdOutlineConnectWithoutContact className="text-xl mr-3 transition-transform duration-200" /> Nakama</TabsTrigger>
+                                    ><MdOutlineConnectWithoutContact className="text-xl mr-3 transition-transform duration-200" /> {t("navigation.nakama")}</TabsTrigger>
                                     <TabsTrigger
                                         value="discord"
                                         className="group"
-                                    ><FaDiscord className="text-xl mr-3 transition-transform duration-200" /> Discord</TabsTrigger>
+                                    ><FaDiscord className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.discord")}</TabsTrigger>
                                 </Card>
 
                                 {/*<div className="text-xs lg:text-[--muted] text-center py-1.5 uppercase px-3 border-gray-800 tracking-wide font-medium">*/}
@@ -277,12 +277,12 @@ export default function Page() {
                                         <TabsTrigger
                                             value="denshi"
                                             className="group"
-                                        ><LuMonitor className="text-xl mr-3 transition-transform duration-200" /> Denshi</TabsTrigger>
+                                        ><LuMonitor className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.denshi")}</TabsTrigger>
                                     )}
                                     <TabsTrigger
                                         value="ui"
                                         className="group"
-                                    ><MdOutlinePalette className="text-xl mr-3 transition-transform duration-200" /> User Interface</TabsTrigger>
+                                    ><MdOutlinePalette className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.userInterface")}</TabsTrigger>
                                     {/* <TabsTrigger
                                      value="cache"
                                      className="group"
@@ -290,7 +290,7 @@ export default function Page() {
                                     <TabsTrigger
                                         value="logs"
                                         className="group"
-                                    ><LuBookKey className="text-xl mr-3 transition-transform duration-200" /> Logs & Cache</TabsTrigger>
+                                    ><LuBookKey className="text-xl mr-3 transition-transform duration-200" /> {t("settings.sections.logsCache")}</TabsTrigger>
                                 </Card>
                             </div>
                         </SettingsNavCard>
@@ -306,7 +306,7 @@ export default function Page() {
                                     size="md"
                                     leftIcon={<BiDonateHeart className="text-lg" />}
                                 >
-                                    Donate
+                                    {t("common.buttons.donate")}
                                 </Button>
                             </SeaLink>
                         </div>
@@ -532,8 +532,8 @@ export default function Page() {
                                     <TabsContent value="seanime" className={tabContentClass}>
 
                                         <SettingsPageHeader
-                                            title="App"
-                                            description="General app settings"
+                                            title={t("settings.pages.app.title")}
+                                            description={t("settings.pages.app.description")}
                                             icon={LuWandSparkles}
                                         />
 
@@ -548,7 +548,7 @@ export default function Page() {
                                                 leftIcon={
                                                     <RiFolderDownloadFill className="transition-transform duration-200 group-hover:scale-110" />}
                                             >
-                                                Open Data directory
+                                                {t("settings.pages.app.openDataDirectory")}
                                             </Button>}
                                             <Button
                                                 size="sm"
@@ -558,7 +558,7 @@ export default function Page() {
                                                 className="transition-all duration-200 hover:scale-105 hover:shadow-md group"
                                                 data-open-issue-recorder-button
                                             >
-                                                Record an issue
+                                                {t("settings.pages.app.recordIssue")}
                                             </Button>
                                             <Button
                                                 size="sm"
@@ -579,7 +579,7 @@ export default function Page() {
                                                                     setWebUpdateModalOpen(true)
                                                                 }
                                                             } else {
-                                                                toast.success("You are running the latest version")
+                                                                toast.success(t("settings.pages.app.latestVersion"))
                                                             }
 
                                                         },
@@ -590,7 +590,7 @@ export default function Page() {
                                                 className="transition-all duration-200 hover:scale-105 hover:shadow-md group"
                                                 data-check-for-updates-button
                                             >
-                                                Check for updates
+                                                {t("settings.pages.app.checkForUpdates")}
                                             </Button>
                                         </div>
 
@@ -601,8 +601,8 @@ export default function Page() {
                                     <TabsContent value="library" className={tabContentClass}>
 
                                         <SettingsPageHeader
-                                            title="Local Anime Library"
-                                            description="Manage your local anime library"
+                                            title={t("settings.pages.library.title")}
+                                            description={t("settings.pages.library.description")}
                                             icon={LuLibrary}
                                         />
 
@@ -625,8 +625,8 @@ export default function Page() {
                                     <TabsContent value="onlinestream" className={tabContentClass}>
 
                                         <SettingsPageHeader
-                                            title="Online Streaming"
-                                            description="Configure online streaming settings"
+                                            title={t("settings.pages.onlineStreaming.title")}
+                                            description={t("settings.pages.onlineStreaming.description")}
                                             icon={CgMediaPodcast}
                                         />
 
@@ -634,17 +634,17 @@ export default function Page() {
                                             <Field.Switch
                                                 side="right"
                                                 name="enableOnlinestream"
-                                                label="Enable"
-                                                help="Watch anime episodes from online sources."
+                                                label={t("settings.fields.enable")}
+                                                help={t("settings.onlineStreaming.enableHelp")}
                                             />
                                         </SettingsCard>
 
-                                        <SettingsCard title="Home Screen">
+                                        <SettingsCard title={t("settings.common.homeScreen")}>
                                             <Field.Switch
                                                 side="right"
                                                 name="includeOnlineStreamingInLibrary"
-                                                label="Include in anime library"
-                                                help="Add non-downloaded shows that are in your currently watching list to the anime library."
+                                                label={t("settings.common.includeInAnimeLibrary")}
+                                                help={t("settings.common.includeInAnimeLibraryHelp")}
                                             />
                                         </SettingsCard>
 
@@ -655,8 +655,8 @@ export default function Page() {
                                     <TabsContent value="discord" className={tabContentClass}>
 
                                         <SettingsPageHeader
-                                            title="Discord"
-                                            description="Configure Discord rich presence settings"
+                                            title={t("settings.pages.discord.title")}
+                                            description={t("settings.pages.discord.description")}
                                             icon={FaDiscord}
                                         />
 
@@ -669,23 +669,23 @@ export default function Page() {
                                     <TabsContent value="torrent" className={tabContentClass}>
 
                                         <SettingsPageHeader
-                                            title="Torrent Provider"
-                                            description="Configure the torrent provider"
+                                            title={t("settings.pages.torrentProvider.title")}
+                                            description={t("settings.pages.torrentProvider.description")}
                                             icon={LuFileSearch}
                                         />
 
                                         <SettingsCard>
                                             <Field.Select
                                                 name="torrentProvider"
-                                                label="Default Provider"
-                                                help="Used by the search engine. Select 'None' if you don't need torrent support."
+                                                label={t("settings.fields.defaultProvider")}
+                                                help={t("settings.torrentProvider.defaultProviderHelp")}
                                                 leftIcon={<RiFolderDownloadFill className="text-orange-500" />}
                                                 options={[
                                                     ...(torrentProviderExtensions?.filter(ext => ext?.settings?.type === "main")?.map(ext => ({
                                                         label: ext.name,
                                                         value: ext.id,
                                                     })) ?? []).sort((a, b) => a?.label?.localeCompare(b?.label) ?? 0),
-                                                    { label: "None", value: TORRENT_PROVIDER.NONE },
+                                                    { label: t("common.words.none"), value: TORRENT_PROVIDER.NONE },
                                                 ]}
                                             />
                                         </SettingsCard>
@@ -727,19 +727,19 @@ export default function Page() {
                                     <TabsContent value="torrent-client" className={tabContentClass}>
 
                                         <SettingsPageHeader
-                                            title="Torrent Client"
-                                            description="Configure the torrent client"
+                                            title={t("settings.pages.torrentClient.title")}
+                                            description={t("settings.pages.torrentClient.description")}
                                             icon={MdOutlineDownloading}
                                         />
 
                                         <SettingsCard>
                                             <Field.Select
                                                 name="defaultTorrentClient"
-                                                label="Default Torrent Client"
+                                                label={t("settings.fields.defaultTorrentClient")}
                                                 options={[
                                                     { label: "qBittorrent", value: "qbittorrent" },
                                                     { label: "Transmission", value: "transmission" },
-                                                    { label: "None", value: "none" },
+                                                    { label: t("common.words.none"), value: "none" },
                                                 ]}
                                             />
                                         </SettingsCard>
@@ -763,21 +763,21 @@ export default function Page() {
                                                 <AccordionContent className="p-0 py-4 space-y-4">
                                                     <Field.Text
                                                         name="qbittorrentHost"
-                                                        label="Host"
+                                                        label={t("settings.fields.host")}
                                                     />
                                                     <div className="flex flex-col md:flex-row gap-4">
                                                         <Field.Text
                                                             name="qbittorrentUsername"
-                                                            label="Username"
+                                                            label={t("settings.fields.username")}
                                                         />
                                                         <Field.Text
                                                             name="qbittorrentPassword"
-                                                            label="Password"
+                                                            label={t("settings.fields.password")}
                                                             type="password"
                                                         />
                                                         <Field.Number
                                                             name="qbittorrentPort"
-                                                            label="Port"
+                                                            label={t("settings.fields.port")}
                                                             formatOptions={{
                                                                 useGrouping: false,
                                                             }}
@@ -785,17 +785,17 @@ export default function Page() {
                                                     </div>
                                                     <Field.Text
                                                         name="qbittorrentPath"
-                                                        label="Executable"
+                                                        label={t("settings.fields.executable")}
                                                     />
                                                     <Field.Text
                                                         name="qbittorrentTags"
-                                                        label="Tags"
-                                                        help="Comma separated tags to apply to downloaded torrents. e.g. seanime,anime"
+                                                        label={t("settings.fields.tags")}
+                                                        help={t("settings.torrentClient.tagsHelp")}
                                                     />
                                                     <Field.Text
                                                         name="qbittorrentCategory"
-                                                        label="Category"
-                                                        help="Category to apply to downloaded torrents."
+                                                        label={t("settings.fields.category")}
+                                                        help={t("settings.torrentClient.categoryHelp")}
                                                     />
                                                 </AccordionContent>
                                             </AccordionItem>
@@ -807,21 +807,21 @@ export default function Page() {
                                                 <AccordionContent className="p-0 py-4 space-y-4 !border-b-0">
                                                     <Field.Text
                                                         name="transmissionHost"
-                                                        label="Host"
+                                                        label={t("settings.fields.host")}
                                                     />
                                                     <div className="flex flex-col md:flex-row gap-4">
                                                         <Field.Text
                                                             name="transmissionUsername"
-                                                            label="Username"
+                                                            label={t("settings.fields.username")}
                                                         />
                                                         <Field.Text
                                                             name="transmissionPassword"
-                                                            label="Password"
+                                                            label={t("settings.fields.password")}
                                                             type="password"
                                                         />
                                                         <Field.Number
                                                             name="transmissionPort"
-                                                            label="Port"
+                                                            label={t("settings.fields.port")}
                                                             formatOptions={{
                                                                 useGrouping: false,
                                                             }}
@@ -829,14 +829,14 @@ export default function Page() {
                                                     </div>
                                                     <Field.Text
                                                         name="transmissionPath"
-                                                        label="Executable"
+                                                        label={t("settings.fields.executable")}
                                                     />
                                                 </AccordionContent>
                                             </AccordionItem>
                                         </Accordion>
                                         {/*</SettingsCard>*/}
 
-                                        <SettingsCard title="Integration">
+                                        <SettingsCard title={t("settings.common.integration")}>
                                             {/*<Field.Switch*/}
                                             {/*    side="right"*/}
                                             {/*    name="hideTorrentList"*/}
@@ -845,13 +845,13 @@ export default function Page() {
                                             <Field.Switch
                                                 side="right"
                                                 name="showActiveTorrentCount"
-                                                label="Show active torrent count"
-                                                help="Show the number of active torrents in the sidebar. (Memory intensive)"
+                                                label={t("settings.torrentClient.showActiveTorrentCount")}
+                                                help={t("settings.torrentClient.showActiveTorrentCountHelp")}
                                             />
                                             <Field.Switch
                                                 side="right"
                                                 name="openTorrentClientOnStart"
-                                                label="Open torrent client on startup"
+                                                label={t("settings.torrentClient.openTorrentClientOnStartup")}
                                             />
                                         </SettingsCard>
 
@@ -889,8 +889,8 @@ export default function Page() {
                         <TabsContent value="ui" className={tabContentClass}>
 
                             <SettingsPageHeader
-                                title="User Interface"
-                                description="Customize the user interface"
+                                title={t("settings.ui.title")}
+                                description={t("settings.ui.description")}
                                 icon={LuPalette}
                             />
 
@@ -901,8 +901,8 @@ export default function Page() {
                         <TabsContent value="torrentstream" className={tabContentClass}>
 
                             <SettingsPageHeader
-                                title="Torrent Streaming"
-                                description="Configure torrent streaming settings"
+                                title={t("settings.pages.torrentStreaming.title")}
+                                description={t("settings.pages.torrentStreaming.description")}
                                 icon={SiBittorrent}
                             />
 
@@ -913,8 +913,8 @@ export default function Page() {
                         <TabsContent value="logs" className={tabContentClass}>
 
                             <SettingsPageHeader
-                                title="Logs"
-                                description="View the logs"
+                                title={t("settings.pages.logs.title")}
+                                description={t("settings.pages.logs.description")}
                                 icon={LuBookKey}
                             />
 
@@ -924,8 +924,8 @@ export default function Page() {
                             <Separator />
 
                             <SettingsPageHeader
-                                title="Cache"
-                                description="Manage the cache"
+                                title={t("settings.pages.cache.title")}
+                                description={t("settings.pages.cache.description")}
                                 icon={TbDatabaseExclamation}
                             />
 
@@ -937,8 +937,8 @@ export default function Page() {
                             <TabsContent value="denshi" className={tabContentClass}>
 
                                 <SettingsPageHeader
-                                    title="Denshi"
-                                    description="Desktop client settings"
+                                    title={t("settings.pages.denshi.title")}
+                                    description={t("settings.pages.denshi.description")}
                                     icon={LuMonitor}
                                 />
 

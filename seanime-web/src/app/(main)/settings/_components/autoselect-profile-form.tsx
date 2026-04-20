@@ -15,8 +15,8 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-
 import { CSS } from "@dnd-kit/utilities"
 import { atomWithImmer } from "jotai-immer"
 import { useAtom } from "jotai/react"
-import capitalize from "lodash/capitalize"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiMenu, BiPlus, BiTrash } from "react-icons/bi"
 import { LuSettings2 } from "react-icons/lu"
 import { toast } from "sonner"
@@ -67,10 +67,14 @@ const formDataAtom = atomWithImmer<FormData>({
 })
 
 export function AutoSelectProfileButton() {
+    const { t } = useTranslation()
     const [isOpen, setIsOpen] = React.useState(false)
     const { data: profile, isLoading } = useGetAutoSelectProfile()
 
     const hasProfile = !!profile?.dbId
+    const getPreferenceLabel = React.useCallback((value: Anime_AutoSelectPreference) => {
+        return t(`settings.autoSelect.preferenceOptions.${value}`)
+    }, [t])
 
     return (
         <>
@@ -83,40 +87,40 @@ export function AutoSelectProfileButton() {
                     loading={isLoading}
                     leftIcon={<LuSettings2 />}
                 >
-                    Customize auto-select
+                    {t("settings.autoSelect.customize")}
                 </Button>
                 {hasProfile && (
                     <div className="text-sm text-[--muted] space-y-1">
                         {profile.resolutions && profile.resolutions.length > 0 && (
-                            <p><strong>Resolutions:</strong> {profile.resolutions.join(", ")}</p>
+                            <p><strong>{t("settings.autoSelect.summary.resolutions")}:</strong> {profile.resolutions.join(", ")}</p>
                         )}
                         {profile.releaseGroups && profile.releaseGroups.length > 0 && (
-                            <p><strong>Groups:</strong> {profile.releaseGroups.slice(0, 3).join(", ")}{profile.releaseGroups.length > 3 ? "..." : ""}
+                            <p><strong>{t("settings.autoSelect.summary.groups")}:</strong> {profile.releaseGroups.slice(0, 3).join(", ")}{profile.releaseGroups.length > 3 ? "..." : ""}
                             </p>
                         )}
                         {profile.providers && profile.providers.length > 0 && (
-                            <p><strong>Providers:</strong> {profile.providers.join(", ")}</p>
+                            <p><strong>{t("settings.autoSelect.summary.providers")}:</strong> {profile.providers.join(", ")}</p>
                         )}
                         {profile.preferredCodecs && profile.preferredCodecs.length > 0 && (
-                            <p><strong>Preferred Codecs:</strong> {profile.preferredCodecs.join(", ")}</p>
+                            <p><strong>{t("settings.autoSelect.summary.preferredCodecs")}:</strong> {profile.preferredCodecs.join(", ")}</p>
                         )}
                         {profile.preferredSources && profile.preferredSources.length > 0 && (
-                            <p><strong>Preferred Sources:</strong> {profile.preferredSources.join(", ")}</p>
+                            <p><strong>{t("settings.autoSelect.summary.preferredSources")}:</strong> {profile.preferredSources.join(", ")}</p>
                         )}
                         {profile.preferredLanguages && profile.preferredLanguages.length > 0 && (
-                            <p><strong>Preferred Languages:</strong> {profile.preferredLanguages.join(", ")}</p>
+                            <p><strong>{t("settings.autoSelect.summary.preferredLanguages")}:</strong> {profile.preferredLanguages.join(", ")}</p>
                         )}
                         {profile.multipleAudioPreference && profile.multipleAudioPreference !== "neutral" && (
-                            <p><strong>Multi Audio:</strong> {capitalize(profile.multipleAudioPreference)}</p>
+                            <p><strong>{t("settings.autoSelect.summary.multipleAudio")}:</strong> {getPreferenceLabel(profile.multipleAudioPreference)}</p>
                         )}
                         {profile.multipleSubsPreference && profile.multipleSubsPreference !== "neutral" && (
-                            <p><strong>Multi Subs:</strong> {capitalize(profile.multipleSubsPreference)}</p>
+                            <p><strong>{t("settings.autoSelect.summary.multipleSubtitles")}:</strong> {getPreferenceLabel(profile.multipleSubsPreference)}</p>
                         )}
                         {profile.bestReleasePreference && profile.bestReleasePreference !== "neutral" && (
-                            <p><strong>Best Releases:</strong> {capitalize(profile.bestReleasePreference)}</p>
+                            <p><strong>{t("settings.autoSelect.summary.bestReleases")}:</strong> {getPreferenceLabel(profile.bestReleasePreference)}</p>
                         )}
                         {profile.batchPreference && profile.batchPreference !== "neutral" && (
-                            <p><strong>Batches:</strong> {capitalize(profile.batchPreference)}</p>
+                            <p><strong>{t("settings.autoSelect.summary.batches")}:</strong> {getPreferenceLabel(profile.batchPreference)}</p>
                         )}
                     </div>
                 )}
@@ -125,14 +129,14 @@ export function AutoSelectProfileButton() {
             <Modal
                 open={isOpen}
                 onOpenChange={setIsOpen}
-                title="Auto-select"
+                title={t("settings.common.autoSelect")}
                 contentClass="max-w-3xl"
             >
                 <AutoSelectProfileForm
                     profile={profile}
                     onSuccess={() => {
                         setIsOpen(false)
-                        toast.success("Settings saved")
+                        toast.success(t("toasts.settingsSaved"))
                     }}
                 />
             </Modal>
@@ -146,6 +150,7 @@ type AutoSelectProfileFormProps = {
 }
 
 function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
+    const { t } = useTranslation()
     const { profile, onSuccess } = props
 
     const { mutate: saveProfile, isPending: saving } = useSaveAutoSelectProfile()
@@ -251,7 +256,7 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
 
             <div className="border rounded-[--radius] p-4 relative space-y-3">
                 <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">
-                    Release Preferences
+                    {t("settings.common.releasePreferences")}
                 </div>
 
                 <ReleaseGroupsSortableField />
@@ -261,7 +266,7 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
 
             <div className="border rounded-[--radius] p-4 relative space-y-3">
                 <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">
-                    Metadata Preferences
+                    {t("settings.common.metadataPreferences")}
                 </div>
 
                 <PreferredLanguagesSortableField />
@@ -272,8 +277,8 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                         onValueChange={(checked) => setFormData(draft => {
                             draft.requireLanguage = checked === true
                         })}
-                        label="Require language match"
-                        help="Reject if no preferred language is found"
+                        label={t("settings.autoSelect.requireLanguageMatch")}
+                        help={t("settings.autoSelect.requireLanguageMatchHelp")}
                     />
                 </div>
 
@@ -287,8 +292,8 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                         onValueChange={(checked) => setFormData(draft => {
                             draft.requireCodec = checked === true
                         })}
-                        label="Require codec match"
-                        help="Reject if no preferred codec is found"
+                        label={t("settings.autoSelect.requireCodecMatch")}
+                        help={t("settings.autoSelect.requireCodecMatchHelp")}
                     />
                 </div>
 
@@ -302,19 +307,19 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                         onValueChange={(checked) => setFormData(draft => {
                             draft.requireSource = checked === true
                         })}
-                        label="Require source match"
-                        help="Reject if no preferred source is found"
+                        label={t("settings.autoSelect.requireSourceMatch")}
+                        help={t("settings.autoSelect.requireSourceMatchHelp")}
                     />
                 </div>
             </div>
 
             <div className="border rounded-[--radius] p-4 relative space-y-3">
                 <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">
-                    Special Preferences
+                    {t("settings.common.specialPreferences")}
                 </div>
 
                 <PreferenceField
-                    label="Multiple Audio"
+                    label={t("settings.autoSelect.multipleAudio")}
                     value={formData.multipleAudioPreference}
                     onChange={(value) => setFormData(draft => {
                         draft.multipleAudioPreference = value
@@ -322,7 +327,7 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                 />
 
                 <PreferenceField
-                    label="Multiple Subtitles"
+                    label={t("settings.autoSelect.multipleSubtitles")}
                     value={formData.multipleSubsPreference}
                     onChange={(value) => setFormData(draft => {
                         draft.multipleSubsPreference = value
@@ -330,14 +335,14 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                 />
 
                 <PreferenceField
-                    label="Batches"
+                    label={t("settings.autoSelect.batches")}
                     value={formData.batchPreference}
                     onChange={(value) => setFormData(draft => {
                         draft.batchPreference = value
                     })}
                 />
                 <PreferenceField
-                    label="Best Releases"
+                    label={t("settings.autoSelect.bestReleases")}
                     without={["only"]}
                     value={formData.bestReleasePreference}
                     onChange={(value) => setFormData(draft => {
@@ -348,12 +353,12 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
 
             <div className="border rounded-[--radius] p-4 relative space-y-3">
                 <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">
-                    Thresholds
+                    {t("settings.common.thresholds")}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Min Seeders</label>
+                        <label className="text-sm font-medium">{t("settings.fields.minSeeders")}</label>
                         <NumberInput
                             value={formData.minSeeders}
                             onChange={(e) => setFormData(draft => {
@@ -364,23 +369,23 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Min Size</label>
+                        <label className="text-sm font-medium">{t("settings.fields.minSize")}</label>
                         <TextInput
                             value={formData.minSize}
                             onChange={(e) => setFormData(draft => {
                                 draft.minSize = e.target.value
                             })}
-                            placeholder="e.g. 100MB"
+                            placeholder={t("settings.autoSelect.minSizePlaceholder")}
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Max Size</label>
+                        <label className="text-sm font-medium">{t("settings.fields.maxSize")}</label>
                         <TextInput
                             value={formData.maxSize}
                             onChange={(e) => setFormData(draft => {
                                 draft.maxSize = e.target.value
                             })}
-                            placeholder="e.g. 2GB or 10GiB"
+                            placeholder={t("settings.autoSelect.maxSizePlaceholder")}
                         />
                     </div>
                 </div>
@@ -394,7 +399,7 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                         onClick={handleDelete}
                         loading={deleting}
                     >
-                        Reset all
+                        {t("settings.autoSelect.resetAll")}
                     </Button>
                 )}
                 <div className="flex-1" />
@@ -403,7 +408,7 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                     intent="success"
                     loading={saving}
                 >
-                    Save
+                    {t("common.buttons.save")}
                 </Button>
             </div>
         </form>
@@ -507,6 +512,7 @@ function SortableItem(props: { id: string; value: string; onRemove: (id: string)
 }
 
 function ProvidersFieldControlled() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const { data: extensions } = useAnimeListTorrentProviderExtensions()
     const [comboboxValue, setComboboxValue] = React.useState<string[]>([])
@@ -566,16 +572,16 @@ function ProvidersFieldControlled() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Providers (ordered, max 3)</label>
-            <p className="text-sm text-[--muted]">Select up to 3 providers in order of priority</p>
+            <label className="text-sm font-medium">{t("settings.fields.providersOrderedMax3")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.providersHelp")}</p>
             <Combobox
                 value={comboboxValue}
                 onValueChange={handleAdd}
                 options={availableOptions}
                 multiple
-                label="Add provider"
+                label={t("settings.autoSelect.addProvider")}
                 disabled={items.length >= 3}
-                emptyMessage="No providers found"
+                emptyMessage={t("settings.autoSelect.noProvidersFound")}
             />
             {items.length > 0 && (
                 <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
@@ -598,6 +604,7 @@ function ProvidersFieldControlled() {
 }
 
 function ReleaseGroupsSortableField() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const items = formData.releaseGroups
 
@@ -642,8 +649,8 @@ function ReleaseGroupsSortableField() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Release Groups (ordered)</label>
-            <p className="text-sm text-[--muted]">Preferred groups in order of priority</p>
+            <label className="text-sm font-medium">{t("settings.fields.releaseGroupsOrdered")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.releaseGroupsHelp")}</p>
 
             <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
@@ -691,13 +698,14 @@ function ReleaseGroupsSortableField() {
                 onClick={handleAdd}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
 }
 
 function ResolutionsSortableField() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const items = formData.resolutions
 
@@ -742,8 +750,8 @@ function ResolutionsSortableField() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Resolutions (ordered)</label>
-            <p className="text-sm text-[--muted]">Preferred resolutions in order of priority</p>
+            <label className="text-sm font-medium">{t("settings.fields.resolutionsOrdered")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.resolutionsHelp")}</p>
 
             <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
@@ -791,13 +799,14 @@ function ResolutionsSortableField() {
                 onClick={handleAdd}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
 }
 
 function ExcludeTermsSortableField() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const items = formData.excludeTerms
 
@@ -840,8 +849,8 @@ function ExcludeTermsSortableField() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Exclude Terms</label>
-            <p className="text-sm text-[--muted]">Exclude torrents with these terms</p>
+            <label className="text-sm font-medium">{t("settings.fields.excludeTerms")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.excludeTermsHelp")}</p>
 
             <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
                 <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
@@ -851,7 +860,7 @@ function ExcludeTermsSortableField() {
                                 key={item.id}
                                 id={item.id}
                                 value={item.value}
-                                placeholder="e.g. CamRip, Cam RIP"
+                                placeholder={t("settings.autoSelect.excludeTermsPlaceholder")}
                                 onUpdate={handleUpdate}
                                 onRemove={handleRemove}
                             />
@@ -867,13 +876,14 @@ function ExcludeTermsSortableField() {
                 onClick={handleAdd}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
 }
 
 function PreferredLanguagesSortableField() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const items = formData.preferredLanguages
 
@@ -918,8 +928,8 @@ function PreferredLanguagesSortableField() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Preferred Languages (ordered)</label>
-            <p className="text-sm text-[--muted]">Ordered list of preferred languages</p>
+            <label className="text-sm font-medium">{t("settings.fields.preferredLanguagesOrdered")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.preferredLanguagesHelp")}</p>
 
             <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
@@ -967,13 +977,14 @@ function PreferredLanguagesSortableField() {
                 onClick={handleAdd}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
 }
 
 function PreferredCodecsSortableField() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const items = formData.preferredCodecs
 
@@ -1018,8 +1029,8 @@ function PreferredCodecsSortableField() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Preferred Codecs (ordered)</label>
-            <p className="text-sm text-[--muted]">Ordered list of preferred codecs (comma-separated alternatives)</p>
+            <label className="text-sm font-medium">{t("settings.fields.preferredCodecsOrdered")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.preferredCodecsHelp")}</p>
 
             <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
@@ -1067,13 +1078,14 @@ function PreferredCodecsSortableField() {
                 onClick={handleAdd}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
 }
 
 function PreferredSourcesSortableField() {
+    const { t } = useTranslation()
     const [formData, setFormData] = useAtom(formDataAtom)
     const items = formData.preferredSources
 
@@ -1118,8 +1130,8 @@ function PreferredSourcesSortableField() {
 
     return (
         <div className="space-y-2">
-            <label className="text-sm font-medium">Preferred Sources (ordered)</label>
-            <p className="text-sm text-[--muted]">Ordered list of preferred sources (comma-separated alternatives)</p>
+            <label className="text-sm font-medium">{t("settings.fields.preferredSourcesOrdered")}</label>
+            <p className="text-sm text-[--muted]">{t("settings.autoSelect.preferredSourcesHelp")}</p>
 
             <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
@@ -1167,7 +1179,7 @@ function PreferredSourcesSortableField() {
                 onClick={handleAdd}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
@@ -1179,14 +1191,15 @@ function PreferenceField(props: {
     value: Anime_AutoSelectPreference
     onChange: (value: Anime_AutoSelectPreference) => void
 }) {
+    const { t } = useTranslation()
     const { label, value, onChange, without = [] } = props
 
     const options = [
-        { label: "Neutral", value: "neutral" },
-        { label: "Prefer", value: "prefer" },
-        { label: "Avoid", value: "avoid" },
-        { label: "Only", value: "only" },
-        { label: "Never", value: "never" },
+        { label: t("settings.autoSelect.preferenceOptions.neutral"), value: "neutral" },
+        { label: t("settings.autoSelect.preferenceOptions.prefer"), value: "prefer" },
+        { label: t("settings.autoSelect.preferenceOptions.avoid"), value: "avoid" },
+        { label: t("settings.autoSelect.preferenceOptions.only"), value: "only" },
+        { label: t("settings.autoSelect.preferenceOptions.never"), value: "never" },
     ].filter(({ value }) => !without.includes(value as Anime_AutoSelectPreference))
 
     return (

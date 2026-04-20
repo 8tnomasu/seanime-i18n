@@ -5,11 +5,13 @@ import { Field } from "@/components/ui/form"
 import { atom, useSetAtom } from "jotai"
 import React from "react"
 import { useFormContext, useFormState } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { FiRotateCcw, FiSave } from "react-icons/fi"
 
 export const settingsFormIsDirtyAtom = atom(false)
 
 export function SettingsSubmitButton({ isPending }: { isPending: boolean }) {
+    const { t } = useTranslation()
 
     const { isDirty } = useFormState()
 
@@ -33,13 +35,14 @@ export function SettingsSubmitButton({ isPending }: { isPending: boolean }) {
                 loading={isPending}
                 leftIcon={<FiSave className="transition-transform duration-200 group-hover:scale-110" />}
             >
-                Save
+                {t("common.buttons.save")}
             </Field.Submit>
         </>
     )
 }
 
 export function SettingsIsDirty({ className }: { className?: string }) {
+    const { t } = useTranslation()
     const { isDirty, isLoading, isSubmitting, isValidating } = useFormState()
     const { reset } = useFormContext()
     return isDirty ? <Alert
@@ -51,7 +54,7 @@ export function SettingsIsDirty({ className }: { className?: string }) {
         )}
     >
         <div className="flex items-center gap-2">
-            <span className="text-sm">You have unsaved changes.</span>
+            <span className="text-sm">{t("settings.unsavedChanges")}</span>
             <Button
                 role="save"
                 size="md"
@@ -62,7 +65,7 @@ export function SettingsIsDirty({ className }: { className?: string }) {
                 onClick={() => reset()}
                 leftIcon={<FiRotateCcw className="transition-transform duration-200 group-hover:rotate-180" />}
             >
-                Reset
+                {t("common.buttons.reset")}
             </Button>
             <Field.Submit
                 role="save"
@@ -74,7 +77,7 @@ export function SettingsIsDirty({ className }: { className?: string }) {
                 disabled={isLoading || isSubmitting || isValidating}
                 leftIcon={<FiSave className="transition-transform duration-200 group-hover:scale-110" />}
             >
-                Save
+                {t("common.buttons.save")}
             </Field.Submit>
         </div>
     </Alert> : null

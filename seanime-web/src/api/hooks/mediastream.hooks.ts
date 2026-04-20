@@ -6,6 +6,7 @@ import {
 } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Mediastream_MediaContainer, Models_MediastreamSettings } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
@@ -28,7 +29,7 @@ export function useSaveMediastreamSettings() {
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.MEDIASTREAM.GetMediastreamSettings.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetStatus.key] })
-            toast.success("Settings saved")
+            toast.success(i18n.t("toasts.settingsSaved"))
         },
     })
 }

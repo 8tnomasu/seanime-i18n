@@ -5,8 +5,10 @@ import { Alert } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/components/ui/core/styling"
 import { defineSchema, Field, Form } from "@/components/ui/form"
+import { appLanguageAtom, SUPPORTED_LANGUAGES, type AppLanguage } from "@/i18n"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { NativeSelect } from "@/components/ui/native-select"
 import { ANIME_COLLECTION_SORTING_OPTIONS, CONTINUE_WATCHING_SORTING_OPTIONS, MANGA_COLLECTION_SORTING_OPTIONS } from "@/lib/helpers/filtering"
 import { THEME_COLOR_BANK } from "@/lib/theme/theme-bank"
 import {
@@ -24,6 +26,7 @@ import { useAtom } from "jotai/react"
 import { atomWithStorage } from "jotai/utils"
 import React, { useState } from "react"
 import { useFormContext, UseFormReturn, useWatch } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { z } from "zod"
 import { useServerStatus } from "../../_hooks/use-server-status"
@@ -93,11 +96,13 @@ const tabContentClass = cn(
 
 
 export function UISettings() {
+    const { t } = useTranslation()
     const themeSettings = useThemeSettings()
     const serverStatus = useServerStatus()
 
     const { mutate, isPending } = useUpdateTheme()
     const [fixBorderRenderingArtifacts, setFixBorerRenderingArtifacts] = useAtom(__ui_fixBorderRenderingArtifacts)
+    const [language, setLanguage] = useAtom(appLanguageAtom)
     const [enableLivePreview, setEnableLivePreview] = useState(false)
 
     const [tab, setTab] = useAtom(selectUISettingTabAtom)
@@ -105,6 +110,98 @@ export function UISettings() {
     const formRef = React.useRef<UseFormReturn<any>>(null)
 
     const { customCSS, setCustomCSS } = useCustomCSS()
+
+    const libraryBannerTypeOptions = React.useMemo(() => ([
+        {
+            label: t("settings.ui.media.bannerTypeOptions.dynamic"),
+            value: "dynamic",
+        },
+        {
+            label: t("settings.ui.media.bannerTypeOptions.custom"),
+            value: "custom",
+        },
+        {
+            label: t("common.words.none"),
+            value: "none",
+        },
+    ]), [t])
+
+    const mediaPageBannerTypeOptions = React.useMemo(() => ThemeMediaPageBannerTypeOptions.map(option => ({
+        value: option.value,
+        label: t(`settings.ui.media.mediaPageBannerImageOptions.${option.value}.label`),
+        description: t(`settings.ui.media.mediaPageBannerImageOptions.${option.value}.description`),
+    })), [t])
+
+    const mediaPageBannerSizeOptions = React.useMemo(() => ThemeMediaPageBannerSizeOptions.map(option => ({
+        value: option.value,
+        label: t(`settings.ui.media.mediaPageBannerSizeOptions.${option.value}.label`),
+        description: t(`settings.ui.media.mediaPageBannerSizeOptions.${option.value}.description`),
+    })), [t])
+
+    const continueWatchingSortingOptions = React.useMemo(() => CONTINUE_WATCHING_SORTING_OPTIONS.map(option => ({
+        value: option.value,
+        label: t(`settings.ui.media.continueWatchingSortingOptions.${option.value}`),
+    })), [t])
+
+    const animeLibrarySortingOptions = React.useMemo(() => ANIME_COLLECTION_SORTING_OPTIONS.filter(option => !option.value.includes("END"))
+        .map(option => ({
+            value: option.value,
+            label: t(`settings.ui.media.animeLibrarySortingOptions.${option.value}`),
+        })), [t])
+
+    const mangaLibrarySortingOptions = React.useMemo(() => MANGA_COLLECTION_SORTING_OPTIONS.filter(option => !option.value.includes("END"))
+        .map(option => ({
+            value: option.value,
+            label: t(`settings.ui.media.mangaLibrarySortingOptions.${option.value}`),
+        })), [t])
+
+    const unpinnedMenuOptions = React.useMemo(() => ([
+        {
+            label: t("navigation.schedule"),
+            textValue: t("navigation.schedule"),
+            value: "schedule",
+        },
+        {
+            label: t("navigation.manga"),
+            textValue: t("navigation.manga"),
+            value: "manga",
+        },
+        {
+            label: t("navigation.discover"),
+            textValue: t("navigation.discover"),
+            value: "discover",
+        },
+        {
+            label: t("navigation.lists"),
+            textValue: t("navigation.lists"),
+            value: "lists",
+        },
+        {
+            label: t("navigation.autoDownloader"),
+            textValue: t("navigation.autoDownloader"),
+            value: "auto-downloader",
+        },
+        {
+            label: t("navigation.torrentList"),
+            textValue: t("navigation.torrentList"),
+            value: "torrent-list",
+        },
+        {
+            label: t("navigation.debrid"),
+            textValue: t("navigation.debrid"),
+            value: "debrid",
+        },
+        {
+            label: t("navigation.scanSummaries"),
+            textValue: t("navigation.scanSummaries"),
+            value: "scan-summaries",
+        },
+        {
+            label: t("navigation.search"),
+            textValue: t("navigation.search"),
+            value: "search",
+        },
+    ]), [t])
 
     const applyLivePreview = React.useCallback((bgColor: string, accentColor: string) => {
         if (!enableLivePreview) return
@@ -202,7 +299,7 @@ export function UISettings() {
 
     function handleSave(data: z.infer<typeof themeSchema>) {
         if (colord(data.backgroundColor).isLight()) {
-            toast.error("Seanime does not support light themes")
+            toast.error(t("toasts.settings.lightThemeUnsupported"))
             return
         }
 
@@ -233,11 +330,25 @@ export function UISettings() {
     }
 
     return (
-        <Form
-            schema={themeSchema}
-            mRef={formRef}
-            onSubmit={handleSave}
-            defaultValues={{
+        <>
+            <SettingsCard title={t("language.title")} description={t("language.description")}>
+                <NativeSelect
+                    label={t("language.title")}
+                    value={language}
+                    onChange={event => setLanguage(event.target.value as AppLanguage)}
+                    options={SUPPORTED_LANGUAGES.map(option => ({
+                        value: option.value,
+                        label: t(option.labelKey),
+                    }))}
+                    help={t("language.help")}
+                />
+            </SettingsCard>
+
+            <Form
+                schema={themeSchema}
+                mRef={formRef}
+                onSubmit={handleSave}
+                defaultValues={{
                 enableColorSettings: themeSettings?.enableColorSettings,
                 animeEntryScreenLayout: themeSettings?.animeEntryScreenLayout,
                 smallerEpisodeCarouselSize: themeSettings?.smallerEpisodeCarouselSize,
@@ -275,42 +386,42 @@ export function UISettings() {
                 unpinnedMenuItems: themeSettings?.unpinnedMenuItems ?? [],
                 enableBlurringEffects: themeSettings?.enableBlurringEffects,
             }}
-            stackClass="space-y-4 relative"
-        >
-            {(f) => (
-                <>
-                    <SettingsIsDirty className="" />
-                    <ObserveColorSettings />
+                stackClass="space-y-4 relative"
+            >
+                {(f) => (
+                    <>
+                        <SettingsIsDirty className="" />
+                        <ObserveColorSettings />
 
-                    <Tabs
-                        value={tab}
-                        onValueChange={setTab}
-                        className={tabsRootClass}
-                        triggerClass={tabsTriggerClass}
-                        listClass={tabsListClass}
-                    >
-                        <TabsList className="flex-wrap max-w-full bg-[--paper] p-2 border rounded-xl">
-                            <TabsTrigger value="main">Theme</TabsTrigger>
-                            <TabsTrigger value="media">Media</TabsTrigger>
-                            <TabsTrigger value="navigation">Navigation</TabsTrigger>
-                            {/*<TabsTrigger value="browser-client">Rendering</TabsTrigger>*/}
-                        </TabsList>
+                        <Tabs
+                            value={tab}
+                            onValueChange={setTab}
+                            className={tabsRootClass}
+                            triggerClass={tabsTriggerClass}
+                            listClass={tabsListClass}
+                        >
+                            <TabsList className="flex-wrap max-w-full bg-[--paper] p-2 border rounded-xl">
+                                <TabsTrigger value="main">{t("settings.sections.theme")}</TabsTrigger>
+                                <TabsTrigger value="media">{t("settings.sections.media")}</TabsTrigger>
+                                <TabsTrigger value="navigation">{t("settings.sections.navigation")}</TabsTrigger>
+                                {/*<TabsTrigger value="browser-client">Rendering</TabsTrigger>*/}
+                            </TabsList>
 
                         <TabsContent value="main" className={tabContentClass}>
 
-                            <SettingsCard title="Color scheme">
+                            <SettingsCard title={t("settings.ui.colorScheme.title")}>
                                 <Field.Switch
                                     side="right"
-                                    label="Enable color settings"
+                                    label={t("settings.ui.colorScheme.enableColorSettings")}
                                     name="enableColorSettings"
                                 />
                                 {f.watch("enableColorSettings") && (
                                     <>
                                         <Switch
                                             side="right"
-                                            label="Live preview"
+                                            label={t("settings.ui.colorScheme.livePreview")}
                                             name="enableLivePreview"
-                                            help={enableLivePreview && "Disabling will reload the page without applying the changes."}
+                                            help={enableLivePreview ? t("settings.ui.colorScheme.disableLivePreviewHelp") : undefined}
                                             value={enableLivePreview}
                                             onValueChange={(value) => {
                                                 setEnableLivePreview(value)
@@ -326,13 +437,13 @@ export function UISettings() {
                                         <div className="flex flex-col md:flex-row gap-3">
                                             <Field.ColorPicker
                                                 name="backgroundColor"
-                                                label="Background color"
-                                                help="Default: #070707"
+                                                label={t("settings.ui.colorScheme.backgroundColor")}
+                                                help={t("settings.ui.colorScheme.backgroundColorDefault")}
                                             />
                                             <Field.ColorPicker
                                                 name="accentColor"
-                                                label="Accent color"
-                                                help="Default: #6152df"
+                                                label={t("settings.ui.colorScheme.accentColor")}
+                                                help={t("settings.ui.colorScheme.accentColorDefault")}
                                             />
                                         </div>
                                     </>
@@ -389,27 +500,27 @@ export function UISettings() {
 
                                 <Field.Switch
                                     side="right"
-                                    label="Enable blurring effects"
-                                    help="May impact performance on some devices."
+                                    label={t("settings.ui.colorScheme.enableBlurringEffects")}
+                                    help={t("settings.ui.colorScheme.enableBlurringEffectsHelp")}
                                     name="enableBlurringEffects"
                                 />
 
                             </SettingsCard>
 
-                            <SettingsCard title="Background image">
+                            <SettingsCard title={t("settings.ui.backgroundImage.title")}>
 
                                 <div className="flex flex-col md:flex-row gap-3">
                                     <Field.Text
-                                        label="Image path"
+                                        label={t("settings.fields.imagePath")}
                                         name="libraryScreenCustomBackgroundImage"
-                                        placeholder="e.g. image.png"
-                                        help="Background image for all pages. Dimmed on non-library screens."
+                                        placeholder={t("settings.ui.backgroundImage.placeholder")}
+                                        help={t("settings.ui.backgroundImage.help")}
                                     />
 
                                     <Field.Number
-                                        label="Opacity"
+                                        label={t("settings.fields.opacity")}
                                         name="libraryScreenCustomBackgroundOpacity"
-                                        placeholder="Default: 10"
+                                        placeholder={t("settings.ui.backgroundImage.opacityPlaceholder")}
                                         min={1}
                                         max={100}
                                     />
@@ -429,24 +540,24 @@ export function UISettings() {
 
                             </SettingsCard>
 
-                            <SettingsCard title="Banner image">
+                            <SettingsCard title={t("settings.ui.bannerImage.title")}>
 
                                 <div className="flex flex-col md:flex-row gap-3">
                                     <Field.Text
-                                        label="Image path"
+                                        label={t("settings.fields.imagePath")}
                                         name="libraryScreenCustomBannerImage"
-                                        placeholder="e.g. image.gif"
-                                        help="Banner image for all pages."
+                                        placeholder={t("settings.ui.bannerImage.placeholder")}
+                                        help={t("settings.ui.bannerImage.help")}
                                     />
                                     <Field.Text
-                                        label="Position"
+                                        label={t("settings.fields.position")}
                                         name="libraryScreenCustomBannerPosition"
-                                        placeholder="Default: 50% 50%"
+                                        placeholder={t("settings.ui.bannerImage.positionPlaceholder")}
                                     />
                                     <Field.Number
-                                        label="Opacity"
+                                        label={t("settings.fields.opacity")}
                                         name="libraryScreenCustomBannerOpacity"
-                                        placeholder="Default: 10"
+                                        placeholder={t("settings.ui.bannerImage.opacityPlaceholder")}
                                         min={1}
                                         max={100}
                                     />
@@ -463,7 +574,7 @@ export function UISettings() {
                             >
                                 <AccordionItem value="more">
                                     <AccordionTrigger className="bg-gray-900 rounded-[--radius-md]">
-                                        Advanced
+                                        {t("settings.common.advanced")}
                                     </AccordionTrigger>
                                     <AccordionContent className="space-y-4">
 
@@ -478,31 +589,30 @@ export function UISettings() {
                                                     })
                                                 }}
                                             >
-                                                Apply to this client
+                                                {t("settings.ui.customCss.applyToThisClient")}
                                             </Button>
                                         )}
 
                                         <p className="text-[--muted] text-sm">
-                                            The custom CSS will be saved on the server and needs to be applied manually to each client.
+                                            {t("settings.ui.customCss.descriptionLine1")}
                                             <br />
-                                            In case of an error rendering the UI unusable, you can always remove it from the local storage using the
-                                            devtools.
+                                            {t("settings.ui.customCss.descriptionLine2")}
                                         </p>
 
                                         <div className="flex flex-col md:flex-row gap-3">
 
                                             <Field.Textarea
-                                                label="Custom CSS"
+                                                label={t("settings.ui.customCss.customCss")}
                                                 name="customCSS"
-                                                placeholder="Custom CSS"
-                                                help="Applied above 1024px screen size."
+                                                placeholder={t("settings.ui.customCss.placeholder")}
+                                                help={t("settings.ui.customCss.customCssHelp")}
                                             />
 
                                             <Field.Textarea
-                                                label="Mobile custom CSS"
+                                                label={t("settings.ui.customCss.mobileCustomCss")}
                                                 name="mobileCustomCSS"
-                                                placeholder="Custom CSS"
-                                                help="Applied below 1024px screen size."
+                                                placeholder={t("settings.ui.customCss.placeholder")}
+                                                help={t("settings.ui.customCss.mobileCustomCssHelp")}
                                             />
 
                                         </div>
@@ -514,84 +624,38 @@ export function UISettings() {
 
                         <TabsContent value="navigation" className={tabContentClass}>
 
-                            <SettingsCard title="Sidebar">
+                            <SettingsCard title={t("settings.common.sidebar")}>
 
                                 <Field.Switch
                                     side="right"
-                                    label="Expand sidebar on hover"
+                                    label={t("settings.ui.navigation.expandSidebarOnHover")}
                                     name="expandSidebarOnHover"
-                                    help="Causes visual glitches with plugin tray."
+                                    help={t("settings.ui.navigation.expandSidebarOnHoverHelp")}
                                 />
 
                                 <Field.Switch
                                     side="right"
-                                    label="Disable transparency"
+                                    label={t("settings.ui.navigation.disableTransparency")}
                                     name="disableSidebarTransparency"
                                 />
 
                                 <Field.Combobox
-                                    label="Unpinned menu items"
+                                    label={t("settings.ui.navigation.unpinnedMenuItems")}
                                     name="unpinnedMenuItems"
-                                    emptyMessage="No items selected"
+                                    emptyMessage={t("settings.ui.navigation.noItemsSelected")}
                                     multiple
-                                    options={[
-                                        {
-                                            label: "Schedule",
-                                            textValue: "Schedule",
-                                            value: "schedule",
-                                        },
-                                        {
-                                            label: "Manga",
-                                            textValue: "Manga",
-                                            value: "manga",
-                                        },
-                                        {
-                                            label: "Discover",
-                                            textValue: "Discover",
-                                            value: "discover",
-                                        },
-                                        {
-                                            label: "My lists",
-                                            textValue: "My lists",
-                                            value: "lists",
-                                        },
-                                        {
-                                            label: "Auto Downloader",
-                                            textValue: "Auto Downloader",
-                                            value: "auto-downloader",
-                                        },
-                                        {
-                                            label: "Torrent list",
-                                            textValue: "Torrent list",
-                                            value: "torrent-list",
-                                        },
-                                        {
-                                            label: "Debrid",
-                                            textValue: "Debrid",
-                                            value: "debrid",
-                                        },
-                                        {
-                                            label: "Scan summaries",
-                                            textValue: "Scan summaries",
-                                            value: "scan-summaries",
-                                        },
-                                        {
-                                            label: "Search",
-                                            textValue: "Search",
-                                            value: "search",
-                                        },
-                                    ]}
+                                    options={unpinnedMenuOptions}
                                 />
 
                             </SettingsCard>
 
-                            <SettingsCard title="Navbar">
+                            <SettingsCard title={t("settings.common.navbar")}>
 
                                 <Field.Switch
                                     side="right"
-                                    label={__isDesktop__ ? "Hide top navbar (Web interface)" : "Hide top navbar"}
+                                    label={__isDesktop__ ? t("settings.ui.navigation.hideTopNavbarWeb") : t("settings.ui.navigation.hideTopNavbar")}
                                     name="hideTopNavbar"
-                                    help="Switches to sidebar-only mode."
+                                    help={t("settings.ui.navigation.hideTopNavbarHelp")}
                                 />
 
                             </SettingsCard>
@@ -600,7 +664,7 @@ export function UISettings() {
 
                         <TabsContent value="media" className={tabContentClass}>
 
-                            <SettingsCard title="Screens">
+                            <SettingsCard title={t("settings.common.screens")}>
 
                                 {!serverStatus?.settings?.library?.enableWatchContinuity && (
                                     f.watch("continueWatchingDefaultSorting").includes("LAST_WATCHED") ||
@@ -608,76 +672,61 @@ export function UISettings() {
                                 ) && (
                                     <Alert
                                         intent="alert"
-                                        description="Watch continuity needs to be enabled to use the last watched sorting options."
+                                        description={t("settings.ui.media.watchContinuityWarning")}
                                     />
                                 )}
 
                                 <Field.RadioCards
-                                    label="Banner type"
+                                    label={t("settings.fields.bannerType")}
                                     name="libraryScreenBannerType"
-                                    options={[
-                                        {
-                                            label: "Dynamic Banner",
-                                            value: "dynamic",
-                                        },
-                                        {
-                                            label: "Custom Banner",
-                                            value: "custom",
-                                        },
-                                        {
-                                            label: "None",
-                                            value: "none",
-                                        },
-                                    ]}
+                                    options={libraryBannerTypeOptions}
                                     stackClass="flex flex-col md:flex-row flex-wrap gap-2 space-y-0"
-                                    help={f.watch("libraryScreenBannerType") === ThemeLibraryScreenBannerType.Custom && "Use the banner image on all library screens."}
+                                    help={f.watch("libraryScreenBannerType") === ThemeLibraryScreenBannerType.Custom ? t("settings.ui.media.customBannerHelp") : undefined}
                                 />
 
                                 <Field.Switch
                                     side="right"
-                                    label="Remove genre selector"
+                                    label={t("settings.ui.media.removeGenreSelector")}
                                     name="disableLibraryScreenGenreSelector"
                                 />
 
                                 <Field.Select
-                                    label="Continue watching sorting"
+                                    label={t("settings.fields.continueWatchingSorting")}
                                     name="continueWatchingDefaultSorting"
-                                    options={CONTINUE_WATCHING_SORTING_OPTIONS.map(n => ({ value: n.value, label: n.label }))}
+                                    options={continueWatchingSortingOptions}
                                 />
 
                                 <Field.Select
-                                    label="Anime library sorting"
+                                    label={t("settings.fields.animeLibrarySorting")}
                                     name="animeLibraryCollectionDefaultSorting"
-                                    options={ANIME_COLLECTION_SORTING_OPTIONS.filter(n => !n.value.includes("END"))
-                                        .map(n => ({ value: n.value, label: n.label }))}
+                                    options={animeLibrarySortingOptions}
                                 />
 
                                 <Field.Select
-                                    label="Manga library sorting"
+                                    label={t("settings.fields.mangaLibrarySorting")}
                                     name="mangaLibraryCollectionDefaultSorting"
-                                    options={MANGA_COLLECTION_SORTING_OPTIONS.filter(n => !n.value.includes("END"))
-                                        .map(n => ({ value: n.value, label: n.label }))}
+                                    options={mangaLibrarySortingOptions}
                                 />
 
 
                             </SettingsCard>
 
-                            <SettingsCard title="Media page">
+                            <SettingsCard title={t("settings.common.mediaPage")}>
 
                                 <Field.RadioCards
-                                    label="AniList banner image"
+                                    label={t("settings.fields.aniListBannerImage")}
                                     name="mediaPageBannerType"
-                                    options={ThemeMediaPageBannerTypeOptions.map(n => ({ value: n.value, label: n.label }))}
+                                    options={mediaPageBannerTypeOptions.map(option => ({ value: option.value, label: option.label }))}
                                     stackClass="flex flex-col md:flex-row flex-wrap gap-2 space-y-0"
-                                    help={ThemeMediaPageBannerTypeOptions.find(n => n.value === f.watch("mediaPageBannerType"))?.description}
+                                    help={mediaPageBannerTypeOptions.find(option => option.value === f.watch("mediaPageBannerType"))?.description}
                                 />
 
                                 <Field.RadioCards
-                                    label="Banner size"
+                                    label={t("settings.fields.bannerSize")}
                                     name="mediaPageBannerSize"
-                                    options={ThemeMediaPageBannerSizeOptions.map(n => ({ value: n.value, label: n.label }))}
+                                    options={mediaPageBannerSizeOptions.map(option => ({ value: option.value, label: option.label }))}
                                     stackClass="flex flex-col md:flex-row flex-wrap gap-2 space-y-0"
-                                    help={ThemeMediaPageBannerSizeOptions.find(n => n.value === f.watch("mediaPageBannerSize"))?.description}
+                                    help={mediaPageBannerSizeOptions.find(option => option.value === f.watch("mediaPageBannerSize"))?.description}
                                 />
 
                                 {/*<Field.RadioCards*/}
@@ -689,40 +738,40 @@ export function UISettings() {
 
                                 <Field.Switch
                                     side="right"
-                                    label="Blurred gradient background"
+                                    label={t("settings.ui.media.blurredGradientBackground")}
                                     name="enableMediaPageBlurredBackground"
-                                    help="Can cause performance issues."
+                                    help={t("settings.ui.media.performanceWarning")}
                                 />
 
                             </SettingsCard>
 
-                            <SettingsCard title="Media card">
+                            <SettingsCard title={t("settings.common.mediaCard")}>
 
                                 <Field.Switch
                                     side="right"
-                                    label="Show anime unwatched count"
+                                    label={t("settings.ui.media.showAnimeUnwatchedCount")}
                                     name="showAnimeUnwatchedCount"
                                 />
 
                                 <Field.Switch
                                     side="right"
-                                    label="Show manga unread count"
+                                    label={t("settings.ui.media.showMangaUnreadCount")}
                                     name="showMangaUnreadCount"
                                 />
 
                                 <Field.Switch
                                     side="right"
-                                    label="Glassy background"
+                                    label={t("settings.ui.media.glassyBackground")}
                                     name="enableMediaCardBlurredBackground"
                                 />
 
                             </SettingsCard>
 
-                            <SettingsCard title="Episode card">
+                            <SettingsCard title={t("settings.common.episodeCard")}>
 
                                 <Field.Switch
                                     side="right"
-                                    label="Legacy episode cards"
+                                    label={t("settings.ui.media.legacyEpisodeCards")}
                                     name="useLegacyEpisodeCard"
                                 />
 
@@ -734,30 +783,30 @@ export function UISettings() {
 
                                 <Field.Switch
                                     side="right"
-                                    label="Hide episode summary"
+                                    label={t("settings.ui.media.hideEpisodeSummary")}
                                     name="hideEpisodeCardDescription"
                                 />
 
                                 <Field.Switch
                                     side="right"
-                                    label="Hide downloaded episode filename"
+                                    label={t("settings.ui.media.hideDownloadedEpisodeFilename")}
                                     name="hideDownloadedEpisodeCardFilename"
                                 />
 
 
                             </SettingsCard>
 
-                            <SettingsCard title="Carousel">
+                            <SettingsCard title={t("settings.common.carousel")}>
 
                                 <Field.Switch
                                     side="right"
-                                    label="Disable auto-scroll"
+                                    label={t("settings.ui.media.disableAutoScroll")}
                                     name="disableCarouselAutoScroll"
                                 />
 
                                 <Field.Switch
                                     side="right"
-                                    label="Smaller episode cards"
+                                    label={t("settings.ui.media.smallerEpisodeCards")}
                                     name="smallerEpisodeCarouselSize"
                                 />
 
@@ -787,14 +836,17 @@ export function UISettings() {
 
                         {/*</TabsContent>*/}
 
-                        {tab !== "browser-client" && <div className="mt-4">
-                            <Field.Submit role="save" intent="white" rounded loading={isPending}>Save</Field.Submit>
-                        </div>}
+                            {tab !== "browser-client" && <div className="mt-4">
+                                <Field.Submit role="save" intent="white" rounded loading={isPending}>
+                                    {t("common.buttons.save")}
+                                </Field.Submit>
+                            </div>}
 
-                    </Tabs>
-                </>
-            )}
-        </Form>
+                        </Tabs>
+                    </>
+                )}
+            </Form>
+        </>
     )
 
 }

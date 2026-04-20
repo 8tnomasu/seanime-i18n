@@ -3,22 +3,37 @@
         "name": "Seanime",
         "nameSpaced": "S e a n i m e"
     },
-    "auth": {
-        "enterToken": "Enter the token",
-        "getAniListToken": "Get AniList token",
-        "loginWithAniList": "Log in with AniList",
-        "signOutDescription": "Are you sure you want to sign out?",
-        "signOutTitle": "Sign out",
-        "usingAniListRecommended": "Using an AniList account is recommended."
+    "language": {
+        "title": "Language",
+        "description": "Choose the display language used by Seanime i18n on this device.",
+        "help": "This preference is stored locally for the current browser or desktop client.",
+        "options": {
+            "en-US": "English",
+            "zh-TW": "Traditional Chinese (Taiwan)"
+        }
     },
     "common": {
         "buttons": {
+            "add": "Add",
             "cancel": "Cancel",
             "close": "Close",
             "continue": "Continue",
+            "copy": "Copy",
+            "delete": "Delete",
+            "deleteSelected": "Delete selected",
+            "donate": "Donate",
+            "edit": "Edit",
             "goHome": "Go Home",
+            "import": "Import",
+            "overwrite": "Overwrite",
+            "refresh": "Refresh",
             "reload": "Reload",
-            "retry": "Retry"
+            "reset": "Reset",
+            "retry": "Retry",
+            "save": "Save",
+            "search": "Search",
+            "undo": "Undo",
+            "upload": "Upload"
         },
         "menu": {
             "openMainMenu": "Open main menu"
@@ -30,20 +45,14 @@
             "pageNotFoundDescription": "The page you are looking for does not exist.",
             "pageNotFoundTitle": "Page Not Found",
             "unexpectedError": "An unexpected error occurred."
-        }
-    },
-    "dialogs": {
-        "confirm": "Confirm",
-        "defaultDescription": "Are you sure you want to continue?"
-    },
-    "language": {
-        "description": "Choose the display language used by Seanime i18n on this device.",
-        "help": "This preference is stored locally for the current browser or desktop client.",
-        "options": {
-            "en-US": "English",
-            "zh-TW": "Traditional Chinese (Taiwan)"
         },
-        "title": "Language"
+        "words": {
+            "all": "All",
+            "auto": "Auto",
+            "highest": "Highest",
+            "none": "None",
+            "or": "or"
+        }
     },
     "navigation": {
         "autoDownloader": "Auto Downloader",
@@ -68,7 +77,744 @@
         "torrentList": "Torrent list",
         "torrentListSeeding": "Torrent list ({{count}} seeding)"
     },
+    "settings": {
+        "title": "Settings",
+        "unsavedChanges": "You have unsaved changes.",
+        "sections": {
+            "app": "App",
+            "debridService": "Debrid Service",
+            "denshi": "Denshi",
+            "desktopMediaPlayer": "Desktop Media Player",
+            "discord": "Discord",
+            "externalPlayerLink": "External Player Link",
+            "localAnimeLibrary": "Local Anime Library",
+            "logsCache": "Logs & Cache",
+            "manga": "Manga",
+            "media": "Media",
+            "navigation": "Navigation",
+            "onlineStreaming": "Online Streaming",
+            "theme": "Theme",
+            "torrentClient": "Torrent Client",
+            "torrentProvider": "Torrent Provider",
+            "torrentStreaming": "Torrent Streaming",
+            "transcodingDirectPlay": "Transcoding / Direct Play",
+            "userInterface": "User Interface",
+            "videoPlayback": "Video Playback"
+        },
+        "common": {
+            "advanced": "Advanced",
+            "app": "App",
+            "autoSelect": "Auto-select",
+            "carousel": "Carousel",
+            "configuration": "Configuration",
+            "cpu": "CPU",
+            "directPlay": "Direct Play",
+            "episodeCard": "Episode card",
+            "ffmpeg": "FFmpeg",
+            "homeScreen": "Home Screen",
+            "includeInAnimeLibrary": "Include in anime library",
+            "includeInAnimeLibraryHelp": "Add non-downloaded shows that are in your currently watching list to the anime library.",
+            "integration": "Integration",
+            "keyboardShortcuts": "Keyboard shortcuts",
+            "localData": "Local Data",
+            "localProvider": "Local Provider",
+            "mediaCard": "Media card",
+            "mediaPage": "Media page",
+            "memory": "Memory",
+            "metadataPreferences": "Metadata Preferences",
+            "navbar": "Navbar",
+            "offlineMode": "Offline mode",
+            "playback": "Playback",
+            "profiling": "Profiling",
+            "releasePreferences": "Release Preferences",
+            "richPresence": "Rich Presence",
+            "savedAutomatically": "Settings are saved automatically",
+            "savedAutomaticallyAfterRestart": "Settings are saved automatically and applied after a restart",
+            "screens": "Screens",
+            "seanimeDenshi": "Seanime Denshi",
+            "settings": "Settings",
+            "sidebar": "Sidebar",
+            "specialPreferences": "Special Preferences",
+            "system": "System",
+            "thresholds": "Thresholds",
+            "torrentClient": "Torrent Client",
+            "transcoding": "Transcoding",
+            "uploadToAniListDialog": {
+                "title": "Upload to AniList",
+                "description": "This will upload your local Seanime collection to your AniList account. Are you sure you want to proceed?"
+            },
+            "window": "Window"
+        },
+        "fields": {
+            "additionalLibraryDirectories": "Additional library directories",
+            "aniListBannerImage": "AniList banner image",
+            "animeLibrarySorting": "Anime library sorting",
+            "apiKey": "API Key",
+            "applicationPath": "Application path",
+            "bannerSize": "Banner size",
+            "bannerType": "Banner type",
+            "cacheDirectory": "Cache directory",
+            "category": "Category",
+            "cliPath": "CLI path",
+            "continueWatchingSorting": "Continue watching sorting",
+            "customScheme": "Custom scheme",
+            "customSettingsJson": "Custom settings (JSON)",
+            "dataFilePath": "Data file path",
+            "defaultPlayer": "Default player",
+            "defaultProvider": "Default Provider",
+            "defaultTorrentClient": "Default Torrent Client",
+            "durationSeconds": "Duration (seconds)",
+            "enable": "Enable",
+            "excludeTerms": "Exclude Terms",
+            "executable": "Executable",
+            "ffmpegPath": "FFmpeg path",
+            "ffprobePath": "FFprobe path",
+            "hardwareAcceleration": "Hardware acceleration",
+            "host": "Host",
+            "imagePath": "Image path",
+            "libraryDirectory": "Library directory",
+            "localSourceDirectory": "Local Source Directory",
+            "mangaLibrarySorting": "Manga library sorting",
+            "matchingAlgorithm": "Matching algorithm",
+            "matchingThreshold": "Matching threshold",
+            "maxSize": "Max Size",
+            "minSeeders": "Min Seeders",
+            "minSize": "Min Size",
+            "opacity": "Opacity",
+            "options": "Options",
+            "passcode": "Passcode",
+            "password": "Password",
+            "port": "Port",
+            "position": "Position",
+            "preferredCodecsOrdered": "Preferred Codecs (ordered)",
+            "preferredLanguagesOrdered": "Preferred Languages (ordered)",
+            "preferredResolution": "Preferred resolution",
+            "preferredSourcesOrdered": "Preferred Sources (ordered)",
+            "provider": "Provider",
+            "providersOrderedMax3": "Providers (ordered, max 3)",
+            "releaseGroupsOrdered": "Release Groups (ordered)",
+            "resolutionsOrdered": "Resolutions (ordered)",
+            "socket": "Socket",
+            "streamUrlAddress": "Stream URL address",
+            "tags": "Tags",
+            "transcodePreset": "Transcode preset",
+            "username": "Username"
+        },
+        "pages": {
+            "anilist": {
+                "title": "AniList",
+                "description": "Manage your AniList account"
+            },
+            "app": {
+                "title": "App",
+                "description": "General app settings",
+                "checkForUpdates": "Check for updates",
+                "latestVersion": "You are running the latest version",
+                "openDataDirectory": "Open Data directory",
+                "recordIssue": "Record an issue"
+            },
+            "cache": {
+                "title": "Cache",
+                "description": "Manage the cache"
+            },
+            "debrid": {
+                "title": "Debrid Service",
+                "description": "Configure your Debrid service integration"
+            },
+            "debridStreaming": {
+                "title": "Debrid Streaming",
+                "description": "Configure how shows are streamed from your Debrid service"
+            },
+            "denshi": {
+                "title": "Denshi",
+                "description": "Desktop client settings"
+            },
+            "discord": {
+                "title": "Discord",
+                "description": "Configure Discord rich presence settings"
+            },
+            "externalPlayerLink": {
+                "title": "External player link",
+                "description": "Send streams to an external player on this device."
+            },
+            "library": {
+                "title": "Local Anime Library",
+                "description": "Manage your local anime library"
+            },
+            "localAccount": {
+                "title": "Local Account",
+                "description": "Local anime and manga list managed by Seanime"
+            },
+            "logs": {
+                "title": "Logs",
+                "description": "View the logs"
+            },
+            "manga": {
+                "title": "Manga",
+                "description": "Manage your manga library"
+            },
+            "mediaPlayer": {
+                "title": "Desktop Media Player",
+                "description": "Seanime has built-in support for MPV, VLC, IINA, and MPC-HC."
+            },
+            "mediastream": {
+                "title": "Transcoding / Direct Play",
+                "description": "Manage transcoding and direct play settings"
+            },
+            "nakama": {
+                "title": "Nakama",
+                "description": "Communicate with other Seanime instances"
+            },
+            "onlineStreaming": {
+                "title": "Online Streaming",
+                "description": "Configure online streaming settings"
+            },
+            "playback": {
+                "title": "Video playback",
+                "description": "Choose how anime is played on this device"
+            },
+            "torrentClient": {
+                "title": "Torrent Client",
+                "description": "Configure the torrent client"
+            },
+            "torrentProvider": {
+                "title": "Torrent Provider",
+                "description": "Configure the torrent provider"
+            },
+            "torrentStreaming": {
+                "title": "Torrent Streaming",
+                "description": "Configure torrent streaming settings"
+            }
+        },
+        "ui": {
+            "title": "User Interface",
+            "description": "Customize the user interface",
+            "colorScheme": {
+                "title": "Color scheme",
+                "enableColorSettings": "Enable color settings",
+                "livePreview": "Live preview",
+                "disableLivePreviewHelp": "Disabling will reload the page without applying the changes.",
+                "backgroundColor": "Background color",
+                "backgroundColorDefault": "Default: #070707",
+                "accentColor": "Accent color",
+                "accentColorDefault": "Default: #6152df",
+                "enableBlurringEffects": "Enable blurring effects",
+                "enableBlurringEffectsHelp": "May impact performance on some devices."
+            },
+            "backgroundImage": {
+                "title": "Background image",
+                "placeholder": "e.g. image.png",
+                "opacityPlaceholder": "Default: 10",
+                "help": "Background image for all pages. Dimmed on non-library screens."
+            },
+            "bannerImage": {
+                "title": "Banner image",
+                "placeholder": "e.g. image.gif",
+                "positionPlaceholder": "Default: 50% 50%",
+                "opacityPlaceholder": "Default: 10",
+                "help": "Banner image for all pages."
+            },
+            "customCss": {
+                "applyToThisClient": "Apply to this client",
+                "customCss": "Custom CSS",
+                "customCssHelp": "Applied above 1024px screen size.",
+                "descriptionLine1": "The custom CSS will be saved on the server and needs to be applied manually to each client.",
+                "descriptionLine2": "In case of an error rendering the UI unusable, you can always remove it from local storage using the devtools.",
+                "mobileCustomCss": "Mobile custom CSS",
+                "mobileCustomCssHelp": "Applied below 1024px screen size.",
+                "placeholder": "Custom CSS"
+            },
+            "navigation": {
+                "expandSidebarOnHover": "Expand sidebar on hover",
+                "expandSidebarOnHoverHelp": "Causes visual glitches with plugin tray.",
+                "disableTransparency": "Disable transparency",
+                "hideTopNavbar": "Hide top navbar",
+                "hideTopNavbarWeb": "Hide top navbar (Web interface)",
+                "hideTopNavbarHelp": "Switches to sidebar-only mode.",
+                "noItemsSelected": "No items selected",
+                "unpinnedMenuItems": "Unpinned menu items"
+            },
+            "media": {
+                "watchContinuityWarning": "Watch continuity needs to be enabled to use the last watched sorting options.",
+                "bannerTypeOptions": {
+                    "dynamic": "Dynamic Banner",
+                    "custom": "Custom Banner"
+                },
+                "customBannerHelp": "Use the banner image on all library screens.",
+                "removeGenreSelector": "Remove genre selector",
+                "blurredGradientBackground": "Blurred gradient background",
+                "performanceWarning": "Can cause performance issues.",
+                "showAnimeUnwatchedCount": "Show anime unwatched count",
+                "showMangaUnreadCount": "Show manga unread count",
+                "glassyBackground": "Glassy background",
+                "legacyEpisodeCards": "Legacy episode cards",
+                "hideEpisodeSummary": "Hide episode summary",
+                "hideDownloadedEpisodeFilename": "Hide downloaded episode filename",
+                "disableAutoScroll": "Disable auto-scroll",
+                "smallerEpisodeCards": "Smaller episode cards",
+                "continueWatchingSortingOptions": {
+                    "AIRDATE_DESC": "Aired recently",
+                    "AIRDATE": "Aired oldest",
+                    "EPISODE_NUMBER_DESC": "Highest episode number",
+                    "EPISODE_NUMBER": "Lowest episode number",
+                    "UNWATCHED_EPISODES_DESC": "Most unwatched episodes",
+                    "UNWATCHED_EPISODES": "Least unwatched episodes",
+                    "SCORE_DESC": "Highest score",
+                    "SCORE": "Lowest score",
+                    "START_DATE_DESC": "Started recently",
+                    "START_DATE": "Oldest start date",
+                    "LAST_WATCHED_DESC": "Most recent watch",
+                    "LAST_WATCHED": "Least recent watch"
+                },
+                "animeLibrarySortingOptions": {
+                    "AIRDATE_DESC": "Aired recently and not up-to-date",
+                    "AIRDATE": "Aired oldest and not up-to-date",
+                    "UNWATCHED_EPISODES_DESC": "Most unwatched episodes",
+                    "UNWATCHED_EPISODES": "Least unwatched episodes",
+                    "LAST_WATCHED_DESC": "Most recent watch",
+                    "LAST_WATCHED": "Least recent watch",
+                    "SCORE_DESC": "Highest score",
+                    "SCORE": "Lowest score",
+                    "TITLE": "Title",
+                    "TITLE_DESC": "Title (Z-A)",
+                    "AUDIENCE_SCORE_DESC": "Highest audience score",
+                    "AUDIENCE_SCORE": "Lowest audience score",
+                    "PROGRESS_DESC": "Highest progress",
+                    "PROGRESS": "Lowest progress",
+                    "START_DATE_DESC": "Started recently",
+                    "START_DATE": "Oldest start date",
+                    "RELEASE_DATE_DESC": "Released recently",
+                    "RELEASE_DATE": "Oldest release"
+                },
+                "mangaLibrarySortingOptions": {
+                    "UNREAD_CHAPTERS_DESC": "Most unread chapters",
+                    "UNREAD_CHAPTERS": "Least unread chapters",
+                    "SCORE_DESC": "Highest score",
+                    "SCORE": "Lowest score",
+                    "TITLE": "Title",
+                    "TITLE_DESC": "Title (Z-A)",
+                    "AUDIENCE_SCORE_DESC": "Highest audience score",
+                    "AUDIENCE_SCORE": "Lowest audience score",
+                    "PROGRESS_DESC": "Highest progress",
+                    "PROGRESS": "Lowest progress",
+                    "START_DATE_DESC": "Started recently",
+                    "START_DATE": "Oldest start date",
+                    "RELEASE_DATE_DESC": "Released recently",
+                    "RELEASE_DATE": "Oldest release"
+                },
+                "mediaPageBannerImageOptions": {
+                    "default": {
+                        "label": "Default",
+                        "description": "Always show a banner image. If not available, the cover image will be used instead."
+                    },
+                    "blur-when-unavailable": {
+                        "label": "Blur when unavailable",
+                        "description": "Show the banner image if available. If not available, the cover image will be used and blurred."
+                    },
+                    "dim-when-unavailable": {
+                        "label": "Dim if unavailable",
+                        "description": "Show the banner image if available. If not available, the banner will be dimmed."
+                    },
+                    "hide-when-unavailable": {
+                        "label": "Hide if unavailable",
+                        "description": "Show the banner image if available. If not available, the banner will be hidden."
+                    },
+                    "blur": {
+                        "label": "Blur",
+                        "description": "Always blur the banner image."
+                    },
+                    "dim": {
+                        "label": "Dim",
+                        "description": "Always dim the banner image."
+                    },
+                    "hide": {
+                        "label": "Hide",
+                        "description": "Always hide the banner image."
+                    }
+                },
+                "mediaPageBannerSizeOptions": {
+                    "default": {
+                        "label": "Large",
+                        "description": "Fill a large portion of the screen."
+                    },
+                    "small": {
+                        "label": "Smaller",
+                        "description": "Use a smaller banner size, displaying more of the image."
+                    }
+                }
+            }
+        },
+        "library": {
+            "libraryDirectoryHelp": "Path of the directory where your media files are located. Keep the casing consistent.",
+            "additionalLibraryDirectoriesHelp": "Include additional directory paths if your library is spread across multiple locations.",
+            "automaticallyRefreshLibrary": "Automatically refresh library",
+            "automaticallyRefreshLibraryMoreHelp": "When adding batches, not all files are guaranteed to be picked up.",
+            "refreshLibraryOnStartup": "Refresh library on startup",
+            "scannerConfigurationTitle": "Scanner Configuration",
+            "scannerConfigurationDescription": "Configure advanced scanner rules in JSON format. This allows you to define custom matching and hydration rules for your library.",
+            "useLegacyMatchingAlgorithm": "Use legacy matching algorithm",
+            "useLegacyMatchingAlgorithmHelp": "Enable to use the legacy matching algorithms. Versions 3.4 and below.",
+            "useLegacyMatchingAlgorithmMoreHelp": "The legacy matching algorithm uses simpler methods which may be less accurate.",
+            "matchingAlgorithms": {
+                "default": "Levenshtein + Sorensen-Dice (Default)"
+            },
+            "matchingAlgorithmHelp": "Choose the algorithm used to match files to AniList entries.",
+            "matchingThresholdHelp": "The minimum score required for a file to be matched to an AniList entry. Default is 0.5.",
+            "scannerConfigPlaceholder": "{\n  \"matching\": {\n    \"rules\": []\n  },\n  \"hydration\": {\n    \"rules\": []\n  },\n  \"logs\": {\n    \"verbose\": false\n  }\n}"
+        },
+        "onlineStreaming": {
+            "enableHelp": "Watch anime episodes from online sources."
+        },
+        "torrentProvider": {
+            "defaultProviderHelp": "Used by the search engine. Select 'None' if you don't need torrent support."
+        },
+        "torrentClient": {
+            "tagsHelp": "Comma separated tags to apply to downloaded torrents. e.g. seanime,anime",
+            "categoryHelp": "Category to apply to downloaded torrents.",
+            "showActiveTorrentCount": "Show active torrent count",
+            "showActiveTorrentCountHelp": "Show the number of active torrents in the sidebar. Memory intensive.",
+            "openTorrentClientOnStartup": "Open torrent client on startup"
+        },
+        "server": {
+            "aniListApiCacheWarningLine1": "The AniList API is not working. All requests will be served from the cache.",
+            "aniListApiCacheWarningLine2": "You can disable this in the app settings.",
+            "automaticallyUpdateProgress": "Automatically update progress",
+            "automaticallyUpdateProgressHelp": "If enabled, your progress will be automatically updated when you watch 80% of an episode.",
+            "desktopAndIntegratedPlayersOnly": "Only applies to desktop and integrated players.",
+            "enableWatchHistory": "Enable watch history",
+            "enableWatchHistoryHelp": "If enabled, Seanime will remember your watch progress and resume from where you left off.",
+            "disableAnimeCardTrailers": "Disable anime card trailers",
+            "hideAudienceScore": "Hide audience score",
+            "hideAudienceScoreHelp": "If enabled, the audience score will be hidden until you decide to view it.",
+            "enableAdultContent": "Enable adult content",
+            "enableAdultContentHelp": "If disabled, adult content will be hidden from search results and your library.",
+            "blurAdultContent": "Blur adult content",
+            "blurAdultContentHelp": "If enabled, adult content will be blurred.",
+            "localDataDescription": "Local data is used when you're not using an AniList account.",
+            "autoBackupListsFromAniList": "Auto backup lists from AniList",
+            "autoBackupListsFromAniListHelp": "If enabled, your local lists will be periodically updated by using your AniList data.",
+            "uploadLocalListsToAniList": "Upload local lists to AniList",
+            "offlineModeDescription": "Only available when authenticated with AniList.",
+            "downloadMetadataAutomaticallyForOfflineUse": "Download metadata automatically for offline use",
+            "downloadMetadataAutomaticallyForOfflineUseHelp": "If disabled, you will need to manually refresh your local metadata by clicking 'Sync now' in the offline mode page.",
+            "downloadMetadataAutomaticallyForOfflineUseMoreHelp": "Will be paused if you have made changes offline and have not synced them to AniList yet.",
+            "saveCurrentMediaOffline": "Save all currently watched/read media for offline use",
+            "saveCurrentMediaOfflineHelp": "If enabled, Seanime will automatically save all media you're currently watching or reading for offline use.",
+            "openCommandPalette": "Open command palette",
+            "openLocalhostWebUrlOnStartup": "Open localhost web URL on startup",
+            "disableSystemNotifications": "Disable system notifications",
+            "disableSystemNotificationsMoreHelp": "Notifications shown by the OS when Seanime runs the auto-downloader or auto-scanner.",
+            "disableAniListCaching": "Disable AniList caching",
+            "disableAniListCachingHelp": "If enabled, Seanime will stop caching AniList requests to disk.",
+            "disableAniListCachingMoreHelp": "By default, all requests made to AniList are cached. This allows Seanime to keep being usable when AniList goes down. The cache directory is modifiable in the config file.",
+            "useCacheOnlyMode": "Use cache-only mode",
+            "useCacheOnlyModeHelp": "Seanime will use cached data instead of making API requests.",
+            "useFallbackMetadataProvider": "Use fallback metadata provider",
+            "useFallbackMetadataProviderHelp": "If enabled, Seanime will use an alternative source to fetch episode metadata.",
+            "doNotCheckForUpdates": "Do not check for updates",
+            "doNotCheckForUpdatesHelp": "If enabled, Seanime will not check for new releases.",
+            "doNotFetchUpdateNotes": "Do not fetch update notes",
+            "doNotFetchUpdateNotesHelp": "If enabled, new releases won't be displayed. Seanime Denshi may still auto-update in the background.",
+            "doNotFetchUpdateNotesMoreHelp": "You cannot disable auto-updates for Seanime Denshi.",
+            "updateChannelExperimental": "Update Channel (Experimental)",
+            "updateChannelHelp": "Also applies to Seanime Denshi auto-updates.",
+            "updateChannels": {
+                "github": "GitHub (Default)",
+                "seanime": "Seanime",
+                "seanimeCanary": "Seanime (Canary)"
+            },
+            "usingSeanimeReleaseChannel": "You are currently using a release channel hosted on Seanime.",
+            "usingSeanimeCanaryReleaseChannel": "You are currently using the canary release channel hosted on Seanime. This channel may receive unstable updates without much testing."
+        },
+        "localAccount": {
+            "autoSyncFromAniList": "Auto sync from AniList",
+            "autoSyncFromAniListHelp": "Periodically update your local collection by using your AniList data.",
+            "uploadToAniList": "Upload to AniList"
+        },
+        "manga": {
+            "enableHelp": "Read manga series, download chapters and track your progress.",
+            "defaultProviderHelp": "Provider selected by default when opening a new manga series.",
+            "overwriteAllSourcesTitle": "Overwrite all sources",
+            "overwriteAllSourcesDescription": "This will overwrite the selected source of all manga series you've opened with the default provider. Are you sure you want to proceed?",
+            "overwriteAllSourcesWithProvider": "Overwrite all manga sources with {{provider}}",
+            "autoUpdateProgress": "Automatically update progress",
+            "autoUpdateProgressHelp": "If enabled, your progress will be automatically updated when you reach the end of a chapter.",
+            "localProviderDescription": "Read manga series from your local directory.",
+            "localSourceDirectoryHelp": "Directory where your manga is stored. This is only used by the local manga provider."
+        },
+        "debrid": {
+            "autoDownloaderNotUsingDebridTitle": "Auto Downloader not using Debrid",
+            "autoDownloaderNotUsingDebridDescription": "Auto Downloader is enabled but not using Debrid. Change the <0>Auto Downloader settings</0> to use your Debrid service.",
+            "autoSelectHelp": "Let Seanime find the best torrent automatically, based on cache and resolution.",
+            "preferredResolutionHelp": "If auto-select is enabled, Seanime will try to find torrents with this resolution."
+        },
+        "torrentStreaming": {
+            "autoSelectHelp": "Let Seanime find the best torrent automatically.",
+            "preferredResolutionHelp": "If auto-select is enabled, Seanime will try to find torrents with this resolution.",
+            "torrentClientHostHelp": "Leave empty for default. The host to listen for new uTP and TCP BitTorrent connections.",
+            "torrentClientPortHelp": "Leave empty for default. Default is 43213.",
+            "disableIpv6": "Disable IPv6",
+            "slowSeeding": "Slow seeding",
+            "slowSeedingHelp": "This can help avoid issues with your network.",
+            "streamUrlAddressPlaceholder": "e.g. 0.0.0.0:43211",
+            "streamUrlAddressHelp": "Modify the stream URL formatting. Leave empty for default.",
+            "cacheDirectoryHelp": "Where the torrents will be downloaded to while streaming. Leave empty to use the default cache directory.",
+            "dropTorrent": "Drop torrent"
+        },
+        "mediastream": {
+            "preferTranscoding": "Prefer transcoding",
+            "preferTranscodingHelp": "If enabled, Seanime will not automatically switch to direct play if the media codec is supported by the client.",
+            "directPlayOnly": "Direct play only",
+            "directPlayOnlyHelp": "Only allow direct play. Transcoding will never be started.",
+            "hardwareAccelerationHelp": "Hardware acceleration is highly recommended for a smoother transcoding experience.",
+            "hardwareAccelerationOptions": {
+                "cpu": "CPU (Disabled)",
+                "nvidia": "NVIDIA (NVENC)",
+                "qsv": "Intel (QSV)",
+                "vaapi": "VAAPI",
+                "videotoolbox": "Apple VideoToolbox",
+                "custom": "Custom"
+            },
+            "customSettingsHelp": "Video stream only, scaleFilter = -vf, -map, -bufsize, -b:v, and -maxrate are applied automatically.",
+            "transcodePresetHelp": "'Fast' is recommended. VAAPI does not support presets.",
+            "transcodePresetOptions": {
+                "ultrafast": "Ultrafast",
+                "superfast": "Superfast",
+                "veryfast": "Veryfast",
+                "fast": "Fast",
+                "medium": "Medium"
+            },
+            "ffmpegPathHelp": "Path to the FFmpeg binary. Leave empty if the binary is already in your PATH.",
+            "ffprobePathHelp": "Path to the FFprobe binary. Leave empty if the binary is already in your PATH."
+        },
+        "mediaPlayer": {
+            "defaultPlayerHelp": "Player that will be used to open files and track your progress automatically.",
+            "hostHelp": "VLC / MPC-HC",
+            "iinaAlert": "<0>For IINA to work correctly with Seanime, make sure <1>Quit after all windows are closed</1> is <2>checked</2> and <3>Keep window open after playback finishes</3> is <4>unchecked</4> in your IINA general settings.</0>",
+            "automaticallyPlayNextEpisode": "Automatically play next episode",
+            "automaticallyPlayNextEpisodeHelp": "If enabled, Seanime will play the next episode after a delay when the current episode is completed.",
+            "playerOptions": {
+                "mpv": "MPV",
+                "vlc": "VLC",
+                "mpcHc": "MPC-HC",
+                "mpcHcWindows": "MPC-HC (Windows)",
+                "iina": "IINA",
+                "iinaMacOs": "IINA (macOS)"
+            },
+            "defaultSocketPlaceholder": "Default: '{{value}}'",
+            "defaultsToCli": "Defaults to CLI",
+            "examplePathPlaceholder": "e.g. {{value}}",
+            "leaveEmptyToUseCli": "Leave empty to use the CLI.",
+            "mpvOptionsPlaceholder": "e.g. --no-config --mute=yes",
+            "iinaCliPathPlaceholder": "Path to the IINA CLI",
+            "iinaOptionsPlaceholder": "e.g. --mpv-mute=yes"
+        },
+        "externalPlayerLink": {
+            "onlyAppliesToThisDevice": "Only applies to this device.",
+            "customSchemePlaceholder": "Example: outplayer://{url}",
+            "encodeFilePathInUrl": "Encode file path in URL (library only)",
+            "encodeFilePathInUrlHelp": "If enabled, the file path will be base64 encoded in the URL to avoid issues with special characters."
+        },
+        "playback": {
+            "deviceLabel": "Device",
+            "noExternalPlayerScheme": "No external player custom scheme has been set",
+            "useBuiltInPlayer": "Use built-in player",
+            "useBuiltInPlayerHelp": "When enabled, all media playback will use the built-in player and override the settings below.",
+            "downloadedMediaTitle": "Downloaded Media",
+            "downloadedMediaDescription": "Choose how to play anime files stored on your device",
+            "desktopMediaPlayerDescription": "Opens files in your system player with automatic tracking",
+            "transcodingEnabledDescription": "Plays in browser with transcoding",
+            "transcodingNotEnabled": "Transcoding not enabled",
+            "externalPlayerLinkDescription": "Send stream URL to another application",
+            "torrentAndDebridStreamingTitle": "Torrent & Debrid Streaming",
+            "torrentAndDebridStreamingDescription": "Choose how to play streamed content from torrents and debrid services",
+            "desktopMediaPlayerStreamsDescription": "Opens streams in your system player with automatic tracking"
+        },
+        "denshi": {
+            "minimizeToTrayOnClose": "Minimize to tray on close",
+            "minimizeToTrayOnCloseHelp": "When enabled, closing the window will minimize the app to the system tray instead of quitting.",
+            "openInBackground": "Open in background",
+            "openInBackgroundHelp": "When enabled, the app will start hidden. You can show it from the system tray.",
+            "openAtLaunch": "Open at launch",
+            "openAtLaunchHelp": "When enabled, the app will start automatically when you log in to your computer.",
+            "openAtLaunchLinuxUnsupported": "This feature is not supported on Linux."
+        },
+        "discord": {
+            "description": "Show what you are watching or reading in Discord.",
+            "anime": "Anime",
+            "manga": "Manga",
+            "hideSeanimeRepositoryButton": "Hide Seanime Repository Button",
+            "showAniListProfileButton": "Show AniList Profile Button",
+            "showAniListProfileButtonHelp": "Show a button to open your profile page on AniList."
+        },
+        "logs": {
+            "columns": {
+                "name": "Name"
+            },
+            "copyCurrentServerLogs": "Copy current server logs",
+            "openLogsDirectory": "Open logs directory",
+            "filters": {
+                "server": "Server",
+                "scanner": "Scanner"
+            },
+            "memoryStatistics": "Memory Statistics",
+            "forceGc": "Force GC",
+            "heapAllocated": "Heap Allocated",
+            "heapInUse": "Heap In Use",
+            "heapSystem": "Heap System",
+            "totalAllocated": "Total Allocated",
+            "goroutines": "Goroutines",
+            "gcCycles": "GC Cycles",
+            "memoryStatisticsEmpty": "Click \"Refresh\" to load memory statistics",
+            "heapProfile": "Heap Profile",
+            "allocationsProfile": "Allocations Profile",
+            "goroutineProfile": "Goroutine Profile",
+            "downloadCpuProfile": "Download CPU Profile",
+            "cpuProfilingHelp": "CPU profiling will run for the specified duration (1-300 seconds)"
+        },
+        "fileCache": {
+            "showTotalSize": "Show total size",
+            "clearMangaCache": "Clear manga cache",
+            "clearMediaStreamingCache": "Clear media streaming cache",
+            "clearOnlineStreamingCache": "Clear online streaming cache"
+        },
+        "data": {
+            "localFilesTitle": "Local files",
+            "localFilesDescription": "Scanned local file data.",
+            "exportLocalFileData": "Export local file data",
+            "importLocalFiles": "Import local files",
+            "importWarning": "This will overwrite your existing library data. Make sure you have a backup.",
+            "dataFilePathHelp": "The path to the JSON file containing the local file data."
+        },
+        "nakama": {
+            "enableNakama": "Enable Nakama",
+            "usernameHelp": "The username to identify this server to other instances. If empty, a random ID will be assigned.",
+            "connectAsPeer": "Connect as a Peer",
+            "hosting": "Hosting",
+            "currentlyHosting": "Currently hosting",
+            "reminderTitle": "Reminder",
+            "reminderDescription": "Add a password to your config file before exposing your server to the internet.",
+            "hostModeDescription": "Host mode is intended for Seanime servers that are accessible over the internet.",
+            "cloudRoomsPrefix": "However, you can use",
+            "cloudRoomsName": "Cloud Rooms",
+            "cloudRoomsSuffix": "to host watch parties without exposing your server to the internet.",
+            "enableHostMode": "Enable host mode",
+            "enableHostModeHelp": "If enabled, this server will act as a host for other clients. This requires a host password to be set.",
+            "hostPasscodeHelp": "Set a passcode to secure your host mode and room. This passcode should be different from your server password.",
+            "shareLocalAnimeLibrary": "Share local anime library",
+            "shareLocalAnimeLibraryHelp": "If enabled, this server will share its local anime library with other clients.",
+            "excludeAnimeFromSharing": "Exclude anime from sharing",
+            "excludeAnimeFromSharingHelp": "Select anime that you don't want to share with other clients.",
+            "cannotConnectWhileHosting": "Cannot connect to a host while in host mode.",
+            "serverUrl": "Nakama Server URL",
+            "serverUrlHelp": "The URL of the Nakama host to connect to.",
+            "serverUrlPlaceholder": "https://{address} or room://{id}",
+            "remotePasscode": "Nakama Passcode",
+            "remotePasscodeHelp": "The passcode to connect to the Nakama host.",
+            "useSharedAnimeLibrary": "Use Nakama's anime library",
+            "useSharedAnimeLibraryHelp": "If enabled, Nakama's anime library will be used as your library if it is being shared."
+        },
+        "autoSelect": {
+            "customize": "Customize auto-select",
+            "summary": {
+                "resolutions": "Resolutions",
+                "groups": "Groups",
+                "providers": "Providers",
+                "preferredCodecs": "Preferred Codecs",
+                "preferredSources": "Preferred Sources",
+                "preferredLanguages": "Preferred Languages",
+                "multipleAudio": "Multi Audio",
+                "multipleSubtitles": "Multi Subs",
+                "bestReleases": "Best Releases",
+                "batches": "Batches"
+            },
+            "providersHelp": "Select up to 3 providers in order of priority",
+            "addProvider": "Add provider",
+            "noProvidersFound": "No providers found",
+            "releaseGroupsHelp": "Preferred groups in order of priority",
+            "resolutionsHelp": "Preferred resolutions in order of priority",
+            "excludeTermsHelp": "Exclude torrents with these terms",
+            "excludeTermsPlaceholder": "e.g. CamRip, Cam RIP",
+            "preferredLanguagesHelp": "Ordered list of preferred languages",
+            "preferredCodecsHelp": "Ordered list of preferred codecs (comma-separated alternatives)",
+            "preferredSourcesHelp": "Ordered list of preferred sources (comma-separated alternatives)",
+            "requireLanguageMatch": "Require language match",
+            "requireLanguageMatchHelp": "Reject if no preferred language is found",
+            "requireCodecMatch": "Require codec match",
+            "requireCodecMatchHelp": "Reject if no preferred codec is found",
+            "requireSourceMatch": "Require source match",
+            "requireSourceMatchHelp": "Reject if no preferred source is found",
+            "multipleAudio": "Multiple Audio",
+            "multipleSubtitles": "Multiple Subtitles",
+            "batches": "Batches",
+            "bestReleases": "Best Releases",
+            "minSizePlaceholder": "e.g. 100MB",
+            "maxSizePlaceholder": "e.g. 2GB or 10GiB",
+            "resetAll": "Reset all",
+            "preferenceOptions": {
+                "neutral": "Neutral",
+                "prefer": "Prefer",
+                "avoid": "Avoid",
+                "only": "Only",
+                "never": "Never"
+            }
+        }
+    },
+    "dialogs": {
+        "confirm": "Confirm",
+        "defaultDescription": "Are you sure you want to continue?"
+    },
+    "auth": {
+        "enterToken": "Enter the token",
+        "getAniListToken": "Get AniList token",
+        "loginWithAniList": "Log in with AniList",
+        "signOutDescription": "Are you sure you want to sign out?",
+        "signOutTitle": "Sign out",
+        "usingAniListRecommended": "Using an AniList account is recommended."
+    },
     "toasts": {
-        "featureDisabled": "This feature is disabled"
+        "featureDisabled": "This feature is disabled",
+        "settingsSaved": "Settings saved",
+        "uiSettingsSaved": "UI settings saved",
+        "settings": {
+            "exportTokenFailed": "Failed to generate export token",
+            "lightThemeUnsupported": "Seanime does not support light themes",
+            "mangaSourcesOverwritten": "All source selections have been overwritten.",
+            "mangaSourcesRestored": "Previous source selections have been restored.",
+            "playbackSettingsUpdated": "Playback settings updated",
+            "cacheCleared": "Cache cleared",
+            "homeScreenUpdated": "Home screen updated",
+            "local": {
+                "addedMediaForOfflineSyncing": "Added media for offline syncing",
+                "removedOfflineData": "Removed offline data",
+                "syncingLocalData": "Syncing local data...",
+                "updatedAniListData": "Updated AniList data",
+                "offlineModeEnabled": "Offline mode enabled",
+                "offlineModeDisabled": "Offline mode disabled"
+            },
+            "logs": {
+                "deleted": "Logs deleted",
+                "fetchFailed": "Couldn't fetch logs",
+                "copiedToClipboard": "Copied to clipboard",
+                "failedToCopy": "Failed to copy logs: {{message}}"
+            },
+            "profiling": {
+                "garbageCollectionCompleted": "Garbage collection completed",
+                "generatingMemoryProfile": "Generating {{profileType}} profile...",
+                "memoryProfileDownloaded": "Profile \"{{profileType}}\" downloaded",
+                "memoryProfileDownloadFailed": "Failed to download {{profileType}} profile",
+                "memoryProfileDownloadFailedGeneric": "Failed to download memory profile",
+                "generatingGoroutineProfile": "Generating goroutine profile...",
+                "goroutineProfileDownloaded": "Goroutine profile downloaded",
+                "goroutineProfileDownloadFailed": "Failed to download goroutine profile",
+                "generatingCpuProfile": "Generating CPU profile for {{duration}} seconds...",
+                "cpuProfileDownloaded": "CPU profile ({{duration}}s) downloaded",
+                "cpuProfileDownloadFailed": "Failed to download CPU profile"
+            },
+            "torrentStreaming": {
+                "streamStopped": "Stream stopped",
+                "torrentDropped": "Torrent dropped"
+            }
+        }
     }
 }

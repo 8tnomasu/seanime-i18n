@@ -8,6 +8,7 @@ import {
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Models_Settings, Status } from "@/api/generated/types"
 import { isLoginModalOpenAtom } from "@/app/(main)/_atoms/server-status.atoms"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { useSetAtom } from "jotai/react"
 import { toast } from "sonner"
@@ -47,7 +48,7 @@ export function useSaveSettings() {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.SETTINGS.GetSettings.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetStatus.key] })
-            toast.success("Settings saved")
+            toast.success(i18n.t("toasts.settingsSaved"))
         },
     })
 }
@@ -62,7 +63,7 @@ export function useSaveAutoDownloaderSettings() {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.SETTINGS.GetSettings.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetStatus.key] })
-            toast.success("Settings saved")
+            toast.success(i18n.t("toasts.settingsSaved"))
         },
     })
 }

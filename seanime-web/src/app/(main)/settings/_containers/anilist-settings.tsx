@@ -3,6 +3,7 @@ import { SettingsPageHeader } from "@/app/(main)/settings/_components/settings-c
 import { SettingsSubmitButton } from "@/app/(main)/settings/_components/settings-submit-button"
 import { ConfirmationDialog, useConfirmationDialog } from "@/components/shared/confirmation-dialog"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { SiAnilist } from "react-icons/si"
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export function AnilistSettings(props: Props) {
+    const { t } = useTranslation()
 
     const {
         isPending,
@@ -21,9 +23,9 @@ export function AnilistSettings(props: Props) {
     const { mutate: upload, isPending: isUploading } = useLocalSyncSimulatedDataToAnilist()
 
     const confirmDialog = useConfirmationDialog({
-        title: "Upload to AniList",
-        description: "This will upload your local Seanime collection to your AniList account. Are you sure you want to proceed?",
-        actionText: "Upload",
+        title: t("settings.common.uploadToAniListDialog.title"),
+        description: t("settings.common.uploadToAniListDialog.description"),
+        actionText: t("common.buttons.upload"),
         actionIntent: "primary",
         onConfirm: async () => {
             if (isUploading) return
@@ -35,8 +37,8 @@ export function AnilistSettings(props: Props) {
         <div className="space-y-4">
 
             <SettingsPageHeader
-                title="AniList"
-                description="Manage your AniList account"
+                title={t("settings.pages.anilist.title")}
+                description={t("settings.pages.anilist.description")}
                 icon={SiAnilist}
             />
 

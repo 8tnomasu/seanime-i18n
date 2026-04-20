@@ -7,6 +7,7 @@ import {
 } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Models_TorrentstreamSettings, Nullish, Torrentstream_BatchHistoryResponse, Torrentstream_FilePreview } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -48,7 +49,7 @@ export function useTorrentstreamStopStream() {
         method: API_ENDPOINTS.TORRENTSTREAM.TorrentstreamStopStream.methods[0],
         mutationKey: [API_ENDPOINTS.TORRENTSTREAM.TorrentstreamStopStream.key],
         onSuccess: async () => {
-            toast.success("Stream stopped")
+            toast.success(i18n.t("toasts.settings.torrentStreaming.streamStopped"))
         },
     })
 }
@@ -59,7 +60,7 @@ export function useTorrentstreamDropTorrent() {
         method: API_ENDPOINTS.TORRENTSTREAM.TorrentstreamDropTorrent.methods[0],
         mutationKey: [API_ENDPOINTS.TORRENTSTREAM.TorrentstreamDropTorrent.key],
         onSuccess: async () => {
-            toast.success("Torrent dropped")
+            toast.success(i18n.t("toasts.settings.torrentStreaming.torrentDropped"))
         },
     })
 }

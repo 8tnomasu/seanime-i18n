@@ -4,6 +4,7 @@ import { DeleteLogs_Variables, GetAnnouncements_Variables, UpdateHomeItems_Varia
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { MemoryStatsResponse, Models_HomeItem, Status, Updater_Announcement } from "@/api/generated/types"
 import { serverAuthTokenAtom } from "@/app/(main)/_atoms/server-status.atoms"
+import i18n from "@/i18n"
 import { copyToClipboard, openTab } from "@/lib/helpers/browser"
 import { __isDesktop__ } from "@/types/constants"
 import { useQueryClient } from "@tanstack/react-query"
@@ -41,7 +42,7 @@ export function useDeleteLogs() {
         mutationKey: [API_ENDPOINTS.STATUS.DeleteLogs.key],
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetLogFilenames.key] })
-            toast.success("Logs deleted")
+            toast.success(i18n.t("toasts.settings.logs.deleted"))
         },
     })
 }
@@ -53,14 +54,14 @@ export function useGetLatestLogContent() {
         method: API_ENDPOINTS.STATUS.GetLatestLogContent.methods[0],
         mutationKey: [API_ENDPOINTS.STATUS.GetLatestLogContent.key],
         onSuccess: async data => {
-            if (!data) return toast.error("Couldn't fetch logs")
+            if (!data) return toast.error(i18n.t("toasts.settings.logs.fetchFailed"))
             try {
                 await copyToClipboard(data)
-                toast.success("Copied to clipboard")
+                toast.success(i18n.t("toasts.settings.logs.copiedToClipboard"))
             }
             catch (err: any) {
                 console.error("Clipboard write error:", err)
-                toast.error("Failed to copy logs: " + err.message)
+                toast.error(i18n.t("toasts.settings.logs.failedToCopy", { message: err.message }))
             }
         },
     })
@@ -95,7 +96,7 @@ export function useForceGC() {
         onSuccess: async () => {
             // Invalidate and refetch memory stats after GC
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetMemoryStats.key] })
-            toast.success("Garbage collection completed")
+            toast.success(i18n.t("toasts.settings.profiling.garbageCollectionCompleted"))
         },
     })
 }
@@ -109,7 +110,7 @@ export function useDownloadMemoryProfile() {
         mutationKey: [API_ENDPOINTS.STATUS.GetMemoryProfile.key],
         onMutate: async (variables) => {
             const profileType = variables.profileType || "heap"
-            toast.info(`Generating ${profileType} profile...`)
+            toast.info(i18n.t("toasts.settings.profiling.generatingMemoryProfile", { profileType }))
 
             let downloadUrl = getServerBaseUrl() + API_ENDPOINTS.STATUS.GetMemoryProfile.endpoint
             if (profileType === "heap") {
@@ -148,18 +149,18 @@ export function useDownloadMemoryProfile() {
                 document.body.removeChild(link)
                 window.URL.revokeObjectURL(url)
 
-                toast.success(`Profile "${profileType}" downloaded`)
+                toast.success(i18n.t("toasts.settings.profiling.memoryProfileDownloaded", { profileType }))
             }
             catch (error) {
                 console.error("Download error:", error)
-                toast.error(`Failed to download ${profileType} profile`)
+                toast.error(i18n.t("toasts.settings.profiling.memoryProfileDownloadFailed", { profileType }))
             }
 
             throw new Error("Download handled in onMutate")
         },
         onError: (error) => {
             if (error.message !== "Download handled in onMutate") {
-                toast.error("Failed to download memory profile")
+                toast.error(i18n.t("toasts.settings.profiling.memoryProfileDownloadFailedGeneric"))
             }
         },
     })
@@ -173,7 +174,7 @@ export function useDownloadGoRoutineProfile() {
         method: API_ENDPOINTS.STATUS.GetGoRoutineProfile.methods[0],
         mutationKey: [API_ENDPOINTS.STATUS.GetGoRoutineProfile.key],
         onMutate: async () => {
-            toast.info("Generating goroutine profile...")
+            toast.info(i18n.t("toasts.settings.profiling.generatingGoroutineProfile"))
 
             const downloadUrl = getServerBaseUrl() + API_ENDPOINTS.STATUS.GetGoRoutineProfile.endpoint
 
@@ -200,18 +201,18 @@ export function useDownloadGoRoutineProfile() {
                 const url = window.URL.createObjectURL(blob)
                 openTab(url)
 
-                toast.success("Goroutine profile downloaded")
+                toast.success(i18n.t("toasts.settings.profiling.goroutineProfileDownloaded"))
             }
             catch (error) {
                 console.error("Download error:", error)
-                toast.error("Failed to download goroutine profile")
+                toast.error(i18n.t("toasts.settings.profiling.goroutineProfileDownloadFailed"))
             }
 
             throw new Error("Download handled in onMutate")
         },
         onError: (error) => {
             if (error.message !== "Download handled in onMutate") {
-                toast.error("Failed to download goroutine profile")
+                toast.error(i18n.t("toasts.settings.profiling.goroutineProfileDownloadFailed"))
             }
         },
     })
@@ -226,7 +227,7 @@ export function useDownloadCPUProfile() {
         mutationKey: [API_ENDPOINTS.STATUS.GetCPUProfile.key],
         onMutate: async (variables) => {
             const duration = variables?.duration || 30
-            toast.info(`Generating CPU profile for ${duration} seconds...`)
+            toast.info(i18n.t("toasts.settings.profiling.generatingCpuProfile", { duration }))
 
             const downloadUrl = `${getServerBaseUrl()}${API_ENDPOINTS.STATUS.GetCPUProfile.endpoint}?duration=${duration}`
 
@@ -260,18 +261,18 @@ export function useDownloadCPUProfile() {
                 document.body.removeChild(link)
                 window.URL.revokeObjectURL(url)
 
-                toast.success(`CPU profile (${duration}s) downloaded`)
+                toast.success(i18n.t("toasts.settings.profiling.cpuProfileDownloaded", { duration }))
             }
             catch (error) {
                 console.error("Download error:", error)
-                toast.error(`Failed to download CPU profile`)
+                toast.error(i18n.t("toasts.settings.profiling.cpuProfileDownloadFailed"))
             }
 
             throw new Error("Download handled in onMutate")
         },
         onError: (error) => {
             if (error.message !== "Download handled in onMutate") {
-                toast.error("Failed to download CPU profile")
+                toast.error(i18n.t("toasts.settings.profiling.cpuProfileDownloadFailed"))
             }
         },
     })
@@ -295,7 +296,7 @@ export function useUpdateHomeItems() {
         mutationKey: [API_ENDPOINTS.STATUS.UpdateHomeItems.key],
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.STATUS.GetHomeItems.key] })
-            toast.success("Home screen updated")
+            toast.success(i18n.t("toasts.settings.homeScreenUpdated"))
         },
     })
 }

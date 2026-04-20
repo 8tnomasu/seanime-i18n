@@ -3,12 +3,14 @@ import { cn } from "@/components/ui/core/styling"
 import { Field } from "@/components/ui/form"
 import React from "react"
 import { useFormContext } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 type DiscordRichPresenceSettingsProps = {
     children?: React.ReactNode
 }
 
 export function DiscordRichPresenceSettings(props: DiscordRichPresenceSettingsProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -21,11 +23,11 @@ export function DiscordRichPresenceSettings(props: DiscordRichPresenceSettingsPr
 
     return (
         <>
-            <SettingsCard title="Rich Presence" description="Show what you are watching or reading in Discord.">
+            <SettingsCard title={t("settings.common.richPresence")} description={t("settings.discord.description")}>
                 <Field.Switch
                     side="right"
                     name="enableRichPresence"
-                    label={<span className="flex gap-1 items-center">Enable</span>}
+                    label={<span className="flex gap-1 items-center">{t("settings.fields.enable")}</span>}
                 />
                 <div
                     className={cn(
@@ -35,12 +37,12 @@ export function DiscordRichPresenceSettings(props: DiscordRichPresenceSettingsPr
                 >
                     <Field.Checkbox
                         name="enableAnimeRichPresence"
-                        label="Anime"
+                        label={t("settings.discord.anime")}
                         fieldClass="w-fit"
                     />
                     <Field.Checkbox
                         name="enableMangaRichPresence"
-                        label="Manga"
+                        label={t("settings.discord.manga")}
                         fieldClass="w-fit"
                     />
                 </div>
@@ -48,7 +50,7 @@ export function DiscordRichPresenceSettings(props: DiscordRichPresenceSettingsPr
                 <Field.Switch
                     side="right"
                     name="richPresenceHideSeanimeRepositoryButton"
-                    label="Hide Seanime Repository Button"
+                    label={t("settings.discord.hideSeanimeRepositoryButton")}
                 />
 
                 {/*<Field.Switch*/}
@@ -61,8 +63,8 @@ export function DiscordRichPresenceSettings(props: DiscordRichPresenceSettingsPr
                 <Field.Switch
                     side="right"
                     name="richPresenceShowAniListProfileButton"
-                    label="Show AniList Profile Button"
-                    help="Show a button to open your profile page on AniList."
+                    label={t("settings.discord.showAniListProfileButton")}
+                    help={t("settings.discord.showAniListProfileButtonHelp")}
                 />
 
                 {/*<Field.Switch*/}

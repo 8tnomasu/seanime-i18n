@@ -3,22 +3,37 @@
         "name": "Seanime",
         "nameSpaced": "S e a n i m e"
     },
-    "auth": {
-        "enterToken": "輸入 token",
-        "getAniListToken": "取得 AniList token",
-        "loginWithAniList": "使用 AniList 登入",
-        "signOutDescription": "確定要登出嗎？",
-        "signOutTitle": "登出",
-        "usingAniListRecommended": "建議使用 AniList 帳號。"
+    "language": {
+        "title": "語言",
+        "description": "選擇這台裝置上 Seanime i18n 使用的顯示語言。",
+        "help": "此偏好設定會儲存在目前的瀏覽器或桌面客戶端本機端。",
+        "options": {
+            "en-US": "English",
+            "zh-TW": "繁體中文（台灣）"
+        }
     },
     "common": {
         "buttons": {
+            "add": "新增",
             "cancel": "??",
             "close": "??",
             "continue": "??",
+            "copy": "複製",
+            "delete": "刪除",
+            "deleteSelected": "刪除所選項目",
+            "donate": "贊助",
+            "edit": "編輯",
             "goHome": "回到首頁",
+            "import": "匯入",
+            "overwrite": "覆寫",
+            "refresh": "重新整理",
             "reload": "重新載入",
-            "retry": "重試"
+            "reset": "重設",
+            "retry": "重試",
+            "save": "儲存",
+            "search": "搜尋",
+            "undo": "復原",
+            "upload": "上傳"
         },
         "menu": {
             "openMainMenu": "開啟主選單"
@@ -30,20 +45,14 @@
             "pageNotFoundDescription": "找不到你要查看的頁面。",
             "pageNotFoundTitle": "找不到頁面",
             "unexpectedError": "發生未預期的錯誤。"
-        }
-    },
-    "dialogs": {
-        "confirm": "確認",
-        "defaultDescription": "確定要繼續嗎？"
-    },
-    "language": {
-        "description": "選擇這台裝置上 Seanime i18n 使用的顯示語言。",
-        "help": "此偏好設定會儲存在目前的瀏覽器或桌面客戶端本機端。",
-        "options": {
-            "en-US": "English",
-            "zh-TW": "繁體中文（台灣）"
         },
-        "title": "語言"
+        "words": {
+            "all": "全部",
+            "auto": "自動",
+            "highest": "最高",
+            "none": "無",
+            "or": "或"
+        }
     },
     "navigation": {
         "autoDownloader": "自動下載器",
@@ -68,7 +77,744 @@
         "torrentList": "Torrent 清單",
         "torrentListSeeding": "Torrent 清單（{{count}} 個做種中）"
     },
+    "settings": {
+        "title": "設定",
+        "unsavedChanges": "你有尚未儲存的變更。",
+        "sections": {
+            "app": "應用程式",
+            "debridService": "Debrid 服務",
+            "denshi": "Denshi",
+            "desktopMediaPlayer": "桌面媒體播放器",
+            "discord": "Discord",
+            "externalPlayerLink": "外部播放器連結",
+            "localAnimeLibrary": "本機動畫媒體庫",
+            "logsCache": "記錄與快取",
+            "manga": "漫畫",
+            "media": "媒體",
+            "navigation": "導覽",
+            "onlineStreaming": "線上串流",
+            "theme": "主題",
+            "torrentClient": "Torrent Client",
+            "torrentProvider": "Torrent Provider",
+            "torrentStreaming": "Torrent 串流",
+            "transcodingDirectPlay": "轉碼 / Direct Play",
+            "userInterface": "使用者介面",
+            "videoPlayback": "影片播放"
+        },
+        "common": {
+            "advanced": "進階",
+            "app": "應用程式",
+            "autoSelect": "自動選擇",
+            "carousel": "輪播",
+            "configuration": "設定",
+            "cpu": "CPU",
+            "directPlay": "Direct Play",
+            "episodeCard": "集數卡片",
+            "ffmpeg": "FFmpeg",
+            "homeScreen": "首頁",
+            "includeInAnimeLibrary": "納入動畫媒體庫",
+            "includeInAnimeLibraryHelp": "將目前觀看清單中尚未下載的作品加入動畫媒體庫。",
+            "integration": "整合",
+            "keyboardShortcuts": "快捷鍵",
+            "localData": "本機資料",
+            "localProvider": "本機 Provider",
+            "mediaCard": "媒體卡片",
+            "mediaPage": "媒體頁面",
+            "memory": "記憶體",
+            "metadataPreferences": "中繼資料偏好",
+            "navbar": "導覽列",
+            "offlineMode": "離線模式",
+            "playback": "播放",
+            "profiling": "效能分析",
+            "releasePreferences": "發佈偏好",
+            "richPresence": "Rich Presence",
+            "savedAutomatically": "設定會自動儲存",
+            "savedAutomaticallyAfterRestart": "設定會自動儲存，重新啟動後套用",
+            "screens": "畫面",
+            "seanimeDenshi": "Seanime Denshi",
+            "settings": "設定",
+            "sidebar": "側邊欄",
+            "specialPreferences": "特殊偏好",
+            "system": "系統",
+            "thresholds": "門檻",
+            "torrentClient": "Torrent Client",
+            "transcoding": "轉碼",
+            "uploadToAniListDialog": {
+                "title": "上傳到 AniList",
+                "description": "這會將你的本機 Seanime 收藏上傳到 AniList 帳號。確定要繼續嗎？"
+            },
+            "window": "視窗"
+        },
+        "fields": {
+            "additionalLibraryDirectories": "額外媒體庫目錄",
+            "aniListBannerImage": "AniList 橫幅圖片",
+            "animeLibrarySorting": "動畫媒體庫排序",
+            "apiKey": "API Key",
+            "applicationPath": "應用程式路徑",
+            "bannerSize": "橫幅大小",
+            "bannerType": "橫幅類型",
+            "cacheDirectory": "快取目錄",
+            "category": "分類",
+            "cliPath": "CLI 路徑",
+            "continueWatchingSorting": "繼續觀看排序",
+            "customScheme": "自訂 scheme",
+            "customSettingsJson": "自訂設定（JSON）",
+            "dataFilePath": "資料檔案路徑",
+            "defaultPlayer": "預設播放器",
+            "defaultProvider": "預設 Provider",
+            "defaultTorrentClient": "預設 Torrent Client",
+            "durationSeconds": "時間長度（秒）",
+            "enable": "啟用",
+            "excludeTerms": "排除詞",
+            "executable": "可執行檔",
+            "ffmpegPath": "FFmpeg 路徑",
+            "ffprobePath": "FFprobe 路徑",
+            "hardwareAcceleration": "硬體加速",
+            "host": "Host",
+            "imagePath": "圖片路徑",
+            "libraryDirectory": "媒體庫目錄",
+            "localSourceDirectory": "本機來源目錄",
+            "mangaLibrarySorting": "漫畫媒體庫排序",
+            "matchingAlgorithm": "比對演算法",
+            "matchingThreshold": "比對門檻",
+            "maxSize": "最大大小",
+            "minSeeders": "最少種子數",
+            "minSize": "最小大小",
+            "opacity": "透明度",
+            "options": "選項",
+            "passcode": "通行碼",
+            "password": "密碼",
+            "port": "Port",
+            "position": "位置",
+            "preferredCodecsOrdered": "偏好 Codec（依序）",
+            "preferredLanguagesOrdered": "偏好語言（依序）",
+            "preferredResolution": "偏好解析度",
+            "preferredSourcesOrdered": "偏好來源（依序）",
+            "provider": "Provider",
+            "providersOrderedMax3": "Provider（依序，最多 3 個）",
+            "releaseGroupsOrdered": "字幕組（依序）",
+            "resolutionsOrdered": "解析度（依序）",
+            "socket": "Socket",
+            "streamUrlAddress": "串流 URL 位址",
+            "tags": "標籤",
+            "transcodePreset": "轉碼預設",
+            "username": "使用者名稱"
+        },
+        "pages": {
+            "anilist": {
+                "title": "AniList",
+                "description": "管理你的 AniList 帳號"
+            },
+            "app": {
+                "title": "應用程式",
+                "description": "一般應用程式設定",
+                "checkForUpdates": "檢查更新",
+                "latestVersion": "目前已是最新版本",
+                "openDataDirectory": "開啟資料目錄",
+                "recordIssue": "記錄問題"
+            },
+            "cache": {
+                "title": "快取",
+                "description": "管理快取"
+            },
+            "debrid": {
+                "title": "Debrid 服務",
+                "description": "設定 Debrid 服務整合"
+            },
+            "debridStreaming": {
+                "title": "Debrid 串流",
+                "description": "設定 Debrid 服務的串流方式"
+            },
+            "denshi": {
+                "title": "Denshi",
+                "description": "桌面客戶端設定"
+            },
+            "discord": {
+                "title": "Discord",
+                "description": "設定 Discord Rich Presence"
+            },
+            "externalPlayerLink": {
+                "title": "外部播放器連結",
+                "description": "將串流送到這台裝置上的外部播放器。"
+            },
+            "library": {
+                "title": "本機動畫媒體庫",
+                "description": "管理你的本機動畫媒體庫"
+            },
+            "localAccount": {
+                "title": "本機帳號",
+                "description": "由 Seanime 管理的本機動畫與漫畫清單"
+            },
+            "logs": {
+                "title": "記錄",
+                "description": "檢視記錄"
+            },
+            "manga": {
+                "title": "漫畫",
+                "description": "管理你的漫畫媒體庫"
+            },
+            "mediaPlayer": {
+                "title": "桌面媒體播放器",
+                "description": "Seanime 內建支援 MPV、VLC、IINA 與 MPC-HC。"
+            },
+            "mediastream": {
+                "title": "轉碼 / Direct Play",
+                "description": "管理轉碼與 Direct Play 設定"
+            },
+            "nakama": {
+                "title": "Nakama",
+                "description": "與其他 Seanime 實例通訊"
+            },
+            "onlineStreaming": {
+                "title": "線上串流",
+                "description": "設定線上串流相關選項"
+            },
+            "playback": {
+                "title": "影片播放",
+                "description": "選擇這台裝置上的動畫播放方式"
+            },
+            "torrentClient": {
+                "title": "Torrent Client",
+                "description": "設定 Torrent Client"
+            },
+            "torrentProvider": {
+                "title": "Torrent Provider",
+                "description": "設定 Torrent Provider"
+            },
+            "torrentStreaming": {
+                "title": "Torrent 串流",
+                "description": "設定 Torrent 串流相關選項"
+            }
+        },
+        "ui": {
+            "title": "使用者介面",
+            "description": "自訂使用者介面",
+            "colorScheme": {
+                "title": "配色",
+                "enableColorSettings": "啟用配色設定",
+                "livePreview": "即時預覽",
+                "disableLivePreviewHelp": "停用後會重新載入頁面，且不會套用這次變更。",
+                "backgroundColor": "背景色",
+                "backgroundColorDefault": "預設：#070707",
+                "accentColor": "強調色",
+                "accentColorDefault": "預設：#6152df",
+                "enableBlurringEffects": "啟用模糊效果",
+                "enableBlurringEffectsHelp": "可能會影響部分裝置的效能。"
+            },
+            "backgroundImage": {
+                "title": "背景圖片",
+                "placeholder": "例如：image.png",
+                "opacityPlaceholder": "預設：10",
+                "help": "所有頁面共用的背景圖片，在非媒體庫頁面會略微變暗。"
+            },
+            "bannerImage": {
+                "title": "橫幅圖片",
+                "placeholder": "例如：image.gif",
+                "positionPlaceholder": "預設：50% 50%",
+                "opacityPlaceholder": "預設：10",
+                "help": "所有頁面共用的橫幅圖片。"
+            },
+            "customCss": {
+                "applyToThisClient": "套用到這個客戶端",
+                "customCss": "自訂 CSS",
+                "customCssHelp": "套用於寬度 1024px 以上的畫面。",
+                "descriptionLine1": "自訂 CSS 會儲存在伺服器端，需要在每個客戶端手動套用。",
+                "descriptionLine2": "如果發生錯誤導致介面無法使用，你隨時可以透過 devtools 從 local storage 移除它。",
+                "mobileCustomCss": "行動版自訂 CSS",
+                "mobileCustomCssHelp": "套用於寬度 1024px 以下的畫面。",
+                "placeholder": "自訂 CSS"
+            },
+            "navigation": {
+                "expandSidebarOnHover": "滑過時展開側邊欄",
+                "expandSidebarOnHoverHelp": "可能會和 plugin tray 發生視覺錯亂。",
+                "disableTransparency": "停用透明效果",
+                "hideTopNavbar": "隱藏頂部導覽列",
+                "hideTopNavbarWeb": "隱藏頂部導覽列（Web 介面）",
+                "hideTopNavbarHelp": "切換為僅顯示側邊欄的模式。",
+                "noItemsSelected": "尚未選擇項目",
+                "unpinnedMenuItems": "未釘選的選單項目"
+            },
+            "media": {
+                "watchContinuityWarning": "若要使用最近觀看排序，必須先啟用觀看連續性。",
+                "bannerTypeOptions": {
+                    "dynamic": "動態橫幅",
+                    "custom": "自訂橫幅"
+                },
+                "customBannerHelp": "在所有媒體庫畫面都使用這張橫幅圖片。",
+                "removeGenreSelector": "移除類型篩選器",
+                "blurredGradientBackground": "模糊漸層背景",
+                "performanceWarning": "可能會影響效能。",
+                "showAnimeUnwatchedCount": "顯示動畫未觀看數",
+                "showMangaUnreadCount": "顯示漫畫未讀數",
+                "glassyBackground": "玻璃質感背景",
+                "legacyEpisodeCards": "舊版集數卡片",
+                "hideEpisodeSummary": "隱藏集數摘要",
+                "hideDownloadedEpisodeFilename": "隱藏已下載集數檔名",
+                "disableAutoScroll": "停用自動捲動",
+                "smallerEpisodeCards": "較小的集數卡片",
+                "continueWatchingSortingOptions": {
+                    "AIRDATE_DESC": "最近播出",
+                    "AIRDATE": "最早播出",
+                    "EPISODE_NUMBER_DESC": "集數最高",
+                    "EPISODE_NUMBER": "集數最低",
+                    "UNWATCHED_EPISODES_DESC": "未觀看集數最多",
+                    "UNWATCHED_EPISODES": "未觀看集數最少",
+                    "SCORE_DESC": "分數最高",
+                    "SCORE": "分數最低",
+                    "START_DATE_DESC": "最近開始觀看",
+                    "START_DATE": "最早開始觀看",
+                    "LAST_WATCHED_DESC": "最近觀看",
+                    "LAST_WATCHED": "最久未觀看"
+                },
+                "animeLibrarySortingOptions": {
+                    "AIRDATE_DESC": "最近播出且尚未追上",
+                    "AIRDATE": "最早播出且尚未追上",
+                    "UNWATCHED_EPISODES_DESC": "未觀看集數最多",
+                    "UNWATCHED_EPISODES": "未觀看集數最少",
+                    "LAST_WATCHED_DESC": "最近觀看",
+                    "LAST_WATCHED": "最久未觀看",
+                    "SCORE_DESC": "分數最高",
+                    "SCORE": "分數最低",
+                    "TITLE": "標題",
+                    "TITLE_DESC": "標題（Z-A）",
+                    "AUDIENCE_SCORE_DESC": "觀眾評分最高",
+                    "AUDIENCE_SCORE": "觀眾評分最低",
+                    "PROGRESS_DESC": "進度最高",
+                    "PROGRESS": "進度最低",
+                    "START_DATE_DESC": "最近開始觀看",
+                    "START_DATE": "最早開始觀看",
+                    "RELEASE_DATE_DESC": "最近發行",
+                    "RELEASE_DATE": "最早發行"
+                },
+                "mangaLibrarySortingOptions": {
+                    "UNREAD_CHAPTERS_DESC": "未讀章節最多",
+                    "UNREAD_CHAPTERS": "未讀章節最少",
+                    "SCORE_DESC": "分數最高",
+                    "SCORE": "分數最低",
+                    "TITLE": "標題",
+                    "TITLE_DESC": "標題（Z-A）",
+                    "AUDIENCE_SCORE_DESC": "觀眾評分最高",
+                    "AUDIENCE_SCORE": "觀眾評分最低",
+                    "PROGRESS_DESC": "進度最高",
+                    "PROGRESS": "進度最低",
+                    "START_DATE_DESC": "最近開始閱讀",
+                    "START_DATE": "最早開始閱讀",
+                    "RELEASE_DATE_DESC": "最近發行",
+                    "RELEASE_DATE": "最早發行"
+                },
+                "mediaPageBannerImageOptions": {
+                    "default": {
+                        "label": "預設",
+                        "description": "一律顯示橫幅圖片。若沒有橫幅，則改用封面圖片。"
+                    },
+                    "blur-when-unavailable": {
+                        "label": "缺少時模糊",
+                        "description": "若有橫幅就顯示橫幅，否則改用封面圖片並套用模糊效果。"
+                    },
+                    "dim-when-unavailable": {
+                        "label": "缺少時變暗",
+                        "description": "若有橫幅就顯示橫幅，否則將橫幅區域變暗。"
+                    },
+                    "hide-when-unavailable": {
+                        "label": "缺少時隱藏",
+                        "description": "若有橫幅就顯示橫幅，否則隱藏橫幅區域。"
+                    },
+                    "blur": {
+                        "label": "模糊",
+                        "description": "一律將橫幅圖片模糊化。"
+                    },
+                    "dim": {
+                        "label": "變暗",
+                        "description": "一律將橫幅圖片變暗。"
+                    },
+                    "hide": {
+                        "label": "隱藏",
+                        "description": "一律隱藏橫幅圖片。"
+                    }
+                },
+                "mediaPageBannerSizeOptions": {
+                    "default": {
+                        "label": "大型",
+                        "description": "填滿畫面較大的區域。"
+                    },
+                    "small": {
+                        "label": "較小",
+                        "description": "使用較小的橫幅尺寸，顯示更多圖片內容。"
+                    }
+                }
+            }
+        },
+        "library": {
+            "libraryDirectoryHelp": "媒體檔案所在的目錄路徑。請保持大小寫一致。",
+            "additionalLibraryDirectoriesHelp": "如果你的媒體庫分散在多個位置，可加入額外的目錄路徑。",
+            "automaticallyRefreshLibrary": "自動重新整理媒體庫",
+            "automaticallyRefreshLibraryMoreHelp": "新增整批檔案時，不保證所有檔案都一定會被偵測到。",
+            "refreshLibraryOnStartup": "啟動時重新整理媒體庫",
+            "scannerConfigurationTitle": "掃描器設定",
+            "scannerConfigurationDescription": "以 JSON 格式設定進階掃描規則，讓你可以為媒體庫自訂比對與補全規則。",
+            "useLegacyMatchingAlgorithm": "使用舊版比對演算法",
+            "useLegacyMatchingAlgorithmHelp": "啟用後會使用舊版比對演算法（3.4 版與更早版本）。",
+            "useLegacyMatchingAlgorithmMoreHelp": "舊版比對演算法使用較簡單的方法，準確度可能較低。",
+            "matchingAlgorithms": {
+                "default": "Levenshtein + Sorensen-Dice（預設）"
+            },
+            "matchingAlgorithmHelp": "選擇用來將檔案比對到 AniList 條目的演算法。",
+            "matchingThresholdHelp": "檔案要成功比對到 AniList 條目所需的最低分數。預設為 0.5。",
+            "scannerConfigPlaceholder": "{\n  \"matching\": {\n    \"rules\": []\n  },\n  \"hydration\": {\n    \"rules\": []\n  },\n  \"logs\": {\n    \"verbose\": false\n  }\n}"
+        },
+        "onlineStreaming": {
+            "enableHelp": "從線上來源觀看動畫集數。"
+        },
+        "torrentProvider": {
+            "defaultProviderHelp": "供搜尋引擎使用。若不需要 Torrent 支援，請選擇「無」。"
+        },
+        "torrentClient": {
+            "tagsHelp": "套用到已下載 Torrent 的逗號分隔標籤，例如：seanime,anime",
+            "categoryHelp": "套用到已下載 Torrent 的分類。",
+            "showActiveTorrentCount": "顯示作用中的 Torrent 數量",
+            "showActiveTorrentCountHelp": "在側邊欄顯示作用中的 Torrent 數量。會較耗記憶體。",
+            "openTorrentClientOnStartup": "啟動時開啟 Torrent Client"
+        },
+        "server": {
+            "aniListApiCacheWarningLine1": "AniList API 目前無法使用，所有請求都會改由快取提供。",
+            "aniListApiCacheWarningLine2": "你可以在應用程式設定中停用這個行為。",
+            "automaticallyUpdateProgress": "自動更新進度",
+            "automaticallyUpdateProgressHelp": "啟用後，當你看完一集的 80% 時會自動更新進度。",
+            "desktopAndIntegratedPlayersOnly": "僅適用於桌面播放器與內建播放器。",
+            "enableWatchHistory": "啟用觀看紀錄",
+            "enableWatchHistoryHelp": "啟用後，Seanime 會記住你的觀看進度，並從上次中斷處繼續。",
+            "disableAnimeCardTrailers": "停用動畫卡片預告片",
+            "hideAudienceScore": "隱藏觀眾評分",
+            "hideAudienceScoreHelp": "啟用後，觀眾評分會先隱藏，直到你決定查看。",
+            "enableAdultContent": "顯示成人內容",
+            "enableAdultContentHelp": "停用後，成人內容會從搜尋結果與媒體庫中隱藏。",
+            "blurAdultContent": "模糊成人內容",
+            "blurAdultContentHelp": "啟用後，成人內容會被模糊處理。",
+            "localDataDescription": "未使用 AniList 帳號時會使用本機資料。",
+            "autoBackupListsFromAniList": "自動備份 AniList 清單",
+            "autoBackupListsFromAniListHelp": "啟用後，會定期利用 AniList 資料更新你的本機清單。",
+            "uploadLocalListsToAniList": "將本機清單上傳到 AniList",
+            "offlineModeDescription": "僅在已登入 AniList 時可用。",
+            "downloadMetadataAutomaticallyForOfflineUse": "自動下載離線用中繼資料",
+            "downloadMetadataAutomaticallyForOfflineUseHelp": "停用後，你需要到離線模式頁面按下「Sync now」來手動重新整理本機中繼資料。",
+            "downloadMetadataAutomaticallyForOfflineUseMoreHelp": "若你在離線狀態下做了變更，且尚未同步回 AniList，這項功能會暫停。",
+            "saveCurrentMediaOffline": "將目前觀看／閱讀的媒體儲存供離線使用",
+            "saveCurrentMediaOfflineHelp": "啟用後，Seanime 會自動儲存你目前觀看或閱讀中的媒體，供離線使用。",
+            "openCommandPalette": "開啟命令面板",
+            "openLocalhostWebUrlOnStartup": "啟動時開啟 localhost 網頁 URL",
+            "disableSystemNotifications": "停用系統通知",
+            "disableSystemNotificationsMoreHelp": "Seanime 執行 auto-downloader 或 auto-scanner 時，作業系統顯示的通知。",
+            "disableAniListCaching": "停用 AniList 快取",
+            "disableAniListCachingHelp": "啟用後，Seanime 會停止將 AniList 請求快取到磁碟。",
+            "disableAniListCachingMoreHelp": "預設會快取所有送往 AniList 的請求。這能讓 Seanime 在 AniList 掛掉時仍可使用。快取目錄可在設定檔中調整。",
+            "useCacheOnlyMode": "使用僅快取模式",
+            "useCacheOnlyModeHelp": "Seanime 會改用快取資料，而不是直接發送 API 請求。",
+            "useFallbackMetadataProvider": "使用備援中繼資料來源",
+            "useFallbackMetadataProviderHelp": "啟用後，Seanime 會改用其他來源抓取集數中繼資料。",
+            "doNotCheckForUpdates": "不要檢查更新",
+            "doNotCheckForUpdatesHelp": "啟用後，Seanime 不會檢查是否有新版本。",
+            "doNotFetchUpdateNotes": "不要取得更新說明",
+            "doNotFetchUpdateNotesHelp": "啟用後，不會顯示新版本資訊。Seanime Denshi 仍可能在背景自動更新。",
+            "doNotFetchUpdateNotesMoreHelp": "你無法停用 Seanime Denshi 的自動更新。",
+            "updateChannelExperimental": "更新頻道（實驗性）",
+            "updateChannelHelp": "也會套用到 Seanime Denshi 的自動更新。",
+            "updateChannels": {
+                "github": "GitHub（預設）",
+                "seanime": "Seanime",
+                "seanimeCanary": "Seanime（Canary）"
+            },
+            "usingSeanimeReleaseChannel": "你目前使用的是由 Seanime 託管的發佈頻道。",
+            "usingSeanimeCanaryReleaseChannel": "你目前使用的是由 Seanime 託管的 Canary 發佈頻道。這個頻道可能會在缺乏充分測試的情況下收到不穩定更新。"
+        },
+        "localAccount": {
+            "autoSyncFromAniList": "從 AniList 自動同步",
+            "autoSyncFromAniListHelp": "定期使用 AniList 資料更新你的本機收藏。",
+            "uploadToAniList": "上傳到 AniList"
+        },
+        "manga": {
+            "enableHelp": "閱讀漫畫、下載章節並追蹤你的進度。",
+            "defaultProviderHelp": "開啟新漫畫時預設使用的 Provider。",
+            "overwriteAllSourcesTitle": "覆寫所有來源",
+            "overwriteAllSourcesDescription": "這會將所有你曾開啟過的漫畫來源，改成目前的預設 Provider。確定要繼續嗎？",
+            "overwriteAllSourcesWithProvider": "將所有漫畫來源覆寫為 {{provider}}",
+            "autoUpdateProgress": "自動更新進度",
+            "autoUpdateProgressHelp": "啟用後，閱讀到章節結尾時會自動更新進度。",
+            "localProviderDescription": "從本機目錄閱讀漫畫。",
+            "localSourceDirectoryHelp": "存放漫畫的目錄。僅供本機漫畫 Provider 使用。"
+        },
+        "debrid": {
+            "autoDownloaderNotUsingDebridTitle": "Auto Downloader 未使用 Debrid",
+            "autoDownloaderNotUsingDebridDescription": "Auto Downloader 已啟用，但未使用 Debrid。請調整 <0>Auto Downloader 設定</0> 來使用你的 Debrid 服務。",
+            "autoSelectHelp": "讓 Seanime 根據快取與解析度，自動找出最合適的 Torrent。",
+            "preferredResolutionHelp": "若已啟用自動選擇，Seanime 會優先尋找這個解析度的 Torrent。"
+        },
+        "torrentStreaming": {
+            "autoSelectHelp": "讓 Seanime 自動找出最合適的 Torrent。",
+            "preferredResolutionHelp": "若已啟用自動選擇，Seanime 會優先尋找這個解析度的 Torrent。",
+            "torrentClientHostHelp": "留空則使用預設值。用來監聽新的 uTP 與 TCP BitTorrent 連線的 Host。",
+            "torrentClientPortHelp": "留空則使用預設值，預設為 43213。",
+            "disableIpv6": "停用 IPv6",
+            "slowSeeding": "慢速做種",
+            "slowSeedingHelp": "這有助於避免網路問題。",
+            "streamUrlAddressPlaceholder": "例如：0.0.0.0:43211",
+            "streamUrlAddressHelp": "修改串流 URL 的格式。留空則使用預設值。",
+            "cacheDirectoryHelp": "串流時 Torrent 下載到的目錄。留空則使用預設快取目錄。",
+            "dropTorrent": "移除 Torrent"
+        },
+        "mediastream": {
+            "preferTranscoding": "偏好轉碼",
+            "preferTranscodingHelp": "啟用後，即使客戶端支援該媒體 codec，Seanime 也不會自動切換為 Direct Play。",
+            "directPlayOnly": "僅 Direct Play",
+            "directPlayOnlyHelp": "只允許 Direct Play，不會啟動轉碼。",
+            "hardwareAccelerationHelp": "建議啟用硬體加速，以獲得更順暢的轉碼體驗。",
+            "hardwareAccelerationOptions": {
+                "cpu": "CPU（停用）",
+                "nvidia": "NVIDIA (NVENC)",
+                "qsv": "Intel (QSV)",
+                "vaapi": "VAAPI",
+                "videotoolbox": "Apple VideoToolbox",
+                "custom": "自訂"
+            },
+            "customSettingsHelp": "僅套用於視訊串流，scaleFilter = -vf、-map、-bufsize、-b:v、-maxrate 會自動補上。",
+            "transcodePresetHelp": "建議使用「Fast」。VAAPI 不支援 preset。",
+            "transcodePresetOptions": {
+                "ultrafast": "Ultrafast",
+                "superfast": "Superfast",
+                "veryfast": "Veryfast",
+                "fast": "Fast",
+                "medium": "Medium"
+            },
+            "ffmpegPathHelp": "FFmpeg 執行檔路徑。若 FFmpeg 已在 PATH 中，可留空。",
+            "ffprobePathHelp": "FFprobe 執行檔路徑。若 FFprobe 已在 PATH 中，可留空。"
+        },
+        "mediaPlayer": {
+            "defaultPlayerHelp": "用來開啟檔案並自動追蹤進度的播放器。",
+            "hostHelp": "VLC / MPC-HC",
+            "iinaAlert": "<0>要讓 IINA 能正確搭配 Seanime 運作，請確認 IINA 一般設定中的 <1>Quit after all windows are closed</1> 為 <2>已勾選</2>，且 <3>Keep window open after playback finishes</3> 為 <4>未勾選</4>。</0>",
+            "automaticallyPlayNextEpisode": "自動播放下一集",
+            "automaticallyPlayNextEpisodeHelp": "啟用後，當目前集數播放完畢，Seanime 會在延遲後自動播放下一集。",
+            "playerOptions": {
+                "mpv": "MPV",
+                "vlc": "VLC",
+                "mpcHc": "MPC-HC",
+                "mpcHcWindows": "MPC-HC（Windows）",
+                "iina": "IINA",
+                "iinaMacOs": "IINA（macOS）"
+            },
+            "defaultSocketPlaceholder": "預設：'{{value}}'",
+            "defaultsToCli": "預設使用 CLI",
+            "examplePathPlaceholder": "例如：{{value}}",
+            "leaveEmptyToUseCli": "留空則使用 CLI。",
+            "mpvOptionsPlaceholder": "例如：--no-config --mute=yes",
+            "iinaCliPathPlaceholder": "IINA CLI 的路徑",
+            "iinaOptionsPlaceholder": "例如：--mpv-mute=yes"
+        },
+        "externalPlayerLink": {
+            "onlyAppliesToThisDevice": "僅適用於這台裝置。",
+            "customSchemePlaceholder": "例如：outplayer://{url}",
+            "encodeFilePathInUrl": "在 URL 中編碼檔案路徑（僅媒體庫）",
+            "encodeFilePathInUrlHelp": "啟用後，檔案路徑會以 base64 編碼放入 URL，避免特殊字元造成問題。"
+        },
+        "playback": {
+            "deviceLabel": "裝置",
+            "noExternalPlayerScheme": "尚未設定外部播放器自訂 scheme",
+            "useBuiltInPlayer": "使用內建播放器",
+            "useBuiltInPlayerHelp": "啟用後，所有媒體播放都會使用內建播放器，並覆蓋下方設定。",
+            "downloadedMediaTitle": "已下載媒體",
+            "downloadedMediaDescription": "選擇如何播放儲存在這台裝置上的動畫檔案",
+            "desktopMediaPlayerDescription": "使用系統播放器開啟檔案並自動追蹤進度",
+            "transcodingEnabledDescription": "在瀏覽器中以轉碼方式播放",
+            "transcodingNotEnabled": "尚未啟用轉碼",
+            "externalPlayerLinkDescription": "將串流 URL 傳送到其他應用程式",
+            "torrentAndDebridStreamingTitle": "Torrent 與 Debrid 串流",
+            "torrentAndDebridStreamingDescription": "選擇如何播放來自 Torrent 與 Debrid 服務的串流內容",
+            "desktopMediaPlayerStreamsDescription": "使用系統播放器開啟串流並自動追蹤進度"
+        },
+        "denshi": {
+            "minimizeToTrayOnClose": "關閉時最小化到系統匣",
+            "minimizeToTrayOnCloseHelp": "啟用後，關閉視窗時會縮到系統匣，而不是直接結束程式。",
+            "openInBackground": "在背景啟動",
+            "openInBackgroundHelp": "啟用後，應用程式會以隱藏狀態啟動，你可以從系統匣叫出它。",
+            "openAtLaunch": "開機時啟動",
+            "openAtLaunchHelp": "啟用後，登入電腦時會自動啟動應用程式。",
+            "openAtLaunchLinuxUnsupported": "Linux 不支援此功能。"
+        },
+        "discord": {
+            "description": "在 Discord 顯示你正在觀看或閱讀的內容。",
+            "anime": "動畫",
+            "manga": "漫畫",
+            "hideSeanimeRepositoryButton": "隱藏 Seanime Repository 按鈕",
+            "showAniListProfileButton": "顯示 AniList 個人檔案按鈕",
+            "showAniListProfileButtonHelp": "顯示可開啟你 AniList 個人頁面的按鈕。"
+        },
+        "logs": {
+            "columns": {
+                "name": "名稱"
+            },
+            "copyCurrentServerLogs": "複製目前伺服器記錄",
+            "openLogsDirectory": "開啟記錄目錄",
+            "filters": {
+                "server": "伺服器",
+                "scanner": "掃描器"
+            },
+            "memoryStatistics": "記憶體統計",
+            "forceGc": "強制 GC",
+            "heapAllocated": "Heap 已配置",
+            "heapInUse": "Heap 使用中",
+            "heapSystem": "Heap 系統保留",
+            "totalAllocated": "總配置量",
+            "goroutines": "Goroutine 數量",
+            "gcCycles": "GC 次數",
+            "memoryStatisticsEmpty": "點擊「重新整理」以載入記憶體統計資料",
+            "heapProfile": "Heap Profile",
+            "allocationsProfile": "Allocations Profile",
+            "goroutineProfile": "Goroutine Profile",
+            "downloadCpuProfile": "下載 CPU Profile",
+            "cpuProfilingHelp": "CPU 效能分析會依指定時間執行（1 到 300 秒）"
+        },
+        "fileCache": {
+            "showTotalSize": "顯示總大小",
+            "clearMangaCache": "清除漫畫快取",
+            "clearMediaStreamingCache": "清除媒體串流快取",
+            "clearOnlineStreamingCache": "清除線上串流快取"
+        },
+        "data": {
+            "localFilesTitle": "本機檔案",
+            "localFilesDescription": "已掃描的本機檔案資料。",
+            "exportLocalFileData": "匯出本機檔案資料",
+            "importLocalFiles": "匯入本機檔案",
+            "importWarning": "這會覆蓋你現有的媒體庫資料，請先確認已備份。",
+            "dataFilePathHelp": "包含本機檔案資料的 JSON 檔案路徑。"
+        },
+        "nakama": {
+            "enableNakama": "啟用 Nakama",
+            "usernameHelp": "用來讓其他實例辨識這台伺服器的使用者名稱。若留空，會自動指派隨機 ID。",
+            "connectAsPeer": "以 Peer 身分連線",
+            "hosting": "主機模式",
+            "currentlyHosting": "目前正在主機模式",
+            "reminderTitle": "提醒",
+            "reminderDescription": "在將伺服器暴露到網際網路之前，請先在設定檔中加入密碼。",
+            "hostModeDescription": "主機模式適用於可從網際網路連線的 Seanime 伺服器。",
+            "cloudRoomsPrefix": "不過，你也可以使用",
+            "cloudRoomsName": "Cloud Rooms",
+            "cloudRoomsSuffix": "來舉辦觀影派對，而不需要將伺服器直接暴露到網際網路。",
+            "enableHostMode": "啟用主機模式",
+            "enableHostModeHelp": "啟用後，這台伺服器會作為其他客戶端的主機。你需要先設定主機密碼。",
+            "hostPasscodeHelp": "設定一組通行碼以保護主機模式與房間。這組通行碼應與伺服器密碼不同。",
+            "shareLocalAnimeLibrary": "分享本機動畫媒體庫",
+            "shareLocalAnimeLibraryHelp": "啟用後，這台伺服器會把本機動畫媒體庫分享給其他客戶端。",
+            "excludeAnimeFromSharing": "排除不分享的動畫",
+            "excludeAnimeFromSharingHelp": "選擇你不希望分享給其他客戶端的動畫。",
+            "cannotConnectWhileHosting": "在主機模式下無法連線到其他主機。",
+            "serverUrl": "Nakama 伺服器 URL",
+            "serverUrlHelp": "要連線的 Nakama 主機 URL。",
+            "serverUrlPlaceholder": "https://{address} 或 room://{id}",
+            "remotePasscode": "Nakama 通行碼",
+            "remotePasscodeHelp": "用來連線到 Nakama 主機的通行碼。",
+            "useSharedAnimeLibrary": "使用 Nakama 的動畫媒體庫",
+            "useSharedAnimeLibraryHelp": "啟用後，若對方有分享動畫媒體庫，便會改用 Nakama 的動畫媒體庫作為你的媒體庫。"
+        },
+        "autoSelect": {
+            "customize": "自訂自動選擇",
+            "summary": {
+                "resolutions": "解析度",
+                "groups": "字幕組",
+                "providers": "Provider",
+                "preferredCodecs": "偏好 Codec",
+                "preferredSources": "偏好來源",
+                "preferredLanguages": "偏好語言",
+                "multipleAudio": "多音軌",
+                "multipleSubtitles": "多字幕",
+                "bestReleases": "最佳版本",
+                "batches": "合集"
+            },
+            "providersHelp": "依優先順序最多選擇 3 個 Provider",
+            "addProvider": "新增 Provider",
+            "noProvidersFound": "找不到 Provider",
+            "releaseGroupsHelp": "依優先順序排列的偏好字幕組",
+            "resolutionsHelp": "依優先順序排列的偏好解析度",
+            "excludeTermsHelp": "排除包含這些詞彙的 Torrent",
+            "excludeTermsPlaceholder": "例如：CamRip、Cam RIP",
+            "preferredLanguagesHelp": "依順序排列的偏好語言清單",
+            "preferredCodecsHelp": "依順序排列的偏好 Codec 清單（逗號分隔可接受的替代詞）",
+            "preferredSourcesHelp": "依順序排列的偏好來源清單（逗號分隔可接受的替代詞）",
+            "requireLanguageMatch": "必須符合語言",
+            "requireLanguageMatchHelp": "若找不到偏好語言就排除",
+            "requireCodecMatch": "必須符合 Codec",
+            "requireCodecMatchHelp": "若找不到偏好 Codec 就排除",
+            "requireSourceMatch": "必須符合來源",
+            "requireSourceMatchHelp": "若找不到偏好來源就排除",
+            "multipleAudio": "多音軌",
+            "multipleSubtitles": "多字幕",
+            "batches": "合集",
+            "bestReleases": "最佳版本",
+            "minSizePlaceholder": "例如：100MB",
+            "maxSizePlaceholder": "例如：2GB 或 10GiB",
+            "resetAll": "全部重設",
+            "preferenceOptions": {
+                "neutral": "中立",
+                "prefer": "偏好",
+                "avoid": "避免",
+                "only": "只接受",
+                "never": "絕不"
+            }
+        }
+    },
+    "dialogs": {
+        "confirm": "確認",
+        "defaultDescription": "確定要繼續嗎？"
+    },
+    "auth": {
+        "enterToken": "輸入 token",
+        "getAniListToken": "取得 AniList token",
+        "loginWithAniList": "使用 AniList 登入",
+        "signOutDescription": "確定要登出嗎？",
+        "signOutTitle": "登出",
+        "usingAniListRecommended": "建議使用 AniList 帳號。"
+    },
     "toasts": {
-        "featureDisabled": "此功能已停用"
+        "featureDisabled": "此功能已停用",
+        "settingsSaved": "設定已儲存",
+        "uiSettingsSaved": "介面設定已儲存",
+        "settings": {
+            "exportTokenFailed": "產生匯出 token 失敗",
+            "lightThemeUnsupported": "Seanime 不支援亮色主題",
+            "mangaSourcesOverwritten": "所有來源選擇都已覆寫。",
+            "mangaSourcesRestored": "已還原先前的來源選擇。",
+            "playbackSettingsUpdated": "播放設定已更新",
+            "cacheCleared": "快取已清除",
+            "homeScreenUpdated": "首頁已更新",
+            "local": {
+                "addedMediaForOfflineSyncing": "已加入供離線同步的媒體",
+                "removedOfflineData": "已移除離線資料",
+                "syncingLocalData": "正在同步本機資料...",
+                "updatedAniListData": "AniList 資料已更新",
+                "offlineModeEnabled": "已啟用離線模式",
+                "offlineModeDisabled": "已停用離線模式"
+            },
+            "logs": {
+                "deleted": "記錄已刪除",
+                "fetchFailed": "無法取得記錄",
+                "copiedToClipboard": "已複製到剪貼簿",
+                "failedToCopy": "複製記錄失敗：{{message}}"
+            },
+            "profiling": {
+                "garbageCollectionCompleted": "垃圾回收已完成",
+                "generatingMemoryProfile": "正在產生 {{profileType}} profile...",
+                "memoryProfileDownloaded": "已下載 \"{{profileType}}\" profile",
+                "memoryProfileDownloadFailed": "下載 {{profileType}} profile 失敗",
+                "memoryProfileDownloadFailedGeneric": "下載記憶體 profile 失敗",
+                "generatingGoroutineProfile": "正在產生 goroutine profile...",
+                "goroutineProfileDownloaded": "已下載 goroutine profile",
+                "goroutineProfileDownloadFailed": "下載 goroutine profile 失敗",
+                "generatingCpuProfile": "正在產生 {{duration}} 秒的 CPU profile...",
+                "cpuProfileDownloaded": "已下載 CPU profile（{{duration}} 秒）",
+                "cpuProfileDownloadFailed": "下載 CPU profile 失敗"
+            },
+            "torrentStreaming": {
+                "streamStopped": "串流已停止",
+                "torrentDropped": "Torrent 已移除"
+            }
+        }
     }
 }
