@@ -33,7 +33,10 @@
             "save": "Save",
             "search": "Search",
             "undo": "Undo",
-            "upload": "Upload"
+            "upload": "Upload",
+            "preview": "Preview",
+            "scan": "Scan",
+            "showAll": "Show all"
         },
         "menu": {
             "openMainMenu": "Open main menu"
@@ -44,7 +47,8 @@
             "oops": "Oops!",
             "pageNotFoundDescription": "The page you are looking for does not exist.",
             "pageNotFoundTitle": "Page Not Found",
-            "unexpectedError": "An unexpected error occurred."
+            "unexpectedError": "An unexpected error occurred.",
+            "noOptionsFound": "No options found"
         },
         "words": {
             "all": "All",
@@ -815,6 +819,265 @@
                 "streamStopped": "Stream stopped",
                 "torrentDropped": "Torrent dropped"
             }
+        },
+        "library": {
+            "scanned": "Library scanned"
+        },
+        "manga": {
+            "sourcesRefreshed": "Sources refreshed"
+        }
+    },
+    "mediaFilters": {
+        "titlePlaceholder": "Title",
+        "sorting": "Sorting",
+        "genre": "Genre",
+        "allGenres": "All genres",
+        "format": "Format",
+        "allFormats": "All formats",
+        "country": "Country",
+        "allCountries": "All countries",
+        "status": "Status",
+        "allStatuses": "All statuses",
+        "season": "Season",
+        "allSeasons": "All seasons",
+        "year": "Year",
+        "timeless": "Timeless",
+        "allScores": "All scores",
+        "adult": "Adult",
+        "options": {
+            "types": {
+                "anime": "Anime",
+                "manga": "Manga"
+            },
+            "countries": {
+                "JP": "Japan",
+                "KR": "South Korea",
+                "CN": "China",
+                "TW": "Taiwan"
+            },
+            "formats": {
+                "TV": "TV",
+                "MOVIE": "Movie",
+                "ONA": "ONA",
+                "OVA": "OVA",
+                "TV_SHORT": "TV Short",
+                "SPECIAL": "Special",
+                "MANGA": "Manga",
+                "ONE_SHOT": "One Shot"
+            },
+            "status": {
+                "FINISHED": "Finished",
+                "RELEASING": "Releasing",
+                "NOT_YET_RELEASED": "Upcoming",
+                "HIATUS": "Hiatus",
+                "CANCELLED": "Cancelled"
+            },
+            "seasons": {
+                "WINTER": "Winter",
+                "SPRING": "Spring",
+                "SUMMER": "Summer",
+                "FALL": "Fall"
+            },
+            "genres": {
+                "action": "Action",
+                "adventure": "Adventure",
+                "comedy": "Comedy",
+                "drama": "Drama",
+                "ecchi": "Ecchi",
+                "fantasy": "Fantasy",
+                "horror": "Horror",
+                "mahouShoujo": "Mahou Shoujo",
+                "mecha": "Mecha",
+                "music": "Music",
+                "mystery": "Mystery",
+                "psychological": "Psychological",
+                "romance": "Romance",
+                "sciFi": "Sci-Fi",
+                "sliceOfLife": "Slice of Life",
+                "sports": "Sports",
+                "supernatural": "Supernatural",
+                "thriller": "Thriller"
+            },
+            "searchSorting": {
+                "TRENDING_DESC": "Trending",
+                "START_DATE_DESC": "Release date",
+                "SCORE_DESC": "Highest score",
+                "POPULARITY_DESC": "Most popular",
+                "EPISODES_DESC": "Number of episodes",
+                "CHAPTERS_DESC": "Number of chapters"
+            },
+            "collectionSorting": {
+                "AIRDATE_DESC": "Aired recently and not up-to-date",
+                "AIRDATE": "Aired oldest and not up-to-date",
+                "UNWATCHED_EPISODES_DESC": "Most unwatched episodes",
+                "UNWATCHED_EPISODES": "Least unwatched episodes",
+                "LAST_WATCHED_DESC": "Most recent watch",
+                "LAST_WATCHED": "Least recent watch",
+                "SCORE_DESC": "Highest score",
+                "SCORE": "Lowest score",
+                "TITLE": "Title",
+                "TITLE_DESC": "Title (Z-A)",
+                "AUDIENCE_SCORE_DESC": "Highest audience score",
+                "AUDIENCE_SCORE": "Lowest audience score",
+                "PROGRESS_DESC": "Highest progress",
+                "PROGRESS": "Lowest progress",
+                "START_DATE_DESC": "Started recently",
+                "START_DATE": "Oldest start date",
+                "END_DATE_DESC": "Completed recently",
+                "END_DATE": "Oldest completion date",
+                "RELEASE_DATE_DESC": "Released recently",
+                "RELEASE_DATE": "Oldest release",
+                "UNREAD_CHAPTERS_DESC": "Most unread chapters",
+                "UNREAD_CHAPTERS": "Least unread chapters"
+            }
+        }
+    },
+    "mediaList": {
+        "tabs": {
+            "lists": "Lists"
+        },
+        "status": {
+            "current": "Current",
+            "currentlyWatching": "Currently watching",
+            "currentlyReading": "Currently reading",
+            "watching": "Watching",
+            "repeating": "Repeating",
+            "planning": "Planning",
+            "paused": "Paused",
+            "completed": "Completed",
+            "dropped": "Dropped"
+        }
+    },
+    "library": {
+        "hostLibrary": "{{username}}'s Library",
+        "accessibility": {
+            "bannerImageAlt": "banner image",
+            "coverImageAlt": "cover image",
+            "episodeImageAlt": "episode image"
+        },
+        "stats": {
+            "library": "Library",
+            "files": "Files",
+            "entries": "Entries",
+            "tvShows": "TV Shows",
+            "movies": "Movies",
+            "specials": "Specials"
+        },
+        "filters": {
+            "showUnwatchedOnly": "Show unwatched only"
+        },
+        "empty": {
+            "title": "Empty library",
+            "description": "Your library is empty",
+            "scanYourLibrary": "Scan your library",
+            "setPathAndScan": "Set the path to your local library and scan it",
+            "includeOnlineStreaming": "Include online streaming in your library",
+            "includeTorrentStreaming": "Include torrent streaming in your library",
+            "includeDebridStreaming": "Include debrid streaming in your library",
+            "trendingThisSeason": "Trending this season"
+        },
+        "continueWatching": {
+            "title": "Continue watching",
+            "seaCommandTitle": "Continue Watching",
+            "episodeShort": "Ep",
+            "movie": "Movie",
+            "releasingNow": "Releasing now",
+            "goToEpisode": "Go to episode {{number}}"
+        },
+        "scanner": {
+            "title": "Library Scanner",
+            "seaCommandGroup": "Library",
+            "refreshLibrary": "Refresh library",
+            "guestWarning": "Using this feature without an AniList account is not recommended if you have a large library, as it may lead to rate limits and slower scanning. Please consider using an account for a better experience.",
+            "sections": {
+                "localFiles": "Local files",
+                "matchingData": "Matching data"
+            },
+            "options": {
+                "skipLockedFiles": "Skip locked files",
+                "skipIgnoredFiles": "Skip ignored files",
+                "myAniListCollectionOnly": "My AniList Collection only",
+                "myAniListCollectionOnlyHelp": "This is faster but generally less accurate if your collection does not contain all anime in the library.",
+                "myAniListCollectionOnlyActiveHelp": "Matches local files against your AniList collection.",
+                "enhancedMatchingMethod": "Enhanced matching method",
+                "useAnimeOfflineDatabase": "Use Anime Offline Database",
+                "useAniListApi": "Use AniList API",
+                "offlineDatabaseHelp": "Matches local files against the entire AniList catalog. Scanning will be slower.",
+                "aniListApiHelp": "<0>Slower for large libraries</0>. Seanime will send an API request for each anime title found in the library, which may lead to rate limits and slower scanning."
+            },
+            "status": {
+                "scanning": "Scanning..."
+            }
+        }
+    },
+    "mangaLibrary": {
+        "empty": {
+            "title": "No manga found",
+            "description": "No manga has been added to your library yet.",
+            "browse": "Browse manga"
+        },
+        "current": {
+            "seaCommandTitle": "Currently Reading",
+            "title": "Continue reading"
+        },
+        "actions": {
+            "refetchingFromSources": "Refetching from sources...",
+            "refetching": "Refetching...",
+            "refreshSources": "Refresh sources",
+            "unreadChaptersOnly": "Unread chapters only"
+        }
+    },
+    "lists": {
+        "tabs": {
+            "anime": "Anime",
+            "manga": "Manga",
+            "stats": "Stats"
+        },
+        "filters": {
+            "allLists": "All lists"
+        }
+    },
+    "search": {
+        "actions": {
+            "discoverSeries": "Discover series",
+            "customSources": "Custom sources",
+            "loadMore": "Load more"
+        },
+        "pageTitle": {
+            "sorting": {
+                "TRENDING_DESC": "Trending",
+                "START_DATE_DESC": "Latest",
+                "SCORE_DESC": "Highest rated",
+                "POPULARITY_DESC": "Popular",
+                "EPISODES_DESC": "Most episodes",
+                "CHAPTERS_DESC": "Most chapters"
+            },
+            "types": {
+                "anime": "shows",
+                "manga": "manga"
+            },
+            "from": "from"
+        }
+    },
+    "home": {
+        "empty": {
+            "title": "Your home screen is empty",
+            "scanAnimeLibrary": "Scan your anime library",
+            "addSeriesToCollection": "Add series to your collection",
+            "addCurrentlyWatchedToLibrary": "Add currently watched series to the library",
+            "noneCurrentlyWatched": "No series are currently being watched",
+            "currentlyWatchingHint": "Add series to your 'Currently watching' list to get started",
+            "trendingNow": "Trending Right Now"
+        },
+        "sections": {
+            "animeCarousel": "Anime Carousel",
+            "mangaCarousel": "Manga Carousel",
+            "missedSequels": "Missed Sequels"
+        },
+        "states": {
+            "itemNotFound": "Item not found",
+            "nothingFetched": "Nothing was fetched, please update your options.",
+            "invalidItem": "Item \"{{name}}\" cannot be displayed because it is missing some required options."
         }
     }
 }

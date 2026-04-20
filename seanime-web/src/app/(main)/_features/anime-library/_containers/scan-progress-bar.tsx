@@ -8,20 +8,22 @@ import { ProgressBar } from "@/components/ui/progress-bar"
 import { WSEvents } from "@/lib/server/ws-events"
 import { useAtom } from "jotai/react"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export function ScanProgressBar() {
+    const { t } = useTranslation()
 
     const [isScanning] = useAtom(__scanner_isScanningAtom)
 
     const [progress, setProgress] = useState(0)
-    const [status, setStatus] = useState("Scanning...")
+    const [status, setStatus] = useState(t("library.scanner.status.scanning"))
 
     React.useEffect(() => {
         if (!isScanning) {
             setProgress(0)
-            setStatus("Scanning...")
+            setStatus(t("library.scanner.status.scanning"))
         }
-    }, [isScanning])
+    }, [isScanning, t])
 
     useWebsocketMessageListener<number>({
         type: WSEvents.SCAN_PROGRESS,

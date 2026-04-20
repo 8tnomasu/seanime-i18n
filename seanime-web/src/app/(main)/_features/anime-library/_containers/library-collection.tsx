@@ -7,10 +7,11 @@ import { IconButton } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/carousel"
 import { cn } from "@/components/ui/core/styling"
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { getLibraryCollectionTitle } from "@/lib/server/utils"
+import { getCollectionStatusLabel } from "@/i18n/labels"
 import { useAtom } from "jotai/react"
 import React from "react"
 import { LuListFilter } from "react-icons/lu"
+import { useTranslation } from "react-i18next"
 
 export function LibraryCollectionLists({ collectionList, isLoading, streamingMediaIds, showStatuses, type }: {
     collectionList: Anime_LibraryCollectionList[],
@@ -109,6 +110,7 @@ export const LibraryCollectionListItem = React.memo(({ list, streamingMediaIds, 
     showStatuses?: AL_MediaListStatus[],
     type: "carousel" | "grid"
 }) => {
+    const { t } = useTranslation()
 
     const isCurrentlyWatching = list.type === "CURRENT"
 
@@ -123,7 +125,7 @@ export const LibraryCollectionListItem = React.memo(({ list, streamingMediaIds, 
                     className={cn(
                         "p-0 m-0",
                     )}
-                >{getLibraryCollectionTitle(list.type)}</h2>
+                >{getCollectionStatusLabel(t, list.type, "anime")}</h2>
                 {type === "grid" && <div className="flex flex-1"></div>}
                 {isCurrentlyWatching && <DropdownMenu
                     trigger={<IconButton
@@ -141,7 +143,7 @@ export const LibraryCollectionListItem = React.memo(({ list, streamingMediaIds, 
                             })
                         }}
                     >
-                        {params.continueWatchingOnly ? "Show all" : "Show unwatched only"}
+                        {params.continueWatchingOnly ? t("common.buttons.showAll") : t("library.filters.showUnwatchedOnly")}
                     </DropdownMenuItem>
                 </DropdownMenu>}
             </div>

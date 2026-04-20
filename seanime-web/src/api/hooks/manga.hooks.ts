@@ -26,6 +26,7 @@ import {
     Manga_PageContainer,
     Nullish,
 } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -216,7 +217,7 @@ export function useRefetchMangaChapterContainers() {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaLatestChapterNumbersMap.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryChapters.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryPages.key] })
-            toast.success("Sources refreshed")
+            toast.success(i18n.t("toasts.manga.sourcesRefreshed"))
         },
     })
 }

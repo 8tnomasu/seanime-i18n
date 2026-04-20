@@ -24,8 +24,15 @@ import { Switch } from "@/components/ui/switch"
 import { StaticTabs } from "@/components/ui/tabs"
 import { TextInput } from "@/components/ui/text-input"
 import { useDebounce } from "@/hooks/use-debounce"
+import {
+    getCollectionSortingLabel,
+    getCollectionStatusLabel,
+    getGenreLabel,
+    getMediaFormatLabel,
+    getMediaSeasonLabel,
+    getMediaStatusLabel,
+} from "@/i18n/labels"
 import { ANIME_COLLECTION_SORTING_OPTIONS } from "@/lib/helpers/filtering"
-import { getLibraryCollectionTitle } from "@/lib/server/utils"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { getYear } from "date-fns"
 import { useSetAtom } from "jotai"
@@ -38,6 +45,7 @@ import { FiSearch } from "react-icons/fi"
 import { LuCalendar, LuLeaf } from "react-icons/lu"
 import { MdPersonalVideo } from "react-icons/md"
 import { RiSignalTowerLine } from "react-icons/ri"
+import { useTranslation } from "react-i18next"
 
 type LibraryViewProps = {
     collectionList: Anime_LibraryCollectionList[]
@@ -51,6 +59,7 @@ type LibraryViewProps = {
 }
 
 export function DetailedLibraryView(props: LibraryViewProps) {
+    const { t } = useTranslation()
 
     const {
         // collectionList: _collectionList,
@@ -106,9 +115,9 @@ export function DetailedLibraryView(props: LibraryViewProps) {
                         size="sm"
                         onClick={() => setView("base")}
                     />
-                    {!isNakamaLibrary && <h3 className="text-ellipsis truncate">Home</h3>}
+                    {!isNakamaLibrary && <h3 className="text-ellipsis truncate">{t("navigation.home")}</h3>}
                     {isNakamaLibrary &&
-                        <h3 className="text-ellipsis truncate">{nakamaStatus?.hostConnectionStatus?.username || "Host"}'s Library</h3>}
+                        <h3 className="text-ellipsis truncate">{t("library.hostLibrary", { username: nakamaStatus?.hostConnectionStatus?.username || "Host" })}</h3>}
                 </div>
 
                 <SearchInput />
@@ -123,27 +132,27 @@ export function DetailedLibraryView(props: LibraryViewProps) {
             >
                 {!isNakamaLibrary && <div>
                     <h3>{stats?.totalSize}</h3>
-                    <p>Library</p>
+                    <p>{t("library.stats.library")}</p>
                 </div>}
                 <div>
                     <h3>{stats?.totalFiles}</h3>
-                    <p>Files</p>
+                    <p>{t("library.stats.files")}</p>
                 </div>
                 <div>
                     <h3>{stats?.totalEntries}</h3>
-                    <p>Entries</p>
+                    <p>{t("library.stats.entries")}</p>
                 </div>
                 <div>
                     <h3>{stats?.totalShows}</h3>
-                    <p>TV Shows</p>
+                    <p>{t("library.stats.tvShows")}</p>
                 </div>
                 <div>
                     <h3>{stats?.totalMovies}</h3>
-                    <p>Movies</p>
+                    <p>{t("library.stats.movies")}</p>
                 </div>
                 <div>
                     <h3>{stats?.totalSpecials}</h3>
-                    <p>Specials</p>
+                    <p>{t("library.stats.specials")}</p>
                 </div>
             </div>}
 
@@ -166,6 +175,7 @@ const LibraryCollectionListItem = React.memo(({ list, streamingMediaIds, type }:
     streamingMediaIds: number[],
     type: "grid" | "carousel"
 }) => {
+    const { t } = useTranslation()
 
     const [selectedList, setSelectedList] = useAtom(__library_selectedListAtom)
 
@@ -173,7 +183,7 @@ const LibraryCollectionListItem = React.memo(({ list, streamingMediaIds, type }:
 
     return (
         <React.Fragment key={list.type}>
-            <h2>{getLibraryCollectionTitle(list.type)} <span className="text-[--muted] font-medium ml-3">{list?.entries?.length ?? 0}</span></h2>
+            <h2>{getCollectionStatusLabel(t, list.type, "anime")} <span className="text-[--muted] font-medium ml-3">{list?.entries?.length ?? 0}</span></h2>
             {type === "grid" && <MediaCardLazyGrid itemCount={list?.entries?.length || 0}>
                 {list.entries?.map(entry => {
                     return <LibraryCollectionEntryItem key={entry.mediaId} entry={entry} streamingMediaIds={streamingMediaIds} type={type} />
@@ -257,6 +267,7 @@ const LibraryCollectionEntryItem = React.memo(({ entry, streamingMediaIds, type 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const SearchInput = () => {
+    const { t } = useTranslation()
 
     const [inputValue, setInputValue] = React.useState("")
     const setDebouncedInput = useSetAtom(__library_debouncedSearchInputAtom)
@@ -271,6 +282,7 @@ const SearchInput = () => {
         <div className="w-full md:w-[300px]">
             <TextInput
                 leftIcon={<FiSearch />}
+                placeholder={t("mediaFilters.titlePlaceholder")}
                 value={inputValue}
                 onValueChange={v => {
                     setInputValue(v)
@@ -282,10 +294,31 @@ const SearchInput = () => {
 }
 
 export function SearchOptions() {
+    const { t } = useTranslation()
 
     const serverStatus = useServerStatus()
     const [params, setParams] = useAtom(__library_paramsAtom)
     const [selectedIndex, setSelectedIndex] = useAtom(__library_selectedListAtom)
+
+    const sortingOptions = React.useMemo(() => ANIME_COLLECTION_SORTING_OPTIONS.map(option => ({
+        value: option.value,
+        label: getCollectionSortingLabel(t, option.value),
+    })), [t])
+
+    const formatOptions = React.useMemo(() => ADVANCED_SEARCH_FORMATS.map(option => ({
+        value: option.value,
+        label: getMediaFormatLabel(t, option.value),
+    })), [t])
+
+    const statusOptions = React.useMemo(() => ADVANCED_SEARCH_STATUS.map(option => ({
+        value: option.value,
+        label: getMediaStatusLabel(t, option.value),
+    })), [t])
+
+    const seasonOptions = React.useMemo(() => ADVANCED_SEARCH_SEASONS.map(season => ({
+        value: season.toUpperCase(),
+        label: getMediaSeasonLabel(t, season.toUpperCase()),
+    })), [t])
 
     return (
         <AppLayoutStack className="px-4 xl:px-0" data-detailed-library-view-search-options-container>
@@ -294,13 +327,13 @@ export function SearchOptions() {
                     className="h-10 w-fit pb-6"
                     triggerClass="px-4 py-1"
                     items={[
-                        { name: "Lists", isCurrent: selectedIndex === "-", onClick: () => setSelectedIndex("-") },
-                        { name: "All", isCurrent: selectedIndex === "all", onClick: () => setSelectedIndex("all") },
-                        { name: "Watching", isCurrent: selectedIndex === "CURRENT", onClick: () => setSelectedIndex("CURRENT") },
-                        { name: "Planning", isCurrent: selectedIndex === "PLANNING", onClick: () => setSelectedIndex("PLANNING") },
-                        { name: "Paused", isCurrent: selectedIndex === "PAUSED", onClick: () => setSelectedIndex("PAUSED") },
-                        { name: "Completed", isCurrent: selectedIndex === "COMPLETED", onClick: () => setSelectedIndex("COMPLETED") },
-                        { name: "Dropped", isCurrent: selectedIndex === "DROPPED", onClick: () => setSelectedIndex("DROPPED") },
+                        { name: t("mediaList.tabs.lists"), isCurrent: selectedIndex === "-", onClick: () => setSelectedIndex("-") },
+                        { name: t("common.words.all"), isCurrent: selectedIndex === "all", onClick: () => setSelectedIndex("all") },
+                        { name: t("mediaList.status.watching"), isCurrent: selectedIndex === "CURRENT", onClick: () => setSelectedIndex("CURRENT") },
+                        { name: t("mediaList.status.planning"), isCurrent: selectedIndex === "PLANNING", onClick: () => setSelectedIndex("PLANNING") },
+                        { name: t("mediaList.status.paused"), isCurrent: selectedIndex === "PAUSED", onClick: () => setSelectedIndex("PAUSED") },
+                        { name: t("mediaList.status.completed"), isCurrent: selectedIndex === "COMPLETED", onClick: () => setSelectedIndex("COMPLETED") },
+                        { name: t("mediaList.status.dropped"), isCurrent: selectedIndex === "DROPPED", onClick: () => setSelectedIndex("DROPPED") },
                     ]}
                 />
             </div>
@@ -309,12 +342,12 @@ export function SearchOptions() {
                 data-detailed-library-view-search-options-grid
             >
                 <Select
-                    label="Sorting"
+                    label={t("mediaFilters.sorting")}
                     leftAddon={<FaSortAmountDown className={cn(params.sorting !== "TITLE" && "text-indigo-300 font-bold text-xl")} />}
                     className="w-full"
                     fieldClass="flex items-center"
                     inputContainerClass="w-full"
-                    options={ANIME_COLLECTION_SORTING_OPTIONS}
+                    options={sortingOptions}
                     value={params.sorting || "TITLE"}
                     onValueChange={v => setParams(draft => {
                         draft.sorting = v as any
@@ -326,10 +359,10 @@ export function SearchOptions() {
                 <Select
                     leftAddon={
                         <MdPersonalVideo className={cn((params.format as any) !== null && (params.format as any) !== "" && "text-indigo-300 font-bold text-xl")} />}
-                    label="Format" placeholder="All formats"
+                    label={t("mediaFilters.format")} placeholder={t("mediaFilters.allFormats")}
                     className="w-full"
                     fieldClass="w-full"
-                    options={ADVANCED_SEARCH_FORMATS}
+                    options={formatOptions}
                     value={params.format || ""}
                     onValueChange={v => setParams(draft => {
                         draft.format = v as any
@@ -340,12 +373,10 @@ export function SearchOptions() {
                 <Select
                     leftAddon={
                         <RiSignalTowerLine className={cn((params.status as any) !== null && (params.status as any) !== "" && "text-indigo-300 font-bold text-xl")} />}
-                    label="Status" placeholder="All statuses"
+                    label={t("mediaFilters.status")} placeholder={t("mediaFilters.allStatuses")}
                     className="w-full"
                     fieldClass="w-full"
-                    options={[
-                        ...ADVANCED_SEARCH_STATUS,
-                    ]}
+                    options={statusOptions}
                     value={params.status || ""}
                     onValueChange={v => setParams(draft => {
                         draft.status = v as any
@@ -356,12 +387,12 @@ export function SearchOptions() {
                 <Select
                     leftAddon={
                         <LuLeaf className={cn((params.season as any) !== null && (params.season as any) !== "" && "text-indigo-300 font-bold text-xl")} />}
-                    label="Season"
-                    placeholder="All seasons"
+                    label={t("mediaFilters.season")}
+                    placeholder={t("mediaFilters.allSeasons")}
                     className="w-full"
                     fieldClass="w-full flex items-center"
                     inputContainerClass="w-full"
-                    options={ADVANCED_SEARCH_SEASONS.map(season => ({ value: season.toUpperCase(), label: season }))}
+                    options={seasonOptions}
                     value={params.season || ""}
                     onValueChange={v => setParams(draft => {
                         draft.season = v as any
@@ -371,7 +402,7 @@ export function SearchOptions() {
                 />
                 <Select
                     leftAddon={<LuCalendar className={cn((params.year !== null && params.year !== "") && "text-indigo-300 font-bold text-xl")} />}
-                    label="Year" placeholder="Timeless"
+                    label={t("mediaFilters.year")} placeholder={t("mediaFilters.timeless")}
                     className="w-full"
                     fieldClass="w-full"
                     options={[...Array(70)].map((v, idx) => getYear(new Date()) - idx).map(year => ({
@@ -394,7 +425,7 @@ export function SearchOptions() {
                 </div>
                 {serverStatus?.settings?.anilist?.enableAdultContent && <div className="flex h-full items-center">
                     <Switch
-                        label="Adult"
+                        label={t("mediaFilters.adult")}
                         value={params.isAdult}
                         onValueChange={v => setParams(draft => {
                             draft.isAdult = v
@@ -410,12 +441,13 @@ export function SearchOptions() {
 }
 
 function GenreSelector({ genres }: { genres: string[] }) {
+    const { t } = useTranslation()
     const [params, setParams] = useAtom(__library_paramsAtom)
     return (
         <MediaGenreSelector
             items={[
                 {
-                    name: "All",
+                    name: t("common.words.all"),
                     isCurrent: !params!.genre?.length,
                     onClick: () => setParams(draft => {
                         draft.genre = []
@@ -423,7 +455,7 @@ function GenreSelector({ genres }: { genres: string[] }) {
                     }),
                 },
                 ...genres.map(genre => ({
-                    name: genre,
+                    name: getGenreLabel(t, genre),
                     isCurrent: params!.genre?.includes(genre) ?? false,
                     onClick: () => setParams(draft => {
                         if (draft.genre?.includes(genre)) {

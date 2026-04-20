@@ -15,9 +15,11 @@ import { useSetAtom } from "jotai/react"
 import React from "react"
 import { LuCompass } from "react-icons/lu"
 import { MdDataSaverOn } from "react-icons/md"
+import { useTranslation } from "react-i18next"
 import { useMount } from "react-use"
 
 export default function Page() {
+    const { t } = useTranslation()
     const router = useRouter()
     const urlParams = useSearchParams()
     const sortingUrlParam = urlParams.get("sorting")
@@ -59,7 +61,7 @@ export default function Page() {
                 <div className="flex items-center gap-3">
                     <SeaLink href={`/discover`}>
                         <Button leftIcon={<LuCompass className="text-xl" />} rounded intent="gray-outline" size="md">
-                            Discover series
+                            {t("search.actions.discoverSeries")}
                         </Button>
                     </SeaLink>
                     {!!customSources?.length && <div data-discover-page-header-custom-source-container>
@@ -71,7 +73,7 @@ export default function Page() {
                                 className="rounded-full"
                                 onClick={() => router.push("/search")}
                             >
-                                Custom sources
+                                {t("search.actions.customSources")}
                             </Button>
                         </SeaLink>
                     </div>}

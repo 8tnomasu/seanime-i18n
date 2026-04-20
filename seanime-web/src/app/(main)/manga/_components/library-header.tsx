@@ -9,6 +9,7 @@ import { atom, useAtomValue } from "jotai"
 import { useSetAtom } from "jotai/react"
 import { AnimatePresence, motion } from "motion/react"
 import React, { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useWindowScroll } from "react-use"
 
 export const __mangaLibraryHeaderImageAtom = atom<string | null>(null)
@@ -17,6 +18,7 @@ export const __mangaLibraryHeaderMangaAtom = atom<AL_BaseManga | null>(null)
 const MotionImage = motion.create(SeaImage)
 
 export function MangaLibraryHeader({ manga }: { manga: AL_BaseManga[] }) {
+    const { t } = useTranslation()
 
     const ts = useThemeSettings()
 
@@ -125,7 +127,7 @@ export function MangaLibraryHeader({ manga }: { manga: AL_BaseManga[] }) {
                                 <MotionImage
                                     data-library-header-banner-image
                                     src={getImageUrl(actualImage || prevImage!)}
-                                    alt="banner image"
+                                    alt={t("library.accessibility.bannerImageAlt")}
                                     fill
                                     quality={100}
                                     sizes="100vw"

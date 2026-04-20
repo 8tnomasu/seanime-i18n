@@ -19,6 +19,15 @@ import { Select } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { TextInput } from "@/components/ui/text-input"
 import { useDebounce } from "@/hooks/use-debounce"
+import {
+    getAdvancedSearchSortingLabel,
+    getCountryLabel,
+    getGenreLabel,
+    getMediaFormatLabel,
+    getMediaSeasonLabel,
+    getMediaStatusLabel,
+    getMediaTypeLabel,
+} from "@/i18n/labels"
 import { getYear } from "date-fns"
 import { useAtom } from "jotai/react"
 import React, { useState } from "react"
@@ -29,10 +38,12 @@ import { LuCalendar, LuLeaf } from "react-icons/lu"
 import { MdOutlineBook, MdPersonalVideo } from "react-icons/md"
 import { RiSignalTowerLine } from "react-icons/ri"
 import { TbSwords } from "react-icons/tb"
+import { useTranslation } from "react-i18next"
 import { useMount } from "react-use"
 import { useUpdateEffect } from "react-use"
 
 export function AdvancedSearchOptions() {
+    const { t } = useTranslation()
 
     const serverStatus = useServerStatus()
     const [params, setParams] = useAtom(__advancedSearch_paramsAtom)
@@ -46,13 +57,54 @@ export function AdvancedSearchOptions() {
             (params.countryOfOrigin === null || params.type === "anime"))
     }, [params])
 
+    const typeOptions = React.useMemo(() => ADVANCED_SEARCH_TYPE.map(option => ({
+        value: option.value,
+        label: getMediaTypeLabel(t, option.value),
+    })), [t])
+
+    const sortingOptions = React.useMemo(() => (params.type === "anime" ? ADVANCED_SEARCH_SORTING : ADVANCED_SEARCH_SORTING_MANGA).map(option => ({
+        value: option.value,
+        label: getAdvancedSearchSortingLabel(t, option.value),
+    })), [params.type, t])
+
+    const genreOptions = React.useMemo(() => ADVANCED_SEARCH_MEDIA_GENRES.map(genre => ({
+        value: genre,
+        label: getGenreLabel(t, genre),
+        textValue: getGenreLabel(t, genre),
+    })), [t])
+
+    const formatOptions = React.useMemo(() => ADVANCED_SEARCH_FORMATS.map(option => ({
+        value: option.value,
+        label: getMediaFormatLabel(t, option.value),
+    })), [t])
+
+    const mangaFormatOptions = React.useMemo(() => ADVANCED_SEARCH_FORMATS_MANGA.map(option => ({
+        value: option.value,
+        label: getMediaFormatLabel(t, option.value),
+    })), [t])
+
+    const countryOptions = React.useMemo(() => ADVANCED_SEARCH_COUNTRIES_MANGA.map(option => ({
+        value: option.value,
+        label: getCountryLabel(t, option.value),
+    })), [t])
+
+    const seasonOptions = React.useMemo(() => ADVANCED_SEARCH_SEASONS.map(season => ({
+        value: season.toUpperCase(),
+        label: getMediaSeasonLabel(t, season.toUpperCase()),
+    })), [t])
+
+    const statusOptions = React.useMemo(() => ADVANCED_SEARCH_STATUS.map(option => ({
+        value: option.value,
+        label: getMediaStatusLabel(t, option.value),
+    })), [t])
+
     return (
         <AppLayoutStack data-advanced-search-options-container className="px-4 xl:px-0 space-y-3">
             <div data-advanced-search-options-header className="flex flex-col md:flex-row xl:flex-col gap-4 lg:gap-3">
                 <TitleInput />
                 <Select
                     className="w-full"
-                    options={ADVANCED_SEARCH_TYPE}
+                    options={typeOptions}
                     value={params.type}
                     onValueChange={v => setParams(draft => {
                         draft.type = v as "anime" | "manga"
@@ -64,7 +116,7 @@ export function AdvancedSearchOptions() {
                     leftAddon={
                         <FaSortAmountDown className={cn((params.sorting !== null && params.sorting?.[0] !== "SCORE_DESC") && "text-indigo-300 font-bold text-xl")} />}
                     className="w-full"
-                    options={params.type === "anime" ? ADVANCED_SEARCH_SORTING : ADVANCED_SEARCH_SORTING_MANGA}
+                    options={sortingOptions}
                     value={params.sorting?.[0] || "SCORE_DESC"}
                     onValueChange={v => setParams(draft => {
                         draft.sorting = [v] as any
@@ -79,9 +131,9 @@ export function AdvancedSearchOptions() {
                 <Combobox
                     multiple
                     leftAddon={<TbSwords className={cn((params.genre !== null && !!params.genre.length) && "text-indigo-300 font-bold text-xl")} />}
-                    emptyMessage="No options found"
-                    label="Genre" placeholder="All genres" className="w-full"
-                    options={ADVANCED_SEARCH_MEDIA_GENRES.map(genre => ({ value: genre, label: genre, textValue: genre }))}
+                    emptyMessage={t("common.states.noOptionsFound")}
+                    label={t("mediaFilters.genre")} placeholder={t("mediaFilters.allGenres")} className="w-full"
+                    options={genreOptions}
                     value={params.genre ? params.genre : []}
                     onValueChange={v => setParams(draft => {
                         draft.genre = v
@@ -91,8 +143,8 @@ export function AdvancedSearchOptions() {
                 />
                 {params.type === "anime" && <Select
                     leftAddon={<MdPersonalVideo className={cn((params.format !== null && !!params.format) && "text-indigo-300 font-bold text-xl")} />}
-                    label="Format" placeholder="All formats" className="w-full"
-                    options={ADVANCED_SEARCH_FORMATS}
+                    label={t("mediaFilters.format")} placeholder={t("mediaFilters.allFormats")} className="w-full"
+                    options={formatOptions}
                     value={params.format || ""}
                     onValueChange={v => setParams(draft => {
                         draft.format = v as any
@@ -103,8 +155,8 @@ export function AdvancedSearchOptions() {
                 {params.type === "manga" && <Select
                     leftAddon={
                         <BiWorld className={cn((params.countryOfOrigin !== null && !!params.countryOfOrigin) && "text-indigo-300 font-bold text-xl")} />}
-                    label="Format" placeholder="All countries" className="w-full"
-                    options={ADVANCED_SEARCH_COUNTRIES_MANGA}
+                    label={t("mediaFilters.country")} placeholder={t("mediaFilters.allCountries")} className="w-full"
+                    options={countryOptions}
                     value={params.countryOfOrigin || ""}
                     onValueChange={v => setParams(draft => {
                         draft.countryOfOrigin = v as any
@@ -114,8 +166,8 @@ export function AdvancedSearchOptions() {
                 />}
                 {params.type === "manga" && <Select
                     leftAddon={<MdOutlineBook className={cn((params.format !== null && !!params.format) && "text-indigo-300 font-bold text-xl")} />}
-                    label="Format" placeholder="All formats" className="w-full"
-                    options={ADVANCED_SEARCH_FORMATS_MANGA}
+                    label={t("mediaFilters.format")} placeholder={t("mediaFilters.allFormats")} className="w-full"
+                    options={mangaFormatOptions}
                     value={params.format || ""}
                     onValueChange={v => setParams(draft => {
                         draft.format = v as any
@@ -125,8 +177,8 @@ export function AdvancedSearchOptions() {
                 />}
                 {params.type === "anime" && <Select
                     leftAddon={<LuLeaf className={cn((params.season !== null && !!params.season) && "text-indigo-300 font-bold text-xl")} />}
-                    placeholder="All seasons" className="w-full"
-                    options={ADVANCED_SEARCH_SEASONS.map(season => ({ value: season.toUpperCase(), label: season }))}
+                    placeholder={t("mediaFilters.allSeasons")} className="w-full"
+                    options={seasonOptions}
                     value={params.season || ""}
                     onValueChange={v => setParams(draft => {
                         draft.season = v as any
@@ -136,7 +188,7 @@ export function AdvancedSearchOptions() {
                 />}
                 <Select
                     leftAddon={<LuCalendar className={cn((params.year !== null && !!params.year) && "text-indigo-300 font-bold text-xl")} />}
-                    label="Year" placeholder="Timeless" className="w-full"
+                    label={t("mediaFilters.year")} placeholder={t("mediaFilters.timeless")} className="w-full"
                     options={[...Array(70)].map((v, idx) => getYear(new Date()) - idx + 2).map(year => ({
                         value: String(year),
                         label: String(year),
@@ -151,8 +203,8 @@ export function AdvancedSearchOptions() {
                 <Select
                     leftAddon={
                         <RiSignalTowerLine className={cn((params.status !== null && !!params.status.length) && "text-indigo-300 font-bold text-xl")} />}
-                    label="Status" placeholder="All statuses" className="w-full"
-                    options={ADVANCED_SEARCH_STATUS}
+                    label={t("mediaFilters.status")} placeholder={t("mediaFilters.allStatuses")} className="w-full"
+                    options={statusOptions}
                     value={params.status?.[0] || ""}
                     onValueChange={v => setParams(draft => {
                         draft.status = [v] as any
@@ -162,7 +214,7 @@ export function AdvancedSearchOptions() {
                 />
                 <Select
                     leftAddon={<FaRegStar className={cn((params.minScore !== null && !!params.minScore) && "text-indigo-300 font-bold text-xl")} />}
-                    placeholder="All scores" className="w-full"
+                    placeholder={t("mediaFilters.allScores")} className="w-full"
                     options={[...Array(9)].map((v, idx) => 9 - idx).map(score => ({
                         value: String(score),
                         label: String(score),
@@ -174,7 +226,7 @@ export function AdvancedSearchOptions() {
                     })}
                 />
                 {serverStatus?.settings?.anilist?.enableAdultContent && <Switch
-                    label="Adult"
+                    label={t("mediaFilters.adult")}
                     value={params.isAdult}
                     onValueChange={v => setParams(draft => {
                         draft.isAdult = v
@@ -208,6 +260,7 @@ export function AdvancedSearchOptions() {
 }
 
 function TitleInput() {
+    const { t } = useTranslation()
     const [inputValue, setInputValue] = useState("")
     const debouncedTitle = useDebounce(inputValue, 500)
     const [params, setParams] = useAtom(__advancedSearch_paramsAtom)
@@ -232,7 +285,7 @@ function TitleInput() {
     return (
         <TextInput
             ref={ref}
-            leftIcon={<FiSearch />} placeholder="Title" className="w-full"
+            leftIcon={<FiSearch />} placeholder={t("mediaFilters.titlePlaceholder")} className="w-full"
             value={inputValue}
             onValueChange={v => setInputValue(v)}
         />

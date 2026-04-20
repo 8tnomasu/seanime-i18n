@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/carousel"
 import { cn } from "@/components/ui/core/styling"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getCollectionStatusLabel } from "@/i18n/labels"
 import { ThemeLibraryScreenBannerType, useThemeSettings } from "@/lib/theme/theme-hooks"
 import { addDays } from "date-fns/addDays"
 import { atom, useAtomValue, useSetAtom } from "jotai"
@@ -40,6 +41,7 @@ import React from "react"
 import { FiSearch } from "react-icons/fi"
 import { LiaPlayCircle } from "react-icons/lia"
 import { LuPlus } from "react-icons/lu"
+import { useTranslation } from "react-i18next"
 import { useWindowSize } from "react-use"
 import { useServerStatus } from "../../_hooks/use-server-status"
 import { DiscoverPageHeader } from "../../discover/_components/discover-page-header"
@@ -60,6 +62,7 @@ export const __home_currentView = atom<"base" | "detailed">("base")
 export const __home_discoverHeaderType = atomWithStorage<"anime" | "manga">("sea-home-discover-header-type", "anime", undefined, { getOnInit: true })
 
 export function HomeScreen() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const { data: _homeItems, isLoading: isLoadingItems } = useGetHomeItems()
 
@@ -180,7 +183,7 @@ export function HomeScreen() {
                 />
 
                 <div className="text-center space-y-6 py-10">
-                    <h2>Your home screen is empty</h2>
+                    <h2>{t("home.empty.title")}</h2>
 
                     {!!serverStatus?.settings?.library?.libraryPath && <>
                         <Button
@@ -190,7 +193,7 @@ export function HomeScreen() {
                             rounded
                             onClick={() => setScannerModalOpen(true)}
                         >
-                            Scan your anime library
+                            {t("home.empty.scanAnimeLibrary")}
                         </Button>
                     </>}
 
@@ -202,7 +205,7 @@ export function HomeScreen() {
                                 size="lg"
                                 rounded
                             >
-                                Add series to your collection
+                                {t("home.empty.addSeriesToCollection")}
                             </Button>
                         </SeaLink>
                     </>}
@@ -217,15 +220,15 @@ export function HomeScreen() {
                                 setHomeSettingsModalOpen(true)
                             }}
                         >
-                            Add currently watched series to the library
+                            {t("home.empty.addCurrentlyWatchedToLibrary")}
                         </Button>}
 
                         {animeLibraryType === "stream" && <div className="p-4 border w-fit mx-auto border-dashed rounded-xl">
                             <p>
-                                No series are currently being watched
+                                {t("home.empty.noneCurrentlyWatched")}
                             </p>
                             <p className="text-[--muted]">
-                                Add series to your 'Currently watching' list to get started
+                                {t("home.empty.currentlyWatchingHint")}
                             </p>
                         </div>}
                     </>}
@@ -233,7 +236,7 @@ export function HomeScreen() {
 
                 </div>
 
-                <h3>Trending Right Now</h3>
+                <h3>{t("home.empty.trendingNow")}</h3>
                 <DiscoverTrending />
 
                 <div data-home-screen-item-divider className="h-8" />
@@ -441,6 +444,7 @@ export type HomeScreenItemProps = {
 }
 
 export function HomeScreenItem(props: HomeScreenItemProps) {
+    const { t } = useTranslation()
     const { item: _item, index } = props
     const {
         libraryGenres,
@@ -480,7 +484,7 @@ export function HomeScreenItem(props: HomeScreenItemProps) {
 
 
     if (!schema || !item) return <div>
-        Item not found
+        {t("home.states.itemNotFound")}
     </div>
 
 
@@ -585,7 +589,7 @@ export function HomeScreenItem(props: HomeScreenItemProps) {
     if (item.type === "missed-sequels") {
         return (
             <PageWrapper className="px-4">
-                <DiscoverMissedSequelsSection title="Missed Sequels" />
+                <DiscoverMissedSequelsSection title={t("home.sections.missedSequels")} />
             </PageWrapper>
         )
     }
@@ -618,27 +622,27 @@ export function HomeScreenItem(props: HomeScreenItemProps) {
                 >
                     {!isNakamaLibrary && <div>
                         <h3>{data?.stats?.totalSize ?? "-"}</h3>
-                        <p>Library</p>
+                        <p>{t("library.stats.library")}</p>
                     </div>}
                     <div>
                         <h3>{data?.stats?.totalFiles ?? "-"}</h3>
-                        <p>Files</p>
+                        <p>{t("library.stats.files")}</p>
                     </div>
                     <div>
                         <h3>{data?.stats?.totalEntries ?? "-"}</h3>
-                        <p>Entries</p>
+                        <p>{t("library.stats.entries")}</p>
                     </div>
                     <div>
                         <h3>{data?.stats?.totalShows ?? "-"}</h3>
-                        <p>TV Shows</p>
+                        <p>{t("library.stats.tvShows")}</p>
                     </div>
                     <div>
                         <h3>{data?.stats?.totalMovies ?? "-"}</h3>
-                        <p>Movies</p>
+                        <p>{t("library.stats.movies")}</p>
                     </div>
                     <div>
                         <h3>{data?.stats?.totalSpecials ?? "-"}</h3>
-                        <p>Specials</p>
+                        <p>{t("library.stats.specials")}</p>
                     </div>
                 </div>
             </PageWrapper>
@@ -646,7 +650,7 @@ export function HomeScreenItem(props: HomeScreenItemProps) {
     }
 
     return <div>
-        Item not found ({item.type})
+        {t("home.states.itemNotFound")} ({item.type})
     </div>
 }
 
@@ -858,6 +862,7 @@ function GlobalAnimeScheduleCalendar(props: { libraryCollectionProps: HandleLibr
 }
 
 function AnimeCarousel(props: { libraryCollectionProps: HandleLibraryCollectionProps, item: Models_HomeItem }) {
+    const { t } = useTranslation()
     const { libraryCollectionProps, item } = props
     const {} = libraryCollectionProps
     const ref = React.useRef(null)
@@ -881,7 +886,7 @@ function AnimeCarousel(props: { libraryCollectionProps: HandleLibraryCollectionP
 
     return (
         <PageWrapper className="space-y-0 px-4" ref={ref}>
-            <h2>{options?.name || "Anime Carousel"}</h2>
+            <h2>{options?.name || t("home.sections.animeCarousel")}</h2>
             {(!isLoading && !data && isInView) ? <InvalidHomeItem item={item} /> : <Carousel
                 className="w-full max-w-full"
                 gap="xl"
@@ -922,7 +927,7 @@ function AnimeCarousel(props: { libraryCollectionProps: HandleLibraryCollectionP
             {(!isLoading && !!data?.Page && !data.Page?.media?.length && isInView) &&
                 <PageWrapper className="rounded-xl bg-gray-900 border-2 border-dashed border-orange-400 p-4 !my-4">
                     <p className="text-sm font-medium text-gray-400">
-                        Nothing was fetched, please update your options.
+                        {t("home.states.nothingFetched")}
                     </p>
                 </PageWrapper>}
         </PageWrapper>
@@ -930,6 +935,7 @@ function AnimeCarousel(props: { libraryCollectionProps: HandleLibraryCollectionP
 }
 
 function MyLists(props: { item: Models_HomeItem }) {
+    const { t } = useTranslation()
     const { item } = props
 
     const {
@@ -947,28 +953,28 @@ function MyLists(props: { item: Models_HomeItem }) {
     return (
         <PageWrapper className="space-y-6 px-4">
             {(!!currentList?.entries?.length && !isCustomList && (!item.options?.statuses?.length || item.options?.statuses?.includes("CURRENT"))) && <>
-                <h2>{item.options?.type === "manga" ? "Currently reading" : "Currently watching"}
+                <h2>{getCollectionStatusLabel(t, "CURRENT", item.options?.type === "manga" ? "manga" : "anime")}
                     <span className="text-[--muted] font-medium ml-3">{currentList?.entries?.length}</span></h2>
                 <AnilistAnimeEntryList type={item.options?.type ?? "anime"} layout={item.options?.layout} list={currentList} />
             </>}
             {(!!repeatingList?.entries?.length && !isCustomList && (!item.options?.statuses?.length || item.options?.statuses?.includes("REPEATING"))) && <>
-                <h2>Repeating <span className="text-[--muted] font-medium ml-3">{repeatingList?.entries?.length}</span></h2>
+                <h2>{t("mediaList.status.repeating")} <span className="text-[--muted] font-medium ml-3">{repeatingList?.entries?.length}</span></h2>
                 <AnilistAnimeEntryList type={item.options?.type ?? "anime"} layout={item.options?.layout} list={repeatingList} />
             </>}
             {(!!planningList?.entries?.length && !isCustomList && (!item.options?.statuses?.length || item.options?.statuses?.includes("PLANNING"))) && <>
-                <h2>Planning <span className="text-[--muted] font-medium ml-3">{planningList?.entries?.length}</span></h2>
+                <h2>{t("mediaList.status.planning")} <span className="text-[--muted] font-medium ml-3">{planningList?.entries?.length}</span></h2>
                 <AnilistAnimeEntryList type={item.options?.type ?? "anime"} layout={item.options?.layout} list={planningList} />
             </>}
             {(!!pausedList?.entries?.length && !isCustomList && (!item.options?.statuses?.length || item.options?.statuses?.includes("PAUSED"))) && <>
-                <h2>Paused <span className="text-[--muted] font-medium ml-3">{pausedList?.entries?.length}</span></h2>
+                <h2>{t("mediaList.status.paused")} <span className="text-[--muted] font-medium ml-3">{pausedList?.entries?.length}</span></h2>
                 <AnilistAnimeEntryList type={item.options?.type ?? "anime"} layout={item.options?.layout} list={pausedList} />
             </>}
             {(!!completedList?.entries?.length && !isCustomList && (!item.options?.statuses?.length || item.options?.statuses?.includes("COMPLETED"))) && <>
-                <h2>Completed <span className="text-[--muted] font-medium ml-3">{completedList?.entries?.length}</span></h2>
+                <h2>{t("mediaList.status.completed")} <span className="text-[--muted] font-medium ml-3">{completedList?.entries?.length}</span></h2>
                 <AnilistAnimeEntryList type={item.options?.type ?? "anime"} layout={item.options?.layout} list={completedList} />
             </>}
             {(!!droppedList?.entries?.length && !isCustomList && (!item.options?.statuses?.length || item.options?.statuses?.includes("DROPPED"))) && <>
-                <h2>Dropped <span className="text-[--muted] font-medium ml-3">{droppedList?.entries?.length}</span></h2>
+                <h2>{t("mediaList.status.dropped")} <span className="text-[--muted] font-medium ml-3">{droppedList?.entries?.length}</span></h2>
                 <AnilistAnimeEntryList type={item.options?.type ?? "anime"} layout={item.options?.layout} list={droppedList} />
             </>}
             {customLists?.map(list => {
@@ -985,6 +991,7 @@ function MyLists(props: { item: Models_HomeItem }) {
 }
 
 function MangaCarousel(props: { libraryCollectionProps: HandleLibraryCollectionProps, item: Models_HomeItem }) {
+    const { t } = useTranslation()
     const { libraryCollectionProps, item } = props
     const {} = libraryCollectionProps
     const ref = React.useRef(null)
@@ -1009,7 +1016,7 @@ function MangaCarousel(props: { libraryCollectionProps: HandleLibraryCollectionP
 
     return (
         <PageWrapper className="space-y-0 px-4" ref={ref}>
-            <h2>{options?.name || "Manga Carousel"}</h2>
+            <h2>{options?.name || t("home.sections.mangaCarousel")}</h2>
             {(!isLoading && !data && isInView) ? <InvalidHomeItem item={item} /> : <Carousel
                 className="w-full max-w-full"
                 gap="xl"
@@ -1048,7 +1055,7 @@ function MangaCarousel(props: { libraryCollectionProps: HandleLibraryCollectionP
             {(!isLoading && !!data?.Page && !data.Page?.media?.length && isInView) &&
                 <PageWrapper className="rounded-xl bg-gray-900 border-2 border-dashed border-orange-400 p-4 !my-4">
                     <p className="text-sm font-medium text-gray-400">
-                        Nothing was fetched, please update your options.
+                        {t("home.states.nothingFetched")}
                     </p>
                 </PageWrapper>}
         </PageWrapper>
@@ -1056,6 +1063,7 @@ function MangaCarousel(props: { libraryCollectionProps: HandleLibraryCollectionP
 }
 
 function InvalidHomeItem(props: { item: Models_HomeItem }) {
+    const { t } = useTranslation()
     const { item } = props
 
     const schema = HOME_ITEMS[item.type]
@@ -1063,7 +1071,7 @@ function InvalidHomeItem(props: { item: Models_HomeItem }) {
     return (
         <PageWrapper className="rounded-xl bg-gray-900 border-2 border-dashed border-orange-400 p-4 !my-4">
             <p className="text-sm font-medium text-gray-400">
-                Item "{schema?.name}" cannot be displayed because it is missing some required options.
+                {t("home.states.invalidItem", { name: schema?.name })}
             </p>
             {/* <pre>
              {JSON.stringify(item, null, 2)}

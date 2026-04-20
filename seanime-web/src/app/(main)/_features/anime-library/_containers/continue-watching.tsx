@@ -18,6 +18,7 @@ import { useWindowSize } from "@uidotdev/usehooks"
 import { atom } from "jotai"
 import { useAtom, useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { seaCommand_compareMediaTitles } from "../../sea-command/utils"
 
 export const __libraryHeaderEpisodeAtom = atom<Anime_Episode | null>(null)
@@ -28,6 +29,7 @@ export function ContinueWatching({ episodes, isLoading, linkTemplate, withTitle 
     linkTemplate?: string
     withTitle?: boolean
 }) {
+    const { t } = useTranslation()
 
     const router = useRouter()
     const ts = useThemeSettings()
@@ -113,14 +115,14 @@ export function ContinueWatching({ episodes, isLoading, linkTemplate, withTitle 
                 data: episode,
                 id: `${episode.localFile?.path || episode.baseAnime?.title?.userPreferred || ""}-${episode.episodeNumber || 1}`,
                 value: `${episode.episodeNumber || 1}`,
-                heading: "Continue Watching",
+                heading: t("library.continueWatching.seaCommandTitle"),
                 priority: 100,
                 render: () => (
                     <>
                         <div className="w-12 aspect-[6/5] flex-none rounded-[--radius-md] relative overflow-hidden">
                             <SeaImage
                                 src={episode.episodeMetadata?.image || ""}
-                                alt="episode image"
+                                alt={t("library.accessibility.episodeImageAlt")}
                                 fill
                                 className="object-center object-cover"
                             />
@@ -128,9 +130,9 @@ export function ContinueWatching({ episodes, isLoading, linkTemplate, withTitle 
                         <div className="flex gap-1 items-center w-full">
                             <p className="max-w-[70%] truncate">{episode.baseAnime?.title?.userPreferred || ""}</p>&nbsp;-&nbsp;
                             {!anilist_animeIsMovie(episode.baseAnime) ? <>
-                                <p className="text-[--muted]">Ep</p><span>{episode.episodeNumber}</span>
+                                <p className="text-[--muted]">{t("library.continueWatching.episodeShort")}</p><span>{episode.episodeNumber}</span>
                             </> : <>
-                                <p className="text-[--muted]">Movie</p>
+                                <p className="text-[--muted]">{t("library.continueWatching.movie")}</p>
                             </>}
 
                         </div>
@@ -149,11 +151,11 @@ export function ContinueWatching({ episodes, isLoading, linkTemplate, withTitle 
         })
 
         return () => remove("continue-watching")
-    }, [episodes, inject, remove, router, setPlayNext])
+    }, [episodes, inject, remove, router, setPlayNext, t])
 
     if (episodes.length > 0) return (
         <PageWrapper className="space-y-3 lg:space-y-6 p-4 relative z-[4]" data-continue-watching-container>
-            <h2 data-continue-watching-title>Continue watching</h2>
+            <h2 data-continue-watching-title>{t("library.continueWatching.title")}</h2>
             {(ts.libraryScreenBannerType === ThemeLibraryScreenBannerType.Dynamic && headerEpisode?.baseAnime && withTitle) && <TextGenerateEffect
                 data-continue-watching-media-title
                 words={headerEpisode?.baseAnime?.title?.userPreferred || ""}

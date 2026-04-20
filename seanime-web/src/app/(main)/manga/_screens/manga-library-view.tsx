@@ -17,8 +17,8 @@ import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/c
 import { cn } from "@/components/ui/core/styling"
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useDebounce } from "@/hooks/use-debounce"
+import { getCollectionStatusLabel, getGenreLabel } from "@/i18n/labels"
 import { useRouter } from "@/lib/navigation"
-import { getMangaCollectionTitle } from "@/lib/server/utils"
 import { ThemeLibraryScreenBannerType, useThemeSettings } from "@/lib/theme/theme-hooks"
 import { useSetAtom } from "jotai"
 import { useAtom, useAtomValue } from "jotai/react"
@@ -26,6 +26,7 @@ import { AnimatePresence } from "motion/react"
 import React, { memo } from "react"
 import { BiDotsVertical } from "react-icons/bi"
 import { LuBookOpenCheck, LuRefreshCcw } from "react-icons/lu"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { CommandItemMedia } from "../../_features/sea-command/_components/command-utils"
 
@@ -41,6 +42,7 @@ type MangaLibraryViewProps = {
 }
 
 export function MangaLibraryView(props: MangaLibraryViewProps) {
+    const { t } = useTranslation()
 
     const {
         collection,
@@ -69,17 +71,17 @@ export function MangaLibraryView(props: MangaLibraryViewProps) {
                 <AnimatePresence mode="wait" initial={false}>
 
                     {!!collection && !hasManga && <LuffyError
-                        title="No manga found"
+                        title={t("mangaLibrary.empty.title")}
                     >
                         <div className="space-y-2">
                             <p>
-                                No manga has been added to your library yet.
+                                {t("mangaLibrary.empty.description")}
                             </p>
 
                             <div className="!mt-4">
                                 <SeaLink href="/discover?type=manga">
                                     <Button intent="white-outline" rounded>
-                                        Browse manga
+                                        {t("mangaLibrary.empty.browse")}
                                     </Button>
                                 </SeaLink>
                             </div>
@@ -243,6 +245,7 @@ const CollectionListItem = memo(({ list, storedProviders, showStatuses, type, wi
     type?: "carousel" | "grid",
     withTitle?: boolean
 }) => {
+    const { t } = useTranslation()
 
     const ts = useThemeSettings()
     const [currentHeaderImage, setCurrentHeaderImage] = useAtom(__mangaLibraryHeaderImageAtom)
@@ -270,7 +273,7 @@ const CollectionListItem = memo(({ list, storedProviders, showStatuses, type, wi
                     data: entry,
                     id: `manga-${entry.mediaId}`,
                     value: entry.media?.title?.userPreferred || "",
-                    heading: "Currently Reading",
+                    heading: t("mangaLibrary.current.seaCommandTitle"),
                     priority: 100,
                     render: () => (
                         <CommandItemMedia media={entry.media!} type="manga" />
@@ -288,14 +291,17 @@ const CollectionListItem = memo(({ list, storedProviders, showStatuses, type, wi
         }
 
         return () => remove("currently-reading-manga")
-    }, [list.entries])
+    }, [inject, list.entries, remove, router, t])
 
     return (
         <React.Fragment>
 
             <div className="flex gap-3 items-center" data-manga-library-view-collection-list-item-header-container>
-                <h2 data-manga-library-view-collection-list-item-header-title>{list.type === "CURRENT" ? "Continue reading" : getMangaCollectionTitle(
-                    list.type)}</h2>
+                <h2 data-manga-library-view-collection-list-item-header-title>{list.type === "CURRENT" ? t("mangaLibrary.current.title") : getCollectionStatusLabel(
+                    t,
+                    list.type,
+                    "manga",
+                )}</h2>
                 <div className="flex flex-1" data-manga-library-view-collection-list-item-header-spacer></div>
 
                 {list.type === "CURRENT" && params.unreadOnly && (
@@ -310,7 +316,7 @@ const CollectionListItem = memo(({ list, storedProviders, showStatuses, type, wi
                             })
                         }}
                     >
-                        Show all
+                        {t("common.buttons.showAll")}
                     </Button>
                 )}
 
@@ -332,13 +338,13 @@ const CollectionListItem = memo(({ list, storedProviders, showStatuses, type, wi
                         onClick={() => {
                             if (isRefetchingMangaChapterContainers) return
 
-                            toast.info("Refetching from sources...")
+                            toast.info(t("mangaLibrary.actions.refetchingFromSources"))
                             refetchMangaChapterContainers({
                                 selectedProviderMap: storedProviders,
                             })
                         }}
                     >
-                        <LuRefreshCcw /> {isRefetchingMangaChapterContainers ? "Refetching..." : "Refresh sources"}
+                        <LuRefreshCcw /> {isRefetchingMangaChapterContainers ? t("mangaLibrary.actions.refetching") : t("mangaLibrary.actions.refreshSources")}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => {
@@ -348,7 +354,7 @@ const CollectionListItem = memo(({ list, storedProviders, showStatuses, type, wi
                             })
                         }}
                     >
-                        <LuBookOpenCheck /> {params.unreadOnly ? "Show all" : "Unread chapters only"}
+                        <LuBookOpenCheck /> {params.unreadOnly ? t("common.buttons.showAll") : t("mangaLibrary.actions.unreadChaptersOnly")}
                     </DropdownMenuItem>
                 </DropdownMenu>}
 
@@ -429,6 +435,7 @@ function GenreSelector({
     genres,
     className,
 }: { genres: string[], className?: string }) {
+    const { t } = useTranslation()
     const [params, setParams] = useAtom(__mangaLibrary_paramsInputAtom)
     const setActualParams = useSetAtom(__mangaLibrary_paramsAtom)
     const debouncedParams = useDebounce(params, 200)
@@ -446,7 +453,7 @@ function GenreSelector({
             staticTabsClass=""
             items={[
                 ...genres.map(genre => ({
-                    name: genre,
+                    name: getGenreLabel(t, genre),
                     isCurrent: params!.genre?.includes(genre) ?? false,
                     onClick: () => setParams(draft => {
                         if (draft.genre?.includes(genre)) {

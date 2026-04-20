@@ -13,6 +13,7 @@ import { TextGenerateEffect } from "@/components/shared/text-generate-effect"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/components/ui/core/styling"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { getGenreLabel } from "@/i18n/labels"
 import { useRouter } from "@/lib/navigation"
 import { getAssetUrl } from "@/lib/server/assets"
 import { ThemeLibraryScreenBannerType, ThemeMediaPageBannerSize, ThemeMediaPageBannerType, useThemeSettings } from "@/lib/theme/theme-hooks"
@@ -22,6 +23,7 @@ import { useAtom, useSetAtom } from "jotai/react"
 import { AnimatePresence, motion } from "motion/react"
 import React, { useEffect, useState } from "react"
 import { RiSignalTowerLine } from "react-icons/ri"
+import { useTranslation } from "react-i18next"
 import { useWindowScroll } from "react-use"
 
 export const __continueWatching_hoveringHeaderAtom = atom(false)
@@ -56,6 +58,7 @@ interface HeaderCarouselDotsProps {
 }
 
 function HeaderCarouselDots({ totalEpisodes, currentIndex, onIndexChange, className }: HeaderCarouselDotsProps) {
+    const { t } = useTranslation()
     const ts = useThemeSettings()
 
     // Don't render if there are no episodes or only one episode
@@ -81,7 +84,7 @@ function HeaderCarouselDots({ totalEpisodes, currentIndex, onIndexChange, classN
                         index === currentIndex ? "w-6 bg-[--muted]" : "w-3 bg-[--subtle] hover:bg-gray-300",
                     )}
                     onClick={() => onIndexChange(index)}
-                    aria-label={`Go to episode ${index + 1}`}
+                    aria-label={t("library.continueWatching.goToEpisode", { number: index + 1 })}
                 />
             ))}
         </div>
@@ -95,6 +98,7 @@ interface MediaMetadataProps {
 }
 
 function MediaMetadata({ episode, episodes, onHoverChange }: MediaMetadataProps) {
+    const { t } = useTranslation()
     const ts = useThemeSettings()
     const { setPreviewModalMediaId } = useMediaPreviewModal()
     const anime = episode.baseAnime
@@ -163,7 +167,7 @@ function MediaMetadata({ episode, episodes, onHoverChange }: MediaMetadataProps)
                             <div className="w-[180px] h-[280px] relative rounded-[--radius-md] overflow-hidden bg-[--background] shadow-md">
                                 <SeaImage
                                     src={anime.coverImage.large}
-                                    alt="cover image"
+                                    alt={t("library.accessibility.coverImageAlt")}
                                     fill
                                     priority
                                     placeholder={imageShimmer(700, 475)}
@@ -194,7 +198,7 @@ function MediaMetadata({ episode, episodes, onHoverChange }: MediaMetadataProps)
                     <div className="flex flex-wrap gap-2">
                         {anime.genres?.slice(0, 3).map((genre) => (
                             <div key={genre} className="text-sm font-semibold px-1 text-gray-300">
-                                {genre}
+                                {getGenreLabel(t, genre)}
                             </div>
                         ))}
                     </div>
@@ -208,7 +212,7 @@ function MediaMetadata({ episode, episodes, onHoverChange }: MediaMetadataProps)
 
                         {anime.nextAiringEpisode?.airingAt && (
                             <p className="text-base text-brand-200 inline-flex items-center gap-1.5">
-                                <RiSignalTowerLine /> Releasing now
+                                <RiSignalTowerLine /> {t("library.continueWatching.releasingNow")}
                             </p>
                         )}
                     </div>
@@ -229,7 +233,7 @@ function MediaMetadata({ episode, episodes, onHoverChange }: MediaMetadataProps)
                             className="rounded-full"
                             onClick={() => setPreviewModalMediaId(anime.id, "anime")}
                         >
-                            Preview
+                            {t("common.buttons.preview")}
                         </Button>
                     </motion.div>
                 </motion.div>
@@ -336,6 +340,7 @@ interface BannerImageProps {
 }
 
 function BannerImage({ episode, isTransitioning, shouldBlurBanner }: BannerImageProps) {
+    const { t } = useTranslation()
     const ts = useThemeSettings()
     const bannerImage = (!!ts.libraryScreenCustomBannerImage
         && ts.libraryScreenBannerType === ThemeLibraryScreenBannerType.Custom) ? getAssetUrl(ts.libraryScreenCustomBannerImage) :
@@ -376,7 +381,7 @@ function BannerImage({ episode, isTransitioning, shouldBlurBanner }: BannerImage
                     {bannerImage && (
                         <MotionImage
                             src={bannerImage}
-                            alt="banner image"
+                            alt={t("library.accessibility.bannerImageAlt")}
                             fill
                             quality={100}
                             priority
