@@ -1,0 +1,74 @@
+{
+    "app": {
+        "name": "Seanime",
+        "nameSpaced": "S e a n i m e"
+    },
+    "auth": {
+        "enterToken": "Enter the token",
+        "getAniListToken": "Get AniList token",
+        "loginWithAniList": "Log in with AniList",
+        "signOutDescription": "Are you sure you want to sign out?",
+        "signOutTitle": "Sign out",
+        "usingAniListRecommended": "Using an AniList account is recommended."
+    },
+    "common": {
+        "buttons": {
+            "cancel": "Cancel",
+            "close": "Close",
+            "continue": "Continue",
+            "goHome": "Go Home",
+            "reload": "Reload",
+            "retry": "Retry"
+        },
+        "menu": {
+            "openMainMenu": "Open main menu"
+        },
+        "states": {
+            "clientSideErrorTitle": "Client side error",
+            "loading": "Loading",
+            "oops": "Oops!",
+            "pageNotFoundDescription": "The page you are looking for does not exist.",
+            "pageNotFoundTitle": "Page Not Found",
+            "unexpectedError": "An unexpected error occurred."
+        }
+    },
+    "dialogs": {
+        "confirm": "Confirm",
+        "defaultDescription": "Are you sure you want to continue?"
+    },
+    "language": {
+        "description": "Choose the display language used by Seanime i18n on this device.",
+        "help": "This preference is stored locally for the current browser or desktop client.",
+        "options": {
+            "en-US": "English",
+            "zh-TW": "Traditional Chinese (Taiwan)"
+        },
+        "title": "Language"
+    },
+    "navigation": {
+        "autoDownloader": "Auto Downloader",
+        "debrid": "Debrid",
+        "discover": "Discover",
+        "extensions": "Extensions",
+        "home": "Home",
+        "lists": "My lists",
+        "login": "Login",
+        "manga": "Manga",
+        "mangaDownloads": "Manga Downloads",
+        "more": "More",
+        "nakama": "Nakama",
+        "offline": "Offline",
+        "refreshAniList": "Refresh AniList",
+        "scanSummaries": "Scan summaries",
+        "schedule": "Schedule",
+        "search": "Search",
+        "settings": "Settings",
+        "signIn": "Sign in",
+        "signOut": "Sign out",
+        "torrentList": "Torrent list",
+        "torrentListSeeding": "Torrent list ({{count}} seeding)"
+    },
+    "toasts": {
+        "featureDisabled": "This feature is disabled"
+    }
+}

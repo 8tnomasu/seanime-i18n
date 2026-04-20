@@ -1,5 +1,6 @@
 import { WebsocketProvider } from "@/app/websocket-provider"
 import { CustomCSSProvider } from "@/components/shared/custom-css-provider"
+import { AppI18nProvider } from "@/i18n/provider"
 import { CustomThemeProvider } from "@/components/shared/custom-theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -30,17 +31,19 @@ export const ClientProviders: React.FC<ClientProvidersProps> = ({ children }) =>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme={"dark"}>
             <CookiesProvider>
                 <JotaiProvider store={store}>
-                    <QueryClientProvider client={queryClient}>
-                        <WebsocketProvider>
-                            {children}
-                            <CustomThemeProvider />
-                            <Toaster />
-                        </WebsocketProvider>
-                        <CustomCSSProvider />
-                        {/*{import.meta.env.MODE === "development" && <React.Suspense fallback={null}>*/}
-                        {/*    <ReactQueryDevtools />*/}
-                        {/*</React.Suspense>}*/}
-                    </QueryClientProvider>
+                    <AppI18nProvider>
+                        <QueryClientProvider client={queryClient}>
+                            <WebsocketProvider>
+                                {children}
+                                <CustomThemeProvider />
+                                <Toaster />
+                            </WebsocketProvider>
+                            <CustomCSSProvider />
+                            {/*{import.meta.env.MODE === "development" && <React.Suspense fallback={null}>*/}
+                            {/*    <ReactQueryDevtools />*/}
+                            {/*</React.Suspense>}*/}
+                        </QueryClientProvider>
+                    </AppI18nProvider>
                 </JotaiProvider>
             </CookiesProvider>
         </ThemeProvider>

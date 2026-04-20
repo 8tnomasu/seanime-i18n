@@ -45,6 +45,14 @@ Seanime is a **media server** with a **web interface** and **desktop app** for m
 > [!IMPORTANT]
 >Seanime does not provide, host, or distribute any media content. Users are responsible for obtaining media through legal means and complying with their local laws. Extensions listed on the app are unaffiliated with Seanime and may be removed if they violated copyright laws. </strong>
 
+## Unofficial Seanime i18n Fork
+
+This repository is an unofficial fork of Seanime focused on building a maintainable i18n foundation for the frontend.
+
+- First additional language: Traditional Chinese (`zh-TW`)
+- Default and fallback language: English (`en-US`)
+- Localization guide: [docs/i18n.md](docs/i18n.md)
+
 
 ## Features
 
@@ -88,7 +96,7 @@ This is a one-person project and may not meet every use case. If it doesn’t fu
 
 - Built-in support for other trackers such as MyAnimeList, Trakt, SIMKL, etc.
 - Built-in support for other media players
-- Built-in localization (translations)
+- Upstream Seanime does not plan built-in localization (translations); this unofficial fork explores it separately.
 
 
 Consider sponsoring or sharing the project if you want to see more features implemented.

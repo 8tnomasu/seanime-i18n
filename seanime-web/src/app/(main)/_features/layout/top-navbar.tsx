@@ -14,6 +14,7 @@ import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { __isDesktop__ } from "@/types/constants"
 import { useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuFolderDown } from "react-icons/lu"
 import { PluginSidebarTray } from "../plugin/tray/plugin-sidebar-tray"
 
@@ -79,6 +80,7 @@ type SidebarNavbarProps = {
 }
 
 export function SidebarNavbar(props: SidebarNavbarProps) {
+    const { t } = useTranslation()
 
     const {
         isCollapsed,
@@ -113,7 +115,7 @@ export function SidebarNavbar(props: SidebarNavbarProps) {
                     ...(isMangaPage ? [
                         {
                             iconType: LuFolderDown,
-                            name: "Manga Downloads",
+                            name: t("navigation.mangaDownloads"),
                             onClick: () => {
                                 openDownloadQueue(true)
                             },

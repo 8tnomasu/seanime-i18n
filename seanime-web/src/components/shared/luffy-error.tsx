@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button/button"
 import { cn } from "@/components/ui/core/styling"
 import { useRouter } from "@/lib/navigation"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 interface LuffyErrorProps {
     children?: React.ReactNode
@@ -14,8 +15,16 @@ interface LuffyErrorProps {
 }
 
 export const LuffyError: React.FC<LuffyErrorProps> = (props) => {
-
-    const { children, reset, className, title = "Oops!", showRefreshButton = false, imageContainerClass, ...rest } = props
+    const { t } = useTranslation()
+    const {
+        children,
+        reset,
+        className,
+        title = t("common.states.oops"),
+        showRefreshButton = false,
+        imageContainerClass,
+        ...rest
+    } = props
 
     const router = useRouter()
 
@@ -43,10 +52,14 @@ export const LuffyError: React.FC<LuffyErrorProps> = (props) => {
                     <div data-luffy-error-content-children>{children}</div>
                     <div data-luffy-error-content-buttons>
                         {(showRefreshButton && !reset) && (
-                            <Button data-luffy-error-content-button-refresh intent="warning-subtle" onClick={() => router.refresh()}>Retry</Button>
+                            <Button data-luffy-error-content-button-refresh intent="warning-subtle" onClick={() => router.refresh()}>
+                                {t("common.buttons.retry")}
+                            </Button>
                         )}
                         {!!reset && (
-                            <Button data-luffy-error-content-button-reset intent="warning-subtle" onClick={reset}>Retry</Button>
+                            <Button data-luffy-error-content-button-reset intent="warning-subtle" onClick={reset}>
+                                {t("common.buttons.retry")}
+                            </Button>
                         )}
                     </div>
                 </div>

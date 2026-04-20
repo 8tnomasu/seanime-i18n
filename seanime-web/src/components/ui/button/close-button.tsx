@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { IconButton, IconButtonProps } from "."
 import { cn } from "../core/styling"
 
@@ -11,6 +12,7 @@ export type CloseButtonProps = Omit<IconButtonProps, "icon"> & {
 }
 
 export const CloseButton = React.forwardRef<HTMLButtonElement, CloseButtonProps>((props, ref) => {
+    const { t } = useTranslation()
 
     const {
         className,
@@ -27,6 +29,7 @@ export const CloseButton = React.forwardRef<HTMLButtonElement, CloseButtonProps>
                 "rounded-full text-2xl flex-none",
                 className,
             )}
+            aria-label={rest["aria-label"] ?? t("common.buttons.close")}
             icon={!icon ? <span>
                 <svg
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"

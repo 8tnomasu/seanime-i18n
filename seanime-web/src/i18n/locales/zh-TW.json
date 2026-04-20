@@ -1,0 +1,74 @@
+{
+    "app": {
+        "name": "Seanime",
+        "nameSpaced": "S e a n i m e"
+    },
+    "auth": {
+        "enterToken": "輸入 token",
+        "getAniListToken": "取得 AniList token",
+        "loginWithAniList": "使用 AniList 登入",
+        "signOutDescription": "確定要登出嗎？",
+        "signOutTitle": "登出",
+        "usingAniListRecommended": "建議使用 AniList 帳號。"
+    },
+    "common": {
+        "buttons": {
+            "cancel": "??",
+            "close": "??",
+            "continue": "??",
+            "goHome": "回到首頁",
+            "reload": "重新載入",
+            "retry": "重試"
+        },
+        "menu": {
+            "openMainMenu": "開啟主選單"
+        },
+        "states": {
+            "clientSideErrorTitle": "用戶端錯誤",
+            "loading": "載入中",
+            "oops": "糟糕！",
+            "pageNotFoundDescription": "找不到你要查看的頁面。",
+            "pageNotFoundTitle": "找不到頁面",
+            "unexpectedError": "發生未預期的錯誤。"
+        }
+    },
+    "dialogs": {
+        "confirm": "確認",
+        "defaultDescription": "確定要繼續嗎？"
+    },
+    "language": {
+        "description": "選擇這台裝置上 Seanime i18n 使用的顯示語言。",
+        "help": "此偏好設定會儲存在目前的瀏覽器或桌面客戶端本機端。",
+        "options": {
+            "en-US": "English",
+            "zh-TW": "繁體中文（台灣）"
+        },
+        "title": "語言"
+    },
+    "navigation": {
+        "autoDownloader": "自動下載器",
+        "debrid": "Debrid",
+        "discover": "探索",
+        "extensions": "擴充功能",
+        "home": "首頁",
+        "lists": "我的清單",
+        "login": "登入",
+        "manga": "漫畫",
+        "mangaDownloads": "漫畫下載",
+        "more": "更多",
+        "nakama": "Nakama",
+        "offline": "離線",
+        "refreshAniList": "重新整理 AniList",
+        "scanSummaries": "掃描摘要",
+        "schedule": "排程",
+        "search": "搜尋",
+        "settings": "設定",
+        "signIn": "登入",
+        "signOut": "登出",
+        "torrentList": "Torrent 清單",
+        "torrentListSeeding": "Torrent 清單（{{count}} 個做種中）"
+    },
+    "toasts": {
+        "featureDisabled": "此功能已停用"
+    }
+}

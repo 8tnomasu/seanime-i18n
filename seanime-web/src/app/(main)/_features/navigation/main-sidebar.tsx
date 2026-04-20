@@ -33,6 +33,7 @@ import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { __isDesktop__, __isElectronDesktop__ } from "@/types/constants"
 import { useAtom } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiChevronRight, BiExtension, BiLogIn, BiLogOut } from "react-icons/bi"
 import { FiLogIn, FiSearch } from "react-icons/fi"
 import { HiOutlineServerStack } from "react-icons/hi2"
@@ -111,6 +112,7 @@ export function MainSidebar() {
 
 
 function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean, containerRef: React.RefObject<HTMLDivElement | null> }) {
+    const { t } = useTranslation()
     const ctx = useAppSidebarContext()
     const ts = useThemeSettings()
     const router = useRouter()
@@ -141,7 +143,7 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
         {
             id: "home",
             iconType: IoHomeOutline,
-            name: "Home",
+            name: t("navigation.home"),
             href: "/",
             isCurrent: pathname === "/",
         },
@@ -155,7 +157,7 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
         {
             id: "schedule",
             iconType: LuCalendar,
-            name: "Schedule",
+            name: t("navigation.schedule"),
             href: "/schedule",
             isCurrent: pathname === "/schedule",
             addon: missingEpisodeCount > 0 ? <Badge
@@ -166,28 +168,28 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
         ...serverStatus?.settings?.library?.enableManga ? [{
             id: "manga",
             iconType: LuBookOpen,
-            name: "Manga",
+            name: t("navigation.manga"),
             href: "/manga",
             isCurrent: pathname.startsWith("/manga"),
         }] : [],
         {
             id: "lists",
             iconType: RiListCheck3,
-            name: "My lists",
+            name: t("navigation.lists"),
             href: "/lists",
             isCurrent: pathname === "/lists",
         },
         {
             id: "discover",
             iconType: LuCompass,
-            name: "Discover",
+            name: t("navigation.discover"),
             href: "/discover",
             isCurrent: pathname === "/discover",
         },
         {
             id: "search",
             iconType: FiSearch,
-            name: "Search",
+            name: t("navigation.search"),
             href: "/search",
             isCurrent: pathname === "/search",
             // onClick: () => {
@@ -202,8 +204,8 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
                 id: "torrent-list",
                 iconType: serverStatus?.settings?.torrent?.defaultTorrentClient === TORRENT_CLIENT.QBITTORRENT ? SiQbittorrent : SiTransmission,
                 name: (activeTorrentCount.seeding === 0 || !serverStatus?.settings?.torrent?.showActiveTorrentCount)
-                    ? "Torrent list"
-                    : `Torrent list (${activeTorrentCount.seeding} seeding)`,
+                    ? t("navigation.torrentList")
+                    : t("navigation.torrentListSeeding", { count: activeTorrentCount.seeding }),
                 href: "/torrent-list",
                 isCurrent: pathname === "/torrent-list",
                 addon: ((activeTorrentCount.downloading + activeTorrentCount.paused) > 0 && serverStatus?.settings?.torrent?.showActiveTorrentCount)
@@ -216,21 +218,21 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
         ...(serverStatus?.debridSettings?.enabled && !!serverStatus?.debridSettings?.provider) ? [{
             id: "debrid",
             iconType: HiOutlineServerStack,
-            name: "Debrid",
+            name: t("navigation.debrid"),
             href: "/debrid",
             isCurrent: pathname === "/debrid",
         }] : [],
         ...(!!serverStatus?.settings?.library?.libraryPath) ? [{
             id: "scan-summaries",
             iconType: TbReportSearch,
-            name: "Scan summaries",
+            name: t("navigation.scanSummaries"),
             href: "/scan-summaries",
             isCurrent: pathname === "/scan-summaries",
         }] : [],
         ...(serverStatus?.settings?.library?.torrentProvider !== TORRENT_PROVIDER.NONE && !!serverStatus?.settings?.library?.libraryPath) ? [{
             id: "auto-downloader",
             iconType: LuRss,
-            name: "Auto Downloader",
+            name: t("navigation.autoDownloader"),
             href: "/auto-downloader",
             isCurrent: pathname === "/auto-downloader",
             addon: autoDownloaderQueueCount > 0 ? <Badge
@@ -252,6 +254,7 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
         activeTorrentCount.downloading,
         activeTorrentCount.paused,
         autoDownloaderQueueCount,
+        t,
     ])
 
     // Plugins
@@ -340,14 +343,14 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
         return [
             {
                 iconType: BiChevronRight,
-                name: "More",
+                name: t("navigation.more"),
                 subContent: <VerticalMenu
                     items={allHidden}
                     isSidebar
                 />,
             } as VerticalMenuItem,
         ]
-    }, [items, ts.unpinnedMenuItems, autoUnpinnedIds, pluginWebviewItems])
+    }, [items, ts.unpinnedMenuItems, autoUnpinnedIds, pluginWebviewItems, t])
 
     return (
         <div>
@@ -375,7 +378,7 @@ function SidebarNavigation({ isCollapsed, containerRef }: { isCollapsed: boolean
                     ...unpinnedMenuItems,
                     {
                         iconType: LuRefreshCw,
-                        name: "Refresh AniList",
+                        name: t("navigation.refreshAniList"),
                         onClick: () => {
                             ctx.setOpen(false)
                             if (isRefreshingAC) return
@@ -433,6 +436,7 @@ function SidebarUpdates({ isCollapsed }: { isCollapsed: boolean }) {
 }
 
 function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogout: () => void }) {
+    const { t } = useTranslation()
     const ctx = useAppSidebarContext()
     const pathname = usePathname()
     const serverStatus = useServerStatus()
@@ -451,8 +455,8 @@ function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogo
 
     // Sign out
     const confirmSignOut = useConfirmationDialog({
-        title: "Sign out",
-        description: "Are you sure you want to sign out?",
+        title: t("auth.signOutTitle"),
+        description: t("auth.signOutDescription"),
         onConfirm: () => {
             onLogout()
         },
@@ -481,7 +485,7 @@ function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogo
                     ...serverStatus?.settings?.nakama?.enabled ? [{
                         iconType: MdOutlineConnectWithoutContact,
                         iconClass: "size-6",
-                        name: "Nakama",
+                        name: t("navigation.nakama"),
                         isCurrent: nakamaModalOpen,
                         onClick: () => {
                             ctx.setOpen(false)
@@ -500,7 +504,7 @@ function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogo
                     }] : [],
                     {
                         iconType: BiExtension,
-                        name: "Extensions",
+                        name: t("navigation.extensions"),
                         href: "/extensions",
                         isCurrent: pathname.includes("/extensions"),
                         addon: (!!updateData?.length || !!pluginWithIssuesCount)
@@ -514,7 +518,7 @@ function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogo
                     },
                     {
                         iconType: IoCloudOfflineOutline,
-                        name: "Offline",
+                        name: t("navigation.offline"),
                         href: "/sync",
                         isCurrent: pathname.includes("/sync"),
                         addon: (syncIsActive)
@@ -528,14 +532,14 @@ function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogo
                     },
                     {
                         iconType: LuSettings,
-                        name: "Settings",
+                        name: t("navigation.settings"),
                         href: "/settings",
                         isCurrent: pathname === ("/settings"),
                     },
                     ...(ctx.isBelowBreakpoint ? [
                         {
                             iconType: user?.isSimulated ? FiLogIn : BiLogOut,
-                            name: user?.isSimulated ? "Sign in" : "Sign out",
+                            name: user?.isSimulated ? t("navigation.signIn") : t("navigation.signOut"),
                             onClick: user?.isSimulated ? () => setLoginModal(true) : confirmSignOut.open,
                         },
                     ] : []),
@@ -547,6 +551,7 @@ function SidebarFooter({ isCollapsed, onLogout }: { isCollapsed: boolean, onLogo
 }
 
 function SidebarUser({ isCollapsed, expandedSidebar, onLogout }: { isCollapsed: boolean, expandedSidebar: boolean, onLogout: () => void }) {
+    const { t } = useTranslation()
     const ctx = useAppSidebarContext()
     const user = useCurrentUser()
     const router = useRouter()
@@ -557,8 +562,8 @@ function SidebarUser({ isCollapsed, expandedSidebar, onLogout }: { isCollapsed: 
 
     // Sign out
     const confirmSignOut = useConfirmationDialog({
-        title: "Sign out",
-        description: "Are you sure you want to sign out?",
+        title: t("auth.signOutTitle"),
+        description: t("auth.signOutDescription"),
         onConfirm: () => {
             onLogout()
         },
@@ -576,7 +581,7 @@ function SidebarUser({ isCollapsed, expandedSidebar, onLogout }: { isCollapsed: 
                         items={[
                             {
                                 iconType: FiLogIn,
-                                name: "Login",
+                                name: t("navigation.login"),
                                 onClick: () => openTab(ANILIST_OAUTH_URL),
                             },
                         ]}
@@ -598,16 +603,16 @@ function SidebarUser({ isCollapsed, expandedSidebar, onLogout }: { isCollapsed: 
                     onOpenChange={setDropdownOpen}
                 >
                     {!user.isSimulated ? <DropdownMenuItem onClick={confirmSignOut.open}>
-                        <BiLogOut /> Sign out
+                        <BiLogOut /> {t("navigation.signOut")}
                     </DropdownMenuItem> : <DropdownMenuItem onClick={() => setLoginModal(true)}>
-                        <BiLogIn /> Log in with AniList
+                        <BiLogIn /> {t("auth.loginWithAniList")}
                     </DropdownMenuItem>}
                 </DropdownMenu>
             </div>}
 
             <Modal
-                title="Log in with AniList"
-                description="Using an AniList account is recommended."
+                title={t("auth.loginWithAniList")}
+                description={t("auth.usingAniListRecommended")}
                 open={loginModal && user?.isSimulated}
                 onOpenChange={(v) => setLoginModal(v)}
                 overlayClass="bg-opacity-95 bg-gray-950"
@@ -630,7 +635,7 @@ function SidebarUser({ isCollapsed, expandedSidebar, onLogout }: { isCollapsed: 
                             </svg>}
                             intent="white"
                             size="md"
-                        >Get AniList token</Button>
+                        >{t("auth.getAniListToken")}</Button>
                     </SeaLink>
 
                     <Form
@@ -646,10 +651,10 @@ function SidebarUser({ isCollapsed, expandedSidebar, onLogout }: { isCollapsed: 
                     >
                         <Field.Textarea
                             name="token"
-                            label="Enter the token"
+                            label={t("auth.enterToken")}
                             fieldClass="px-4"
                         />
-                        <Field.Submit showLoadingOverlayOnSuccess loading={loggingIn}>Continue</Field.Submit>
+                        <Field.Submit showLoadingOverlayOnSuccess loading={loggingIn}>{t("common.buttons.continue")}</Field.Submit>
                     </Form>
 
                 </div>

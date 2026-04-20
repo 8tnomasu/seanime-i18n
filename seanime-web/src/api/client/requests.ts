@@ -1,6 +1,7 @@
 
 import { getServerBaseUrl } from "@/api/client/server-url"
 import { serverAuthTokenAtom } from "@/app/(main)/_atoms/server-status.atoms"
+import i18n from "@/i18n"
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "@tanstack/react-query"
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { useAtomValue } from "jotai"
@@ -91,7 +92,7 @@ export function useServerMutation<R = void, V = void>(
             console.log("Mutation error", error)
             const errorMsg = _handleSeaError(error.response?.data)
             if (errorMsg.includes("feature disabled")) {
-                toast.warning("This feature is disabled")
+                toast.warning(i18n.t("toasts.featureDisabled"))
                 return
             }
             toast.error(errorMsg)

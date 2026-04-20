@@ -2,6 +2,7 @@ import { SeaLink } from "@/components/shared/sea-link"
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
 import { cva, VariantProps } from "class-variance-authority"
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { cn, ComponentAnatomy, defineStyleAnatomy } from "../core/styling"
 import { Drawer } from "../drawer"
 import { VerticalMenu, VerticalMenuItem } from "../vertical-menu"
@@ -129,6 +130,7 @@ export type NavigationMenuProps = ComponentAnatomy<typeof NavigationMenuAnatomy>
 }
 
 export const NavigationMenu = React.forwardRef<HTMLDivElement, NavigationMenuProps>((props, ref) => {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -176,10 +178,10 @@ export const NavigationMenu = React.forwardRef<HTMLDivElement, NavigationMenuPro
                         switchToDrawerBelow,
                     }),
                     mobileTriggerClass,
-                )}
+                )} 
                 onClick={() => setMobileOpen(s => !s)}
             >
-                <span className="sr-only">Open main menu</span>
+                <span className="sr-only">{t("common.menu.openMainMenu")}</span>
                 {mobileOpen ? (
                     <svg
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

@@ -5,12 +5,15 @@ import { LoadingOverlay } from "@/components/ui/loading-spinner"
 import { __isDesktop__ } from "@/types/constants"
 import { SeaImage } from "@/components/shared/sea-image"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export function LoadingOverlayWithLogo({ refetch, title }: { refetch?: () => void, title?: string }) {
+    const { t } = useTranslation()
+
     return <LoadingOverlay showSpinner={false}>
         <SeaImage
             src="/seanime-logo.png"
-            alt="Loading..."
+            alt={t("common.states.loading")}
             priority
             width={100}
             height={100}
@@ -26,7 +29,7 @@ export function LoadingOverlayWithLogo({ refetch, title }: { refetch?: () => voi
                 className="mt-4 z-[1]"
                 intent="gray-outline"
                 size="sm"
-            >Reload</Button>
+            >{t("common.buttons.reload")}</Button>
         )}
     </LoadingOverlay>
 }

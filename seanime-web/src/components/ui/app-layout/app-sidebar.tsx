@@ -1,5 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority"
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { AppLayoutAnatomy } from "."
 import { cn, ComponentAnatomy, defineStyleAnatomy } from "../core/styling"
 import { Drawer, DrawerProps } from "../drawer"
@@ -100,6 +101,7 @@ AppSidebar.displayName = "AppSidebar"
 export type AppSidebarTriggerProps = React.ComponentPropsWithoutRef<"button"> & ComponentAnatomy<typeof AppSidebarTriggerAnatomy>
 
 export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarTriggerProps>((props, ref) => {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -116,7 +118,7 @@ export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarT
             onClick={() => ctx.setOpen(!ctx.open)}
             {...rest}
         >
-            <span className="sr-only">Open main menu</span>
+            <span className="sr-only">{t("common.menu.openMainMenu")}</span>
             {ctx.open ? (
                 <svg
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
