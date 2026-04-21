@@ -9,6 +9,7 @@ import {
 } from "@/app/(main)/entry/_containers/torrent-search/torrent-search-drawer"
 import { useSetAtom } from "jotai"
 import React, { startTransition } from "react"
+import { useTranslation } from "react-i18next"
 import { BiCalendarAlt, BiDownload } from "react-icons/bi"
 import { EpisodeItemInfoModalButton } from "./episode-item"
 
@@ -17,6 +18,7 @@ export function UndownloadedEpisodeList({ downloadInfo, media, maxCol }: {
     media: AL_BaseAnime
     maxCol?: number
 }) {
+    const { t, i18n } = useTranslation()
 
     const episodes = downloadInfo?.episodesToDownload
 
@@ -26,9 +28,9 @@ export function UndownloadedEpisodeList({ downloadInfo, media, maxCol }: {
     const { hasTorrentProvider } = useHasTorrentProvider()
 
     const text = hasTorrentProvider ? (downloadInfo?.rewatch
-            ? "You have not downloaded the following:"
-            : "You have not watched nor downloaded the following:") :
-        "The following episodes are not in your library:"
+            ? t("mediaDetail.episodes.notDownloaded")
+            : t("mediaDetail.episodes.notWatchedOrDownloaded")) :
+        t("mediaDetail.episodes.notInLibrary")
 
     if (!episodes?.length) return null
 
@@ -74,15 +76,17 @@ export function UndownloadedEpisodeList({ downloadInfo, media, maxCol }: {
                             <div data-undownloaded-episode-list-episode-metadata-container className="mt-1">
                                 <p data-undownloaded-episode-list-episode-metadata-text className="flex gap-1 items-center text-sm text-[--muted]">
                                     <BiCalendarAlt /> {episode.episodeMetadata?.airDate
-                                    ? `Aired on ${new Date(episode.episodeMetadata?.airDate).toLocaleDateString()}`
-                                    : "Aired"}
+                                    ? t("mediaDetail.episodes.airedOn", {
+                                        date: new Date(episode.episodeMetadata?.airDate).toLocaleDateString(i18n.resolvedLanguage),
+                                    })
+                                    : t("mediaDetail.episodes.aired")}
                                 </p>
                             </div>
                         </EpisodeGridItem>
                     )
                 })}
             </EpisodeListGrid>
-            {episodes.length > 28 && <h3>And more...</h3>}
+            {episodes.length > 28 && <h3>{t("mediaDetail.episodes.andMore")}</h3>}
         </div>
     )
 

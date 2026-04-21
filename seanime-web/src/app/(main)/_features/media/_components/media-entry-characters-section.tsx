@@ -3,8 +3,10 @@ import { imageShimmer } from "@/components/shared/image-helpers"
 import { SeaImage } from "@/components/shared/sea-image"
 import { SeaLink } from "@/components/shared/sea-link"
 import { cn } from "@/components/ui/core/styling"
+import { getCharacterRoleLabel } from "@/i18n/labels"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiSolidHeart } from "react-icons/bi"
 
 type RelationsRecommendationsSectionProps = {
@@ -13,6 +15,7 @@ type RelationsRecommendationsSectionProps = {
 }
 
 export function MediaEntryCharactersSection(props: RelationsRecommendationsSectionProps) {
+    const { t } = useTranslation()
 
     const {
         details,
@@ -32,7 +35,7 @@ export function MediaEntryCharactersSection(props: RelationsRecommendationsSecti
         <>
             {/*{!isMangaPage && <Separator />}*/}
 
-            <h2 data-media-entry-characters-section-title>Characters</h2>
+            <h2 data-media-entry-characters-section-title>{t("mediaDetail.sections.characters")}</h2>
 
             <div
                 data-media-entry-characters-section-grid
@@ -74,7 +77,7 @@ export function MediaEntryCharactersSection(props: RelationsRecommendationsSecti
                                 {(edge?.node?.image?.large) && <SeaImage
                                     data-media-entry-characters-section-grid-item-image
                                     src={edge?.node?.image?.large || ""}
-                                    alt="episode image"
+                                    alt={t("mediaDetail.accessibility.characterImageAlt")}
                                     fill
                                     quality={60}
                                     placeholder={imageShimmer(700, 475)}
@@ -96,11 +99,11 @@ export function MediaEntryCharactersSection(props: RelationsRecommendationsSecti
                                 </SeaLink>
 
                                 {edge?.node?.age && <p data-media-entry-characters-section-grid-item-content-age className="text-sm">
-                                    {edge?.node?.age} years old
+                                    {t("mediaDetail.metadata.characterAge", { age: edge?.node?.age })}
                                 </p>}
 
                                 <p data-media-entry-characters-section-grid-item-content-role className="text-[--muted] text-xs">
-                                    {edge?.role}
+                                    {getCharacterRoleLabel(t, edge?.role)}
                                 </p>
 
                                 {edge?.node?.isFavourite && <div data-media-entry-characters-section-grid-item-content-favourite>

@@ -1,5 +1,6 @@
 import { TFunction } from "i18next"
 import capitalize from "lodash/capitalize"
+import { enUS, zhTW } from "date-fns/locale"
 
 export function getCollectionStatusLabel(
     t: TFunction,
@@ -175,4 +176,40 @@ export function getGenreLabel(t: TFunction, value?: string | null) {
         default:
             return value ?? ""
     }
+}
+
+export function getMediaRelationTypeLabel(t: TFunction, value?: string | null) {
+    switch (value) {
+        case "ADAPTATION":
+        case "ALTERNATIVE":
+        case "CHARACTER":
+        case "COMPILATION":
+        case "CONTAINS":
+        case "OTHER":
+        case "PARENT":
+        case "PREQUEL":
+        case "SEQUEL":
+        case "SIDE_STORY":
+        case "SOURCE":
+        case "SUMMARY":
+        case "SPIN_OFF":
+            return t(`mediaDetail.enums.relationTypes.${value}`)
+        default:
+            return capitalize((value ?? "").toLowerCase().replace(/_/g, " "))
+    }
+}
+
+export function getCharacterRoleLabel(t: TFunction, value?: string | null) {
+    switch (value) {
+        case "MAIN":
+        case "SUPPORTING":
+        case "BACKGROUND":
+            return t(`mediaDetail.enums.characterRoles.${value}`)
+        default:
+            return value ?? ""
+    }
+}
+
+export function getDateFnsLocale(language?: string) {
+    return language === "zh-TW" ? zhTW : enUS
 }

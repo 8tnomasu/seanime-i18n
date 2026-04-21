@@ -22,6 +22,7 @@ import { Select } from "@/components/ui/select"
 import { useAtom, useSetAtom } from "jotai/react"
 import React from "react"
 import { ErrorBoundary } from "react-error-boundary"
+import { useTranslation } from "react-i18next"
 import { FaRedo } from "react-icons/fa"
 import { GiOpenBook } from "react-icons/gi"
 import { IoBookOutline, IoLibrary } from "react-icons/io5"
@@ -38,6 +39,7 @@ type ChapterListProps = {
 }
 
 export function ChapterList(props: ChapterListProps) {
+    const { t } = useTranslation()
 
     const {
         mediaId,
@@ -121,10 +123,10 @@ export function ChapterList(props: ChapterListProps) {
     }, [chapterIdToNumbersMap, chapterContainer, entry])
 
     const confirmReloadSource = useConfirmationDialog({
-        title: "Reload sources",
+        title: t("mediaDetail.dialogs.reloadSourcesTitle"),
         actionIntent: "primary",
-        actionText: "Reload",
-        description: "This action will empty the cache for this manga and fetch the latest data from the selected source.",
+        actionText: t("mediaDetail.dialogs.reloadSourcesAction"),
+        description: t("mediaDetail.dialogs.reloadSourcesDescription"),
         onConfirm: () => {
             if (mediaId) {
                 clearMangaCache({ mediaId: Number(mediaId) })
@@ -138,12 +140,12 @@ export function ChapterList(props: ChapterListProps) {
     const columns = React.useMemo(() => defineDataGridColumns<HibikeManga_ChapterDetails>(() => [
         {
             accessorKey: "title",
-            header: "Name",
+            header: t("mediaDetail.chapters.name"),
             size: 90,
         },
         ...(selectedExtension?.settings?.supportsMultiScanlator ? [{
             id: "scanlator",
-            header: "Scanlator",
+            header: t("mediaDetail.chapters.scanlator"),
             size: 30,
             accessorFn: (row: any) => row.scanlator,
             enableSorting: true,
@@ -151,7 +153,7 @@ export function ChapterList(props: ChapterListProps) {
         }] : []),
         ...(selectedExtension?.settings?.supportsMultiLanguage ? [{
             id: "language",
-            header: "Language",
+            header: t("mediaDetail.chapters.language"),
             size: 40,
             accessorFn: (row: any) => LANGUAGES_LIST[row.language]?.nativeName || row.language,
             enableSorting: true,
@@ -159,7 +161,7 @@ export function ChapterList(props: ChapterListProps) {
         }] : []),
         {
             id: "number",
-            header: "Number",
+            header: t("mediaDetail.chapters.number"),
             size: 10,
             enableSorting: true,
             accessorFn: (row) => {
@@ -182,7 +184,7 @@ export function ChapterList(props: ChapterListProps) {
                             icon={<LuDownload className="text-xl" />}
                             className="opacity-50 hover:opacity-100"
                         />}
-                        {isChapterQueued(row.original) && <p className="text-[--muted]">Queued</p>}
+                        {isChapterQueued(row.original) && <p className="text-[--muted]">{t("mediaDetail.chapters.queued")}</p>}
                         {isChapterDownloaded(row.original) && <p className="text-[--green] px-1"><MdOutlineOfflinePin className="text-2xl" /></p>}
                         <IconButton
                             intent="gray-subtle"
@@ -199,7 +201,7 @@ export function ChapterList(props: ChapterListProps) {
                 )
             },
         },
-    ]), [chapterIdToNumbersMap, selectedExtension, isSendingDownloadRequest, isChapterDownloaded, downloadData, mediaId])
+    ]), [chapterIdToNumbersMap, downloadData, isChapterDownloaded, isChapterQueued, isSendingDownloadRequest, mediaId, selectedExtension, setSelectedChapter, t])
 
     const unreadChapters = React.useMemo(() => chapterContainer?.chapters?.filter(ch => retainUnreadChapters(ch)) ?? [], [chapterContainer, entry])
     const allChapters = React.useMemo(() => chapterContainer?.chapters?.toReversed() ?? [], [chapterContainer])
@@ -250,11 +252,11 @@ export function ChapterList(props: ChapterListProps) {
                 data: nextChapter,
                 id: `next-chapter-${nextChapter.id}`,
                 value: `${nextChapter.chapter}`,
-                heading: "Next Chapter",
+                heading: t("mediaDetail.chapters.nextChapter"),
                 priority: 2,
                 render: () => (
                     <div className="flex gap-1 items-center w-full">
-                        <p className="max-w-[70%] truncate">Chapter {nextChapter.chapter}</p>
+                        <p className="max-w-[70%] truncate">{t("mediaDetail.chapters.chapter")} {nextChapter.chapter}</p>
                         {nextChapter.scanlator && (
                             <p className="text-[--muted]">({nextChapter.scanlator})</p>
                         )}
@@ -275,11 +277,11 @@ export function ChapterList(props: ChapterListProps) {
                 data: chapter,
                 id: `chapter-${chapter.id}`,
                 value: `${chapter.chapter}`,
-                heading: "Upcoming Chapters",
+                heading: t("mediaDetail.chapters.upcomingChapters"),
                 priority: 1,
                 render: () => (
                     <div className="flex gap-1 items-center w-full">
-                        <p className="max-w-[70%] truncate">Chapter {chapter.chapter}</p>
+                        <p className="max-w-[70%] truncate">{t("mediaDetail.chapters.chapter")} {chapter.chapter}</p>
                         {chapter.scanlator && (
                             <p className="text-[--muted]">({chapter.scanlator})</p>
                         )}
@@ -308,7 +310,7 @@ export function ChapterList(props: ChapterListProps) {
         })
 
         return () => remove("manga-chapters")
-    }, [chapterContainer?.chapters, unreadChapters, mediaId])
+    }, [chapterContainer?.chapters, inject, mediaId, remove, setSelectedChapter, t, unreadChapters])
 
     const [downloadedChapterContainer] = useAtom(manga_downloadedChapterContainerAtom)
 
@@ -333,7 +335,7 @@ export function ChapterList(props: ChapterListProps) {
                         mId: mediaId,
                         provider: v,
                     })}
-                    leftAddon="Source"
+                    leftAddon={t("mediaDetail.chapters.source")}
                     size="sm"
                     disabled={isClearingMangaCache}
                 />
@@ -345,7 +347,7 @@ export function ChapterList(props: ChapterListProps) {
                     loading={isClearingMangaCache}
                     size="sm"
                 >
-                    Reload sources
+                    {t("mediaDetail.actions.reloadSources")}
                 </Button>
 
                 <MangaManualMappingModal entry={entry}>
@@ -354,7 +356,7 @@ export function ChapterList(props: ChapterListProps) {
                         intent="gray-outline"
                         size="sm"
                     >
-                        Manual match
+                        {t("mediaDetail.actions.manualMatch")}
                     </Button>
                 </MangaManualMappingModal>
             </div>
@@ -362,8 +364,8 @@ export function ChapterList(props: ChapterListProps) {
             <ErrorBoundary
                 fallbackRender={({ error }) => <Alert
                     intent="alert"
-                    title="Client side error"
-                    description={`Could not load chapter filters. Please contact the extension developer: "${error}"`}
+                    title={t("common.states.clientSideErrorTitle")}
+                    description={t("mediaDetail.states.clientFilterErrorDescription", { error: String(error) })}
                 />}
             >
                 {(selectedExtension?.settings?.supportsMultiLanguage || selectedExtension?.settings?.supportsMultiScanlator) && (
@@ -373,13 +375,13 @@ export function ChapterList(props: ChapterListProps) {
                                 <Select
                                     fieldClass="w-64"
                                     options={scanlatorOptions}
-                                    placeholder="All"
+                                    placeholder={t("common.words.all")}
                                     value={selectedFilters.scanlators[0] || ""}
                                     onValueChange={v => setSelectedScanlator({
                                         mId: mediaId,
                                         scanlators: [v],
                                     })}
-                                    leftAddon="Scanlator"
+                                    leftAddon={t("mediaDetail.chapters.scanlator")}
                                     // intent="filled"
                                     // size="sm"
                                 />
@@ -389,13 +391,13 @@ export function ChapterList(props: ChapterListProps) {
                             <Select
                                 fieldClass="w-64"
                                 options={languageOptions}
-                                placeholder="All"
+                                placeholder={t("common.words.all")}
                                 value={selectedFilters.language}
                                 onValueChange={v => setSelectedLanguage({
                                     mId: mediaId,
                                     language: v,
                                 })}
-                                leftAddon="Language"
+                                leftAddon={t("mediaDetail.chapters.language")}
                                 // intent="filled"
                                 // size="sm"
                             />
@@ -405,27 +407,27 @@ export function ChapterList(props: ChapterListProps) {
             </ErrorBoundary>
 
             {(chapterContainerLoading || isClearingMangaCache) ? <LoadingSpinner /> : (
-                chapterContainerError ? <LuffyError title="No chapters found">
+                chapterContainerError ? <LuffyError title={t("mediaDetail.states.noChaptersFound")}>
                     <MangaManualMappingModal entry={entry}>
                         <Button
                             leftIcon={<LuSearch className="text-lg" />}
                             intent="gray-outline"
                             size="md"
                         >
-                            Manual match
+                            {t("mediaDetail.actions.manualMatch")}
                         </Button>
                     </MangaManualMappingModal>
                 </LuffyError> : (
                     <>
 
                         {chapterContainer?.chapters?.length === 0 && (
-                            <LuffyError title="No chapters found"><p>Try another source</p></LuffyError>
+                            <LuffyError title={t("mediaDetail.states.noChaptersFound")}><p>{t("mediaDetail.states.tryAnotherSource")}</p></LuffyError>
                         )}
 
                         {!!chapterContainer?.chapters?.length && (
                             <>
                                 <div data-chapter-list-header-container className="flex gap-2 items-center w-full pb-2">
-                                    <h2 className="px-1">Chapters</h2>
+                                    <h2 className="px-1">{t("mediaDetail.chapters.title")}</h2>
                                     <div className="flex flex-1"></div>
                                     <div>
                                         {!!unreadChapters?.length && <Button
@@ -442,7 +444,7 @@ export function ChapterList(props: ChapterListProps) {
                                                 })
                                             }}
                                         >
-                                            {!!entry.listData?.progress ? "Continue reading" : "Start reading"}
+                                            {!!entry.listData?.progress ? t("mediaDetail.actions.continueReading") : t("mediaDetail.actions.startReading")}
                                         </Button>}
                                     </div>
                                 </div>
@@ -470,14 +472,14 @@ export function ChapterList(props: ChapterListProps) {
 
                                     <div data-chapter-list-bulk-actions-checkboxes-container className="flex flex-wrap items-center gap-4">
                                         <Checkbox
-                                            label="Show unread"
+                                            label={t("mediaDetail.chapters.showUnread")}
                                             value={showUnreadChapter}
                                             onValueChange={v => setShowUnreadChapter(v as boolean)}
                                             fieldClass="w-fit"
                                             {...monochromeCheckboxClasses}
                                         />
                                         {selectedProvider !== "local-manga" && <Checkbox
-                                            label={<span className="flex gap-2 items-center"><IoLibrary /> Show downloaded</span>}
+                                            label={<span className="flex gap-2 items-center"><IoLibrary /> {t("mediaDetail.chapters.showDownloaded")}</span>}
                                             value={showDownloadedChapters}
                                             onValueChange={v => setShowDownloadedChapters(v as boolean)}
                                             fieldClass="w-fit"

@@ -17,6 +17,7 @@ import { useWindowSize } from "@uidotdev/usehooks"
 import { atom } from "jotai"
 import { createIsolation } from "jotai-scope"
 import React, { memo } from "react"
+import { useTranslation } from "react-i18next"
 import { AiFillWarning } from "react-icons/ai"
 import { BiDotsHorizontal, BiLockOpenAlt } from "react-icons/bi"
 import { LuTvMinimalPlay } from "react-icons/lu"
@@ -41,6 +42,7 @@ export const EpisodeItem = memo(({ episode, media, isWatched, onPlay, percentage
     minutesRemaining?: number
     isOffline?: boolean
 }) => {
+    const { t } = useTranslation()
 
     const { updateLocalFile, isPending } = useUpdateLocalFileData()
     const [_, copyToClipboard] = useCopyToClipboard()
@@ -115,11 +117,11 @@ export const EpisodeItem = memo(({ episode, media, isWatched, onPlay, percentage
                                     const tokenQuery = await getHMACTokenQueryParam("/api/v1/nakama/stream", "&")
                                     copyToClipboard(`${getServerBaseUrl()}${endpoint}${tokenQuery}`)
                                 }
-                                toast.info("Stream URL copied")
+                                toast.info(t("toasts.mediaDetail.streamUrlCopied"))
                             }}
                         >
                             <MdOutlineOndemandVideo />
-                            Copy stream URL
+                            {t("mediaDetail.actions.copyStreamUrl")}
                         </DropdownMenuItem>}
 
                         {onPlayExternally && <DropdownMenuItem
@@ -128,7 +130,7 @@ export const EpisodeItem = memo(({ episode, media, isWatched, onPlay, percentage
                             }}
                         >
                             <LuTvMinimalPlay />
-                            Play externally
+                            {t("mediaDetail.actions.playExternally")}
                         </DropdownMenuItem>}
 
 
@@ -148,7 +150,7 @@ export const EpisodeItem = memo(({ episode, media, isWatched, onPlay, percentage
                                     }
                                 }}
                             >
-                                <MdOutlineRemoveDone /> Unmatch
+                                <MdOutlineRemoveDone /> {t("mediaDetail.actions.unmatch")}
                             </DropdownMenuItem>
                         </>}
                     </DropdownMenu>
@@ -173,6 +175,7 @@ export const localFileMetadataSchema = defineSchema(({ z }) => z.object({
 }))
 
 function MetadataModal({ episode }: { episode: Anime_Episode }) {
+    const { t } = useTranslation()
 
     const [isOpen, setIsOpen] = EpisodeItemIsolation.useAtom(__metadataModalIsOpenAtom)
 
@@ -189,7 +192,7 @@ function MetadataModal({ episode }: { episode: Anime_Episode }) {
                 },
             }, () => {
                 setIsOpen(false)
-                toast.success("Metadata saved")
+                toast.success(t("toasts.mediaDetail.metadataSaved"))
             })
         }
     }
@@ -212,26 +215,28 @@ function MetadataModal({ episode }: { episode: Anime_Episode }) {
                 defaultValues={{ ...episode.fileMetadata }}
             >
                 <Field.Number
-                    label="Episode number" name="episode"
-                    help="Relative episode number. If movie, episode number = 1"
+                    label={t("mediaDetail.metadata.episodeNumber")} name="episode"
+                    help={t("mediaDetail.metadata.episodeNumberHelp")}
                     required
                 />
                 <Field.Text
-                    label="AniDB episode"
+                    label={t("mediaDetail.metadata.aniDbEpisode")}
                     name="aniDBEpisode"
-                    help="Specials typically contain the letter S"
+                    help={t("mediaDetail.metadata.aniDbEpisodeHelp")}
                 />
                 <Field.Select
-                    label="Type"
+                    label={t("mediaDetail.metadata.type")}
                     name="type"
                     options={[
-                        { label: "Main", value: "main" },
-                        { label: "Special", value: "special" },
-                        { label: "NC/Other", value: "nc" },
+                        { label: t("mediaDetail.enums.episodeTypes.main"), value: "main" },
+                        { label: t("mediaDetail.enums.episodeTypes.special"), value: "special" },
+                        { label: t("mediaDetail.enums.episodeTypes.nc"), value: "nc" },
                     ]}
                 />
                 <div className="w-full">
-                    <Field.Submit role="save" intent="primary" className="w-full" loading={isPending}>Save</Field.Submit>
+                    <Field.Submit role="save" intent="primary" className="w-full" loading={isPending}>
+                        {t("common.buttons.save")}
+                    </Field.Submit>
                 </div>
             </Form>
         </Modal>
@@ -239,10 +244,11 @@ function MetadataModal({ episode }: { episode: Anime_Episode }) {
 }
 
 function MetadataModalButton() {
+    const { t } = useTranslation()
     const [, setIsOpen] = EpisodeItemIsolation.useAtom(__metadataModalIsOpenAtom)
     return <DropdownMenuItem onClick={() => setIsOpen(true)}>
         <RiEdit2Line />
-        Update metadata
+        {t("mediaDetail.actions.updateMetadata")}
     </DropdownMenuItem>
 }
 
@@ -270,6 +276,7 @@ function IsomorphicPopover(props: PopoverProps & ModalProps) {
 }
 
 export function EpisodeItemInfoModalButton({ episode }: { episode: Anime_Episode }) {
+    const { t } = useTranslation()
     return <IsomorphicPopover
         title={episode.displayTitle}
         trigger={<IconButton
@@ -285,7 +292,7 @@ export function EpisodeItemInfoModalButton({ episode }: { episode: Anime_Episode
         >
             <SeaImage
                 src={getImageUrl(episode.episodeMetadata?.image)}
-                alt="banner"
+                alt={t("library.accessibility.bannerImageAlt")}
                 fill
                 quality={80}
                 sizes="20rem"
@@ -302,11 +309,13 @@ export function EpisodeItemInfoModalButton({ episode }: { episode: Anime_Episode
                 {episode.isInvalid && <AiFillWarning />}
             </p>
             <p className="text-[--muted]">
-                {episode.episodeMetadata?.airDate || "Unknown airing date"} - {episode.episodeMetadata?.length || "N/A"} minutes
+                {episode.episodeMetadata?.airDate || t("mediaDetail.episodes.unknownAiringDate")} - {t("mediaDetail.episodes.minutes", {
+                    length: episode.episodeMetadata?.length || t("mediaDetail.episodes.notAvailable"),
+                })}
             </p>
             <p className="text-gray-300">
                 {(episode.episodeMetadata?.summary || episode.episodeMetadata?.overview)?.replaceAll("`", "'")
-                    ?.replace(/source:.*/gi, "") || "No summary"}
+                    ?.replace(/source:.*/gi, "") || t("mediaDetail.episodes.noSummary")}
             </p>
             <Separator />
             <p className="text-[--muted] line-clamp-2 tracking-wide text-sm">
@@ -315,12 +324,12 @@ export function EpisodeItemInfoModalButton({ episode }: { episode: Anime_Episode
             {
                 (!!episode.episodeMetadata?.anidbId) && <>
                     <div className="w-full flex gap-2">
-                        <p>AniDB Episode: {episode.fileMetadata?.aniDBEpisode}</p>
+                        <p>{t("mediaDetail.episodes.aniDbEpisode", { episode: episode.fileMetadata?.aniDBEpisode })}</p>
                         <a
                             href={"https://anidb.net/episode/" + episode.episodeMetadata?.anidbId + "#layout-footer"}
                             target="_blank"
                             className="hover:underline text-[--muted]"
-                        >Open on AniDB
+                        >{t("mediaDetail.actions.openOnAniDB")}
                         </a>
                     </div>
                 </>

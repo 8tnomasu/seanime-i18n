@@ -2,8 +2,9 @@ import { AL_AnimeDetailsById_Media, Anime_Entry, Nullish } from "@/api/generated
 import { MediaCardGrid } from "@/app/(main)/_features/media/_components/media-card-grid"
 import { MediaEntryCard } from "@/app/(main)/_features/media/_components/media-entry-card"
 import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
-import capitalize from "lodash/capitalize"
+import { getMediaFormatLabel, getMediaRelationTypeLabel } from "@/i18n/labels"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 type RelationsRecommendationsSectionProps = {
     entry: Nullish<Anime_Entry>
@@ -13,6 +14,7 @@ type RelationsRecommendationsSectionProps = {
 }
 
 export function RelationsRecommendationsSection(props: RelationsRecommendationsSectionProps) {
+    const { t } = useTranslation()
 
     const {
         entry,
@@ -45,14 +47,14 @@ export function RelationsRecommendationsSection(props: RelationsRecommendationsS
             {/*{(!!sourceManga || relations.length > 0 || recommendations.length > 0) && <Separator />}*/}
             {(!!sourceManga || relations.length > 0) && (
                 <>
-                    <h2>Relations</h2>
+                    <h2>{t("mediaDetail.sections.relations")}</h2>
                     <MediaCardGrid maxCol={maxCol}>
                         {!!sourceManga && <div className="col-span-1">
                             <MediaEntryCard
                                 media={sourceManga!}
                                 overlay={<p
                                     className="font-semibold text-white bg-gray-950 z-[-1] absolute right-0 w-fit px-4 py-1.5 text-center !bg-opacity-90 text-sm lg:text-base rounded-none rounded-bl-lg"
-                                >Manga</p>}
+                                >{t("mediaFilters.options.types.manga")}</p>}
                                 type="manga"
                             /></div>}
                         {relations.slice(0, 4).map(edge => {
@@ -62,8 +64,8 @@ export function RelationsRecommendationsSection(props: RelationsRecommendationsS
                                     overlay={<p
                                         className="font-semibold text-white bg-gray-950 z-[-1] absolute right-0 w-fit px-4 py-1.5 text-center !bg-opacity-90 text-sm lg:text-base rounded-none rounded-bl-lg"
                                     >{edge.node?.format === "MOVIE"
-                                        ? capitalize(edge.relationType || "").replace("_", " ") + " (Movie)"
-                                        : capitalize(edge.relationType || "").replace("_", " ")}</p>}
+                                        ? `${getMediaRelationTypeLabel(t, edge.relationType)} (${getMediaFormatLabel(t, edge.node?.format)})`
+                                        : getMediaRelationTypeLabel(t, edge.relationType)}</p>}
                                     showLibraryBadge
                                     showTrailer
                                     type="anime"
@@ -74,7 +76,7 @@ export function RelationsRecommendationsSection(props: RelationsRecommendationsS
                 </>
             )}
             {recommendations.length > 0 && <>
-                <h2>Recommendations</h2>
+                <h2>{t("mediaDetail.sections.recommendations")}</h2>
                 <MediaCardGrid maxCol={maxCol}>
                     {recommendations.map(media => {
                         return <div key={media.id} className="col-span-1">

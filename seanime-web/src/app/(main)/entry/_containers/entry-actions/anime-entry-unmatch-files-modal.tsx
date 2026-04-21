@@ -7,6 +7,7 @@ import { Modal } from "@/components/ui/modal"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export type AnimeEntryUnmatchFilesModalProps = {
     entry: Anime_Entry
@@ -16,6 +17,7 @@ export const __animeEntryUnmatchFilesModalIsOpenAtom = atom(false)
 
 
 export function AnimeEntryUnmatchFilesModal({ entry }: AnimeEntryUnmatchFilesModalProps) {
+    const { t } = useTranslation()
 
     const [open, setOpen] = useAtom(__animeEntryUnmatchFilesModalIsOpenAtom)
 
@@ -24,7 +26,7 @@ export function AnimeEntryUnmatchFilesModal({ entry }: AnimeEntryUnmatchFilesMod
             open={open}
             onOpenChange={() => setOpen(false)}
             contentClass="max-w-2xl"
-            title={<span>Select files to unmatch</span>}
+            title={<span>{t("mediaDetail.dialogs.selectFilesToUnmatch")}</span>}
             titleClass="text-center"
 
         >
@@ -35,6 +37,7 @@ export function AnimeEntryUnmatchFilesModal({ entry }: AnimeEntryUnmatchFilesMod
 }
 
 function Content({ entry }: { entry: Anime_Entry }) {
+    const { t } = useTranslation()
 
     const [open, setOpen] = useAtom(__animeEntryUnmatchFilesModalIsOpenAtom)
 
@@ -52,7 +55,7 @@ function Content({ entry }: { entry: Anime_Entry }) {
     const { mutate: updateFiles, isPending: isDeleting } = useUpdateLocalFiles()
 
     const confirmUnmatch = useConfirmationDialog({
-        title: "Unmatch files",
+        title: t("mediaDetail.actions.unmatch"),
         onConfirm: () => {
             if (filepaths.length === 0) return
 
@@ -85,14 +88,14 @@ function Content({ entry }: { entry: Anime_Entry }) {
                     onClick={() => confirmUnmatch.open()}
                     loading={isDeleting}
                 >
-                    Unmatch
+                    {t("mediaDetail.actions.unmatch")}
                 </Button>
                 <Button
                     intent="white"
                     onClick={() => setOpen(false)}
                     disabled={isDeleting}
                 >
-                    Cancel
+                    {t("common.buttons.cancel")}
                 </Button>
             </div>
             <ConfirmationDialog {...confirmUnmatch} />

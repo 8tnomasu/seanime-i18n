@@ -1,6 +1,7 @@
 import { HibikeManga_ChapterDetails } from "@/api/generated/types"
 import { Button } from "@/components/ui/button"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { FaDownload } from "react-icons/fa"
 
 type ChapterListBulkActionsProps = {
@@ -9,6 +10,7 @@ type ChapterListBulkActionsProps = {
 }
 
 export function ChapterListBulkActions(props: ChapterListBulkActionsProps) {
+    const { t } = useTranslation()
 
     const {
         rowSelectedChapters,
@@ -32,7 +34,7 @@ export function ChapterListBulkActions(props: ChapterListBulkActionsProps) {
                 className="animate-pulse"
                 data-download-selected-chapters-button
             >
-                Download selected chapters ({rowSelectedChapters?.length})
+                {t("mediaDetail.chapters.downloadSelected", { count: rowSelectedChapters?.length })}
             </Button>
         </>
     )

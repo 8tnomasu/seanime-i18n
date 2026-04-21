@@ -1,8 +1,9 @@
 import { AL_MangaDetailsById_Media, Manga_Entry, Nullish } from "@/api/generated/types"
 import { MediaCardGrid } from "@/app/(main)/_features/media/_components/media-card-grid"
 import { MediaEntryCard } from "@/app/(main)/_features/media/_components/media-entry-card"
-import capitalize from "lodash/capitalize"
+import { getMediaFormatLabel, getMediaRelationTypeLabel } from "@/i18n/labels"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 type MangaRecommendationsProps = {
     entry: Nullish<Manga_Entry>
@@ -11,6 +12,7 @@ type MangaRecommendationsProps = {
 }
 
 export function MangaRecommendations(props: MangaRecommendationsProps) {
+    const { t } = useTranslation()
 
     const {
         entry,
@@ -30,7 +32,7 @@ export function MangaRecommendations(props: MangaRecommendationsProps) {
         <div className="space-y-4" data-manga-recommendations-container>
             {!!anime?.length && (
                 <>
-                    <h2>Relations</h2>
+                    <h2>{t("mediaDetail.sections.relations")}</h2>
                     <MediaCardGrid maxCol={maxCol}>
                         {anime?.toSorted((a, b) => (a.node?.format === "TV" && b.node?.format !== "TV")
                             ? -1
@@ -42,7 +44,9 @@ export function MangaRecommendations(props: MangaRecommendationsProps) {
                                     showTrailer
                                     overlay={<p
                                         className="font-semibold text-white bg-gray-950 z-[-1] absolute right-0 w-fit px-4 py-1.5 text-center !bg-opacity-90 text-sm lg:text-base rounded-none rounded-bl-lg"
-                                    >{capitalize(edge.relationType || "").replace("_", " ")}{edge?.node?.format === "MOVIE" ? " (Movie)" : ""}</p>}
+                                    >{getMediaRelationTypeLabel(t, edge.relationType)}{edge?.node?.format === "MOVIE"
+                                        ? ` (${getMediaFormatLabel(t, edge?.node?.format)})`
+                                        : ""}</p>}
                                     type="anime"
                                 />
                             </div>
@@ -51,7 +55,7 @@ export function MangaRecommendations(props: MangaRecommendationsProps) {
                 </>
             )}
             {recommendations.length > 0 && <>
-                <h2>Recommendations</h2>
+                <h2>{t("mediaDetail.sections.recommendations")}</h2>
                 <MediaCardGrid maxCol={maxCol}>
                     {recommendations.map(media => {
                         return <div key={media.id} className="col-span-1">

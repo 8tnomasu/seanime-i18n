@@ -7,6 +7,7 @@ import {
 } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Models_MediaMetadataParent } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -19,7 +20,7 @@ export function usePopulateFillerData() {
         mutationKey: [API_ENDPOINTS.METADATA.PopulateFillerData.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
-            toast.success("Filler data fetched")
+            toast.success(i18n.t("toasts.mediaDetail.fillerDataFetched"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME.GetAnimeEpisodeCollection.key] })
         },
     })
@@ -34,7 +35,7 @@ export function useRemoveFillerData() {
         mutationKey: [API_ENDPOINTS.METADATA.RemoveFillerData.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
-            toast.success("Filler data removed")
+            toast.success(i18n.t("toasts.mediaDetail.fillerDataRemoved"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME.GetAnimeEpisodeCollection.key] })
         },
     })
@@ -58,7 +59,7 @@ export function useSaveMediaMetadataParent() {
         onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.METADATA.GetMediaMetadataParent.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
-            toast.success("Metadata updated")
+            toast.success(i18n.t("toasts.mediaDetail.metadataUpdated"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME.GetAnimeEpisodeCollection.key] })
         },
     })
@@ -73,7 +74,7 @@ export function useDeleteMediaMetadataParent() {
         onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.METADATA.GetMediaMetadataParent.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
-            toast.success("Metadata removed")
+            toast.success(i18n.t("toasts.mediaDetail.metadataRemoved"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME.GetAnimeEpisodeCollection.key] })
         },
     })

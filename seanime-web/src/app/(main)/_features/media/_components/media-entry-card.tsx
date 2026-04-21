@@ -43,8 +43,9 @@ import { Button } from "@/components/ui/button"
 import { ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuTrigger } from "@/components/ui/context-menu"
 import { useRouter } from "@/lib/navigation"
 import { useAtomValue, useSetAtom } from "jotai/react"
-import capitalize from "lodash/capitalize"
+import { getCollectionStatusLabel } from "@/i18n/labels"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { BiAddToQueue, BiPlay } from "react-icons/bi"
 import { LuBookOpen } from "react-icons/lu"
 import { LuEye, LuFolderTree } from "react-icons/lu"
@@ -84,6 +85,7 @@ function useMediaCollectionEntry(type: "anime" | "manga", mediaId: number) {
 }
 
 export function MediaEntryCard<T extends "anime" | "manga">(props: MediaEntryCardProps<T>) {
+    const { t } = useTranslation()
 
     const {
         media,
@@ -241,17 +243,17 @@ export function MediaEntryCard<T extends "anime" | "manga">(props: MediaEntryCar
                     {!serverStatus?.isOffline && <ContextMenuItem
                         onClick={handlePreviewClick}
                     >
-                        <LuEye /> Preview
+                        <LuEye /> {t("common.buttons.preview")}
                     </ContextMenuItem>}
                     {(libraryData || nakamaLibraryData || (listData && hasStreamingEnabled)) && <ContextMenuItem
                         onClick={handleAddToPlaylistClick}
                     >
-                        <BiAddToQueue /> Add to Playlist
+                        <BiAddToQueue /> {t("mediaDetail.actions.addToPlaylist")}
                     </ContextMenuItem>}
                     {(!!libraryData) && <ContextMenuItem
                         onClick={handleOpenInExplorerClick}
                     >
-                        <LuFolderTree /> Open in Library Explorer
+                        <LuFolderTree /> {t("mediaDetail.actions.openInLibraryExplorer")}
                     </ContextMenuItem>}
 
                     <PluginMediaCardContextMenuItems for={type} media={media} />
@@ -309,8 +311,8 @@ export function MediaEntryCard<T extends "anime" | "manga">(props: MediaEntryCar
                                     onClick={handleWatchButtonClicked}
                                 >
                                     {!!listData?.progress && (listData?.status === "CURRENT" || listData?.status === "PAUSED")
-                                        ? "Continue"
-                                        : "Watch"}
+                                        ? t("common.buttons.continue")
+                                        : t("mediaDetail.actions.watch")}
                                 </Button>}
 
                                 {type === "manga" && <SeaLink
@@ -326,8 +328,8 @@ export function MediaEntryCard<T extends "anime" | "manga">(props: MediaEntryCar
                                         tabIndex={-1}
                                     >
                                         {!!listData?.progress && (listData?.status === "CURRENT" || listData?.status === "PAUSED")
-                                            ? "Continue"
-                                            : "Start Reading"}
+                                            ? t("mediaDetail.actions.continueReading")
+                                            : t("mediaDetail.actions.startReading")}
                                     </Button>
                                 </SeaLink>}
                             </div>
@@ -338,7 +340,7 @@ export function MediaEntryCard<T extends "anime" | "manga">(props: MediaEntryCar
 
                             {(listData?.status && listData?.status !== "CURRENT") &&
                                 <p className="text-center text-xs text-[--muted] w-full">
-                                    {capitalize(listData?.status ?? "")}
+                                    {getCollectionStatusLabel(t, listData?.status, type)}
                                     {/*{listData?.status === "CURRENT" ? type === "anime" ? "Watching" : "Reading"*/}
                                     {/*    : capitalize(listData?.status ?? "")}*/}
                                 </p>}

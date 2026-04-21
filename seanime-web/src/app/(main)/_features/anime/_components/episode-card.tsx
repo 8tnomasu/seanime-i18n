@@ -13,6 +13,7 @@ import { usePathname, useRouter } from "@/lib/navigation"
 import { getImageUrl } from "@/lib/server/assets"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiAddToQueue } from "react-icons/bi"
 import { FaCirclePlay } from "react-icons/fa6"
 import { LuDock, LuEye } from "react-icons/lu"
@@ -51,6 +52,7 @@ type EpisodeCardProps = {
 } & Omit<React.ComponentPropsWithoutRef<"div">, "title">
 
 export function EpisodeCard(props: EpisodeCardProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -142,7 +144,7 @@ export function EpisodeCard(props: EpisodeCardProps) {
                                 setPreviewModalMediaId(anime?.id || 0, "anime")
                             }}
                         >
-                            <LuEye /> Preview
+                            <LuEye /> {t("common.buttons.preview")}
                         </ContextMenuItem>}
                         <ContextMenuItem
                             onClick={() => {
@@ -153,7 +155,7 @@ export function EpisodeCard(props: EpisodeCardProps) {
                                 }
                             }}
                         >
-                            <LuDock /> Open page
+                            <LuDock /> {t("common.buttons.open")}
                         </ContextMenuItem>
                     </>}
                     {(props.episode && anime?.id && props.episode?.aniDBEpisode) && <ContextMenuItem
@@ -161,7 +163,7 @@ export function EpisodeCard(props: EpisodeCardProps) {
                             selectEpisodeToAddAndOpenEditor(anime.id!, props.episode?.aniDBEpisode!)
                         }}
                     >
-                        <BiAddToQueue /> Add to Playlist
+                        <BiAddToQueue /> {t("mediaDetail.actions.addToPlaylist")}
                     </ContextMenuItem>}
 
                     {additionalContextMenuItems}
@@ -234,12 +236,12 @@ export function EpisodeCard(props: EpisodeCardProps) {
                             >
                                 <ProgressBar value={percentageComplete} size="xs" />
                                 {!!minutesRemaining && <div
-                                    className={cn(
+                                className={cn(
                                         "absolute bottom-2 right-2 text-[--muted]",
                                         isSingleContainer && "right-4 bottom-4 ",
                                     )}
                                 >
-                                    <span>{minutesRemaining}m left</span>
+                                    <span>{t("mediaDetail.episodes.minutesLeft", { count: minutesRemaining })}</span>
                                 </div>}
                             </div>}
 

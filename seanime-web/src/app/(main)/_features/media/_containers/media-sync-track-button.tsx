@@ -3,6 +3,7 @@ import { ConfirmationDialog, useConfirmationDialog } from "@/components/shared/c
 import { IconButton } from "@/components/ui/button"
 import { Tooltip } from "@/components/ui/tooltip"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { MdOutlineDownloadForOffline, MdOutlineOfflinePin } from "react-icons/md"
 
 type MediaSyncTrackButtonProps = {
@@ -12,6 +13,7 @@ type MediaSyncTrackButtonProps = {
 }
 
 export function MediaSyncTrackButton(props: MediaSyncTrackButtonProps) {
+    const { t } = useTranslation()
 
     const {
         mediaId,
@@ -38,8 +40,8 @@ export function MediaSyncTrackButton(props: MediaSyncTrackButtonProps) {
     }
 
     const confirmUntrack = useConfirmationDialog({
-        title: "Remove offline data",
-        description: "This action will remove the offline data for this media entry. Are you sure you want to proceed?",
+        title: t("mediaDetail.dialogs.removeOfflineDataTitle"),
+        description: t("mediaDetail.dialogs.removeOfflineDataDescription"),
         onConfirm: () => {
             handleToggle()
         },
@@ -57,7 +59,7 @@ export function MediaSyncTrackButton(props: MediaSyncTrackButtonProps) {
                     {...rest}
                 />}
             >
-                {isTracked ? `Remove offline data` : `Save locally`}
+                {isTracked ? t("mediaDetail.dialogs.removeOfflineDataTitle") : t("mediaDetail.actions.saveLocally")}
             </Tooltip>
 
             <ConfirmationDialog {...confirmUntrack} />

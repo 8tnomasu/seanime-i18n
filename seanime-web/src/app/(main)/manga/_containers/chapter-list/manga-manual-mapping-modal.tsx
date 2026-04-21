@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import { Tooltip } from "@/components/ui/tooltip"
 import { useRouter } from "@/lib/navigation"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { FiSearch } from "react-icons/fi"
 
 type MangaManualMappingModalProps = {
@@ -22,6 +23,7 @@ type MangaManualMappingModalProps = {
 }
 
 export function MangaManualMappingModal(props: MangaManualMappingModalProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -33,8 +35,8 @@ export function MangaManualMappingModal(props: MangaManualMappingModalProps) {
         <>
             <Modal
                 data-manga-manual-mapping-modal
-                title="Manual match"
-                description="Match this manga to a search result"
+                title={t("mediaDetail.chapters.manualMatchTitle")}
+                description={t("mediaDetail.chapters.manualMatchDescription")}
                 trigger={children}
                 contentClass="max-w-4xl"
             >
@@ -49,6 +51,7 @@ const searchSchema = defineSchema(({ z }) => z.object({
 }))
 
 function Content({ entry }: { entry: Manga_Entry }) {
+    const { t } = useTranslation()
     const router = useRouter()
     const { selectedProvider } = useSelectedMangaProvider(entry.mediaId)
 
@@ -78,9 +81,9 @@ function Content({ entry }: { entry: Manga_Entry }) {
 
     const [mangaId, setMangaId] = React.useState<string | null>(null)
     const confirmMatch = useConfirmationDialog({
-        title: "Manual match",
-        description: "Are you sure you want to match this manga to the search result?",
-        actionText: "Confirm",
+        title: t("mediaDetail.dialogs.manualMatchConfirmTitle"),
+        description: t("mediaDetail.dialogs.manualMatchConfirmDescription"),
+        actionText: t("common.buttons.confirm"),
         actionIntent: "success",
         onConfirm: () => {
             if (mangaId && selectedProvider) {
@@ -105,7 +108,7 @@ function Content({ entry }: { entry: Manga_Entry }) {
                         {!!existingMapping?.mangaId ? (
                             <AppLayoutStack>
                                 <p>
-                                    Current mapping: <span>{existingMapping.mangaId}</span>
+                                    {t("mediaDetail.chapters.currentMapping", { id: existingMapping.mangaId })}
                                 </p>
                                 <Button
                                     intent="alert-subtle" loading={isUnmatching} onClick={() => {
@@ -117,11 +120,11 @@ function Content({ entry }: { entry: Manga_Entry }) {
                                     }
                                 }}
                                 >
-                                    Remove mapping
+                                    {t("mediaDetail.actions.removeMapping")}
                                 </Button>
                             </AppLayoutStack>
                         ) : (
-                            <p className="text-[--muted] italic">No manual match</p>
+                            <p className="text-[--muted] italic">{t("mediaDetail.chapters.noManualMatch")}</p>
                         )}
                     </div>
 
@@ -131,12 +134,12 @@ function Content({ entry }: { entry: Manga_Entry }) {
                         <div className="flex gap-2 items-center">
                             <Field.Text
                                 name="query"
-                                placeholder="Enter a title..."
+                                placeholder={t("mediaDetail.chapters.enterTitlePlaceholder")}
                                 leftIcon={<FiSearch className="text-xl text-[--muted]" />}
                                 fieldClass="w-full"
                             />
 
-                            <Field.Submit intent="white" loading={isMatching || searchLoading || mappingLoading} className="">Search</Field.Submit>
+                            <Field.Submit intent="white" loading={isMatching || searchLoading || mappingLoading} className="">{t("common.buttons.search")}</Field.Submit>
                         </div>
                     </Form>
 

@@ -8,6 +8,7 @@ import { ProgressBar } from "@/components/ui/progress-bar"
 import { getImageUrl } from "@/lib/server/assets"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiFillWarning } from "react-icons/ai"
 import { FaCirclePlay } from "react-icons/fa6"
 
@@ -40,6 +41,7 @@ type EpisodeGridItemProps = {
 }
 
 export const EpisodeGridItem = React.memo((props: EpisodeGridItemProps & React.ComponentPropsWithoutRef<"div">) => {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -112,7 +114,7 @@ export const EpisodeGridItem = React.memo((props: EpisodeGridItemProps & React.C
                     )}
                     intent="gray"
                     size="lg"
-                >Filler</Badge>
+                >{t("mediaDetail.metadata.filler")}</Badge>
             )}
 
             <div
@@ -173,7 +175,7 @@ export const EpisodeGridItem = React.memo((props: EpisodeGridItemProps & React.C
                     {(image || media.coverImage?.large) && <SeaImage
                         data-episode-grid-item-image
                         src={getImageUrl(image || media.coverImage?.large || "")}
-                        alt="episode image"
+                        alt={t("library.accessibility.episodeImageAlt")}
                         fill
                         quality={60}
                         placeholder={imageShimmer(700, 475)}
@@ -195,7 +197,7 @@ export const EpisodeGridItem = React.memo((props: EpisodeGridItemProps & React.C
                 <div data-episode-grid-item-content className="relative overflow-hidden">
                     {isInvalid && <p data-episode-grid-item-invalid-metadata className="flex gap-2 text-red-300 items-center"><AiFillWarning
                         className="text-lg text-red-500"
-                    /> Unidentified</p>}
+                    /> {t("mediaDetail.metadata.unidentified")}</p>}
                     {/*{isInvalid &&*/}
                     {/*    <p data-episode-grid-item-invalid-metadata className="flex gap-2 text-red-200 text-sm items-center">No metadata found</p>}*/}
 

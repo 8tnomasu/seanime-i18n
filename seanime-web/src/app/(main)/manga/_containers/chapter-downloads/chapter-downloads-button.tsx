@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { usePathname } from "@/lib/navigation"
 import { useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuFolderDown } from "react-icons/lu"
 
 type ChapterDownloadsButtonProps = {
@@ -10,6 +11,7 @@ type ChapterDownloadsButtonProps = {
 }
 
 export function ChapterDownloadsButton(props: ChapterDownloadsButtonProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -31,7 +33,7 @@ export function ChapterDownloadsButton(props: ChapterDownloadsButtonProps) {
                 size="sm"
                 leftIcon={<LuFolderDown />}
             >
-                Downloads
+                {t("mediaDetail.chapters.downloadedChapters")}
             </Button>
         </>
     )

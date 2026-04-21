@@ -155,7 +155,7 @@ export function useMangaManualMapping() {
         method: API_ENDPOINTS.MANGA.MangaManualMapping.methods[0],
         mutationKey: [API_ENDPOINTS.MANGA.MangaManualMapping.key],
         onSuccess: async () => {
-            toast.success("Mapping added")
+            toast.success(i18n.t("toasts.mediaDetail.mappingAdded"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryChapters.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryPages.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaMapping.key] })
@@ -181,7 +181,7 @@ export function useRemoveMangaMapping() {
         method: API_ENDPOINTS.MANGA.RemoveMangaMapping.methods[0],
         mutationKey: [API_ENDPOINTS.MANGA.RemoveMangaMapping.key],
         onSuccess: async () => {
-            toast.info("Mapping removed")
+            toast.info(i18n.t("toasts.mediaDetail.mappingRemoved"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryChapters.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryPages.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.MANGA.GetMangaMapping.key] })

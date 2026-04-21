@@ -18,9 +18,10 @@ import {
     useIsMobile,
     useThemeSettings,
 } from "@/lib/theme/theme-hooks.ts"
-import capitalize from "lodash/capitalize"
+import { getCollectionStatusLabel, getMediaSeasonLabel, getMediaStatusLabel } from "@/i18n/labels"
 import { motion } from "motion/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiCalendarAlt, BiSolidStar, BiStar } from "react-icons/bi"
 import { MdOutlineSegment } from "react-icons/md"
 import { RiSignalTowerFill } from "react-icons/ri"
@@ -316,6 +317,7 @@ type MediaPageHeaderEntryDetailsProps = {
 }
 
 export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsProps) {
+    const { t, i18n } = useTranslation()
 
     const {
         children,
@@ -340,6 +342,13 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
 
     const ts = useThemeSettings()
     const { y } = useWindowScroll()
+    const descriptionText = description?.replace(/(<([^>]+)>)/ig, "") || t("mediaDetail.metadata.descriptionFallback")
+    const mediaStatusLabel = status === "NOT_YET_RELEASED"
+        ? t("mediaDetail.states.notYetReleased")
+        : getMediaStatusLabel(t, status)
+    const listStatusLabel = listData?.status === "CURRENT"
+        ? t(type === "anime" ? "mediaList.status.watching" : "mediaList.status.reading")
+        : getCollectionStatusLabel(t, listData?.status, type)
 
     return (
         <>
@@ -370,7 +379,7 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                         <MotionImage
                             data-media-page-header-entry-details-cover-image
                             src={getImageUrl(coverImage)}
-                            alt="cover image"
+                            alt={t("library.accessibility.coverImageAlt")}
                             fill
                             priority
                             placeholder={imageShimmer(700, 475)}
@@ -412,11 +421,11 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                             data-media-page-header-entry-details-date-container
                         >
                             <p className="text-lg text-white flex gap-1 items-center">
-                                <BiCalendarAlt /> {new Intl.DateTimeFormat("en-US", {
+                                <BiCalendarAlt /> {new Intl.DateTimeFormat(i18n.resolvedLanguage || "en-US", {
                                 year: "numeric",
                                 month: "short",
                             }).format(new Date(startDate?.year || 0, startDate?.month ? startDate?.month - 1 : 0))}{!!season
-                                ? ` - ${capitalize(season)}`
+                                ? ` - ${getMediaSeasonLabel(t, season)}`
                                 : ""}
                             </p>
 
@@ -427,7 +436,7 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                                 leftIcon={<RiSignalTowerFill />}
                                 data-media-page-header-entry-details-date-badge
                             >
-                                {capitalize(status || "")?.replaceAll("_", " ")}
+                                {mediaStatusLabel}
                             </Badge>}
 
                             {ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small && <Popover
@@ -441,7 +450,7 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                                 }
                                 className="max-w-[40rem] bg-[--background] p-4 w-[20rem] lg:w-[40rem] text-md"
                             >
-                                <span className="transition-colors">{description?.replace(/(<([^>]+)>)/ig, "")}</span>
+                                <span className="transition-colors">{descriptionText}</span>
                             </Popover>}
                         </div>
                     )}
@@ -460,11 +469,9 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
 
                         {(listData?.status || listData?.repeat) &&
                             <div
-                                data-media-page-header-entry-details-status
-                                className="text-base text-white md:text-md font-medium tracking-wide flex items-center"
-                            >{capitalize(listData?.status === "CURRENT"
-                                ? type === "anime" ? "watching" : "reading"
-                                : listData?.status)}
+                            data-media-page-header-entry-details-status
+                            className="text-base text-white md:text-md font-medium tracking-wide flex items-center"
+                            >{listStatusLabel}
                                 {listData?.repeat && <Tooltip
                                     trigger={<Badge
                                         size="md"
@@ -476,9 +483,9 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
 
                                     </Badge>}
                                 >
-                                    {listData?.repeat} {type === "anime" ? "rewatch" : "reread"}{listData?.repeat > 1
-                                    ? type === "anime" ? "es" : "s"
-                                    : ""}
+                                    {type === "anime"
+                                        ? t("mediaDetail.metadata.rewatchCount", { count: listData?.repeat })
+                                        : t("mediaDetail.metadata.rereadCount", { count: listData?.repeat })}
                                 </Tooltip>}
                             </div>}
 
@@ -492,12 +499,12 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                             )}
                             data-media-page-header-details-description-trigger
                         >
-                            {description?.replace(/(<([^>]+)>)/ig, "")}
+                            {descriptionText}
                         </div>}
                         className="max-w-[40rem] bg-[--background] p-4 w-[20rem] lg:w-[40rem] text-md"
                         data-media-page-header-details-description-popover
                     >
-                        <span className="transition-colors">{description?.replace(/(<([^>]+)>)/ig, "")}</span>
+                        <span className="transition-colors">{descriptionText}</span>
                     </Popover>}
 
                     {children}

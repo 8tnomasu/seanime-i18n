@@ -9,6 +9,7 @@ import { openTab } from "@/lib/helpers/browser"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export type AnimeEntryDownloadFilesModalProps = {
     entry: Anime_Entry
@@ -18,6 +19,7 @@ export const __animeEntryDownloadFilesModalIsOpenAtom = atom(false)
 
 
 export function AnimeEntryDownloadFilesModal({ entry }: AnimeEntryDownloadFilesModalProps) {
+    const { t } = useTranslation()
 
     const [open, setOpen] = useAtom(__animeEntryDownloadFilesModalIsOpenAtom)
 
@@ -27,7 +29,7 @@ export function AnimeEntryDownloadFilesModal({ entry }: AnimeEntryDownloadFilesM
             open={open}
             onOpenChange={() => setOpen(false)}
             contentClass="max-w-2xl"
-            title={<span>Select files to download</span>}
+            title={<span>{t("mediaDetail.dialogs.selectFilesToDownload")}</span>}
             titleClass="text-center"
 
         >
@@ -38,6 +40,7 @@ export function AnimeEntryDownloadFilesModal({ entry }: AnimeEntryDownloadFilesM
 }
 
 function Content({ entry }: { entry: Anime_Entry }) {
+    const { t } = useTranslation()
 
     const [open, setOpen] = useAtom(__animeEntryDownloadFilesModalIsOpenAtom)
     const [filepaths, setFilepaths] = React.useState<string[]>([])
@@ -59,7 +62,7 @@ function Content({ entry }: { entry: Anime_Entry }) {
         <div className="space-y-2 mt-2">
 
             <p className="text-[--muted]">
-                Seanime will open a new tab for each file you download. Make sure your browser allows popups.
+                {t("mediaDetail.downloads.allowPopups")}
             </p>
 
             <Separator />
@@ -76,7 +79,7 @@ function Content({ entry }: { entry: Anime_Entry }) {
                     intent="white"
                     onClick={() => handleDownload()}
                 >
-                    Download
+                    {t("common.buttons.download")}
                 </Button>
             </div>
         </div>

@@ -10,13 +10,14 @@ import { SeaLink } from "@/components/shared/sea-link"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/components/ui/core/styling"
 import { Tooltip } from "@/components/ui/tooltip"
+import { getDateFnsLocale, getMediaFormatLabel, getMediaSeasonLabel, getMediaStatusLabel } from "@/i18n/labels"
 import { getImageUrl } from "@/lib/server/assets"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { __isElectronDesktop__ } from "@/types/constants"
 import { addSeconds, formatDistanceToNow } from "date-fns"
 import { atom, useAtom } from "jotai"
-import capitalize from "lodash/capitalize"
 import React, { memo } from "react"
+import { useTranslation } from "react-i18next"
 import { BiCalendarAlt } from "react-icons/bi"
 import { IoLibrarySharp } from "react-icons/io5"
 import { RiSignalTowerLine } from "react-icons/ri"
@@ -228,6 +229,7 @@ type MediaEntryCardHoverPopupTitleSectionProps = {
 }
 
 export function MediaEntryCardHoverPopupTitleSection(props: MediaEntryCardHoverPopupTitleSectionProps) {
+    const { t } = useTranslation()
 
     const {
         link,
@@ -270,8 +272,8 @@ export function MediaEntryCardHoverPopupTitleSection(props: MediaEntryCardHoverP
                     data-media-entry-card-hover-popup-title-section-year-season
                     className="justify-center text-sm text-[--muted] flex w-full gap-1 items-center"
                 >
-                    {/*{startCase(format || "")} - <BiCalendarAlt /> {capitalize(season ?? "")} {year}*/}
-                    <BiCalendarAlt /> {capitalize(season ?? "")} {year}{(format !== "TV" && format !== "MANGA") && ` - ${format || ""}`}
+                    <BiCalendarAlt /> {getMediaSeasonLabel(t, season)} {year}
+                    {(format !== "TV" && format !== "MANGA") && ` - ${getMediaFormatLabel(t, format) || format || ""}`}
                 </p>
             </div>}
         </>
@@ -286,6 +288,7 @@ type AnimeEntryCardNextAiringProps = {
 }
 
 export function AnimeEntryCardNextAiring(props: AnimeEntryCardNextAiringProps) {
+    const { t, i18n } = useTranslation()
 
     const {
         nextAiring,
@@ -299,8 +302,11 @@ export function AnimeEntryCardNextAiring(props: AnimeEntryCardNextAiringProps) {
             <div data-anime-entry-card-next-airing-container className="flex gap-1 items-center justify-center">
                 {/*<p className="text-xs min-[2000px]:text-md">Next episode:</p>*/}
                 <p data-anime-entry-card-next-airing className="text-justify font-normal text-xs min-[2000px]:text-md">
-                    Episode <span className="font-semibold">{nextAiring?.episode}</span> {formatDistanceToNow(addSeconds(new Date(),
-                    nextAiring?.timeUntilAiring), { addSuffix: true })}
+                    {t("mediaDetail.episodes.episode", { number: nextAiring?.episode })}{" "}
+                    {formatDistanceToNow(addSeconds(new Date(), nextAiring?.timeUntilAiring), {
+                        addSuffix: true,
+                        locale: getDateFnsLocale(i18n.resolvedLanguage),
+                    })}
                     {/*<Badge*/}
                     {/*    size="sm"*/}
                     {/*    className="bg-transparent rounded-[--radius]"*/}
@@ -448,6 +454,7 @@ type MediaEntryCardTitleSectionProps = {
 }
 
 export function MediaEntryCardTitleSection(props: MediaEntryCardTitleSectionProps) {
+    const { t } = useTranslation()
 
     const {
         title,
@@ -467,7 +474,7 @@ export function MediaEntryCardTitleSection(props: MediaEntryCardTitleSectionProp
             </div>
             {(!!season || !!year) && <div>
                 <p data-media-entry-card-title-section-year-season className="text-sm text-[--muted] inline-flex gap-1 items-center">
-                    {capitalize(season ?? "")} {year}
+                    {getMediaSeasonLabel(t, season)} {year}
                 </p>
             </div>}
         </div>
@@ -509,6 +516,7 @@ export const MediaEntryCardHoverPopupBanner = memo(({
     status?: AL_MediaStatus
     onClick?: () => void
 }) => {
+    const { t } = useTranslation()
 
     const [trailerLoaded, setTrailerLoaded] = React.useState(false)
     const [actionPopupHoverId] = useAtom(__mediaEntryCard_hoveredPopupId)
@@ -546,14 +554,14 @@ export const MediaEntryCardHoverPopupBanner = memo(({
                     <Tooltip
                         trigger={<Badge intent={status === "RELEASING" ? "primary-solid" : "zinc-solid"} size="lg"><RiSignalTowerLine /></Badge>}
                     >
-                        {status === "RELEASING" ? "Releasing" : "Not yet released"}
+                        {status === "NOT_YET_RELEASED" ? t("mediaDetail.states.notYetReleased") : getMediaStatusLabel(t, status)}
                     </Tooltip>
                 </div>}
 
             {(!!bannerImage) ? <div className="absolute object-cover top-0 object-center w-full h-full overflow-hidden"><SeaImage
                 data-media-entry-card-hover-popup-banner-image
                 src={getImageUrl(bannerImage || "")}
-                alt={"banner"}
+                alt={t("library.accessibility.bannerImageAlt")}
                 fill
                 placeholder={imageShimmer(700, 475)}
                 quality={100}

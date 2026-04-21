@@ -4,9 +4,11 @@ import { useAnimeEntryPageView } from "@/app/(main)/entry/_containers/anime-entr
 import { __torrentSearch_selectionAtom } from "@/app/(main)/entry/_containers/torrent-search/torrent-search-drawer"
 import { useSetAtom } from "jotai/react"
 import React, { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { BiDownload } from "react-icons/bi"
 
 export function TorrentSearchButton({ entry, onClick }: { entry: Anime_Entry, onClick?: () => void }) {
+    const { t } = useTranslation()
 
     const setter = useSetAtom(__torrentSearch_selectionAtom)
     const count = entry.downloadInfo?.episodesToDownload?.length
@@ -31,10 +33,14 @@ export function TorrentSearchButton({ entry, onClick }: { entry: Anime_Entry, on
                 data-torrent-search-button
             >
                 {(!entry.downloadInfo?.hasInaccurateSchedule && !!count) ? <>
-                    {(!isMovie) && `Download ${entry.downloadInfo?.batchAll ? "batch /" : "next"} ${count > 1 ? `${count} episodes` : "episode"}`}
-                    {(isMovie) && `Download movie`}
+                    {(!isMovie) && (entry.downloadInfo?.batchAll
+                        ? t("mediaDetail.actions.downloadBatchEpisodes", { count })
+                        : count > 1
+                            ? t("mediaDetail.actions.downloadNextEpisodes", { count })
+                            : t("mediaDetail.actions.downloadNextEpisode"))}
+                    {(isMovie) && t("mediaDetail.actions.downloadMovie")}
                 </> : <>
-                    Download
+                    {t("common.buttons.download")}
                 </>}
             </AnimeMetaActionButton>
         </div>

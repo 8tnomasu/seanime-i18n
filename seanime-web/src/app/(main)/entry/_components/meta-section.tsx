@@ -30,6 +30,7 @@ import { TORRENT_CLIENT } from "@/lib/server/settings"
 import { getCustomSourceExtensionId, getCustomSourceMediaSiteUrl, isCustomSource } from "@/lib/server/utils"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiExtension } from "react-icons/bi"
 import { IoInformationCircle } from "react-icons/io5"
 import { LuExternalLink } from "react-icons/lu"
@@ -52,6 +53,7 @@ export function AnimeMetaActionButton({ className, ...rest }: ButtonProps) {
 }
 
 export function MetaSection(props: { entry: Anime_Entry, details: AL_AnimeDetailsById_Media | undefined }) {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const { entry, details } = props
     const ts = useThemeSettings()
@@ -143,7 +145,7 @@ export function MetaSection(props: { entry: Anime_Entry, details: AL_AnimeDetail
                                 </SeaLink>
                             </div>}
                         >
-                            Custom source
+                            {t("mediaDetail.metadata.customSource")}
                         </Tooltip>
                     )}
 
@@ -158,13 +160,13 @@ export function MetaSection(props: { entry: Anime_Entry, details: AL_AnimeDetail
                             </SeaLink>
                         </div>}
                     >
-                        Open in website
+                        {t("mediaDetail.actions.openOnWebsite")}
                     </Tooltip>}
 
                     {!!entry?.media?.trailer?.id && <TrailerModal
                         trailerId={entry?.media?.trailer?.id} trigger={
                         <Button size="sm" intent="gray-link" className="px-0">
-                            Trailer
+                            {t("mediaDetail.actions.trailer")}
                         </Button>}
                     />}
 
@@ -201,7 +203,9 @@ export function MetaSection(props: { entry: Anime_Entry, details: AL_AnimeDetail
                     {entry._isNakamaEntry && currentView === "library" &&
                         <div className="flex items-center gap-2 h-10 px-4 border rounded-md flex-none">
                             <MdOutlineConnectWithoutContact className="size-6 animate-pulse text-[--blue]" />
-                            <span className="text-sm tracking-wide">Shared by {nakamaStatus?.hostConnectionStatus?.username}</span>
+                            <span className="text-sm tracking-wide">
+                                {t("mediaDetail.metadata.sharedBy", { username: nakamaStatus?.hostConnectionStatus?.username ?? "" })}
+                            </span>
                         </div>}
 
                     <PluginAnimePageButtons media={entry.media!} />
@@ -219,8 +223,8 @@ export function MetaSection(props: { entry: Anime_Entry, details: AL_AnimeDetail
                     )}
                     data-anime-meta-section-inaccurate-schedule-message
                 >
-                    <span className="block">Could not retrieve accurate scheduling information for this show.</span>
-                    <span className="block text-[--muted]">Please check the schedule online for more information.</span>
+                    <span className="block">{t("mediaDetail.metadata.inaccurateScheduleTitle")}</span>
+                    <span className="block text-[--muted]">{t("mediaDetail.metadata.inaccurateScheduleDescription")}</span>
                 </p>}
 
 
@@ -233,7 +237,7 @@ export function MetaSection(props: { entry: Anime_Entry, details: AL_AnimeDetail
                         data-anime-meta-section-no-metadata-message
                     >
                         <IoInformationCircle />
-                        Episode metadata retrieval not available for this entry.
+                        {t("mediaDetail.metadata.episodeMetadataUnavailable")}
                     </p>
                 )}
 

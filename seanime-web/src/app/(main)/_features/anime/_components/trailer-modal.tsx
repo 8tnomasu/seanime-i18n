@@ -5,6 +5,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Modal } from "@/components/ui/modal"
 import { __isElectronDesktop__ } from "@/types/constants"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 type PlaylistsModalProps = {
     trigger?: React.ReactElement
@@ -42,6 +43,7 @@ type ContentProps = {
 }
 
 export function Content(props: ContentProps) {
+    const { t } = useTranslation()
 
     const {
         trailerId,
@@ -50,7 +52,7 @@ export function Content(props: ContentProps) {
 
     const [loaded, setLoaded] = React.useState(true)
 
-    if (!trailerId) return <LuffyError title="No trailer found" />
+    if (!trailerId) return <LuffyError title={t("mediaDetail.states.noTrailerFound")} />
 
     return (
         <>
@@ -64,7 +66,7 @@ export function Content(props: ContentProps) {
                 {__isElectronDesktop__ && <ElectronYoutubeEmbed trailerId={trailerId} />}
                 {!__isElectronDesktop__ && <iframe
                     src={`https://www.youtube.com/embed/${trailerId}`}
-                    title="YouTube Video"
+                    title={t("mediaDetail.accessibility.trailerVideoTitle")}
                     className="w-full aspect-video rounded-xl"
                     allowFullScreen
                     loading="lazy" // Lazy load the iframe

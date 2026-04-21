@@ -7,6 +7,7 @@ import { Modal } from "@/components/ui/modal"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export type AnimeEntryBulkDeleteFilesModalProps = {
     entry: Anime_Entry
@@ -16,6 +17,7 @@ export const __bulkDeleteFilesModalIsOpenAtom = atom(false)
 
 
 export function AnimeEntryBulkDeleteFilesModal({ entry }: AnimeEntryBulkDeleteFilesModalProps) {
+    const { t } = useTranslation()
 
     const [open, setOpen] = useAtom(__bulkDeleteFilesModalIsOpenAtom)
 
@@ -24,7 +26,7 @@ export function AnimeEntryBulkDeleteFilesModal({ entry }: AnimeEntryBulkDeleteFi
             open={open}
             onOpenChange={() => setOpen(false)}
             contentClass="max-w-2xl"
-            title={<span>Select files to delete</span>}
+            title={<span>{t("mediaDetail.dialogs.selectFilesToDelete")}</span>}
             titleClass="text-center"
 
         >
@@ -35,6 +37,7 @@ export function AnimeEntryBulkDeleteFilesModal({ entry }: AnimeEntryBulkDeleteFi
 }
 
 function Content({ entry }: { entry: Anime_Entry }) {
+    const { t } = useTranslation()
 
     const [open, setOpen] = useAtom(__bulkDeleteFilesModalIsOpenAtom)
 
@@ -52,8 +55,8 @@ function Content({ entry }: { entry: Anime_Entry }) {
     const { mutate: deleteFiles, isPending: isDeleting } = useDeleteLocalFiles()
 
     const confirmUnmatch = useConfirmationDialog({
-        title: "Delete files",
-        description: "This action cannot be undone.",
+        title: t("mediaDetail.dialogs.deleteFilesTitle"),
+        description: t("mediaDetail.dialogs.deleteFilesDescription"),
         onConfirm: () => {
             if (filepaths.length === 0) return
 
@@ -84,14 +87,14 @@ function Content({ entry }: { entry: Anime_Entry }) {
                     onClick={() => confirmUnmatch.open()}
                     loading={isDeleting}
                 >
-                    Delete
+                    {t("common.buttons.delete")}
                 </Button>
                 <Button
                     intent="white"
                     onClick={() => setOpen(false)}
                     disabled={isDeleting}
                 >
-                    Cancel
+                    {t("common.buttons.cancel")}
                 </Button>
             </div>
             <ConfirmationDialog {...confirmUnmatch} />

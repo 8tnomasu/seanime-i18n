@@ -17,6 +17,7 @@ import { Carousel, CarouselContent, CarouselDotButtons, CarouselItem } from "@/c
 import { ContextMenuItem } from "@/components/ui/context-menu"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { IoLibrarySharp } from "react-icons/io5"
 import { LuTvMinimalPlay } from "react-icons/lu"
 
@@ -29,6 +30,7 @@ type EpisodeSectionProps = {
 }
 
 export function EpisodeSection({ entry, details, bottomSection, hideCarousel, maxCol = 4 }: EpisodeSectionProps) {
+    const { t } = useTranslation()
     const ts = useThemeSettings()
     const serverStatus = useServerStatus()
     const { currentView } = useAnimeEntryPageView()
@@ -66,9 +68,9 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
                 data: episode,
                 id: `${episode.type}-${episode.localFile?.path || ""}-${episode.episodeNumber}`,
                 value: `${episode.episodeNumber}`,
-                heading: episode.type === "next" ? "Next Episode" :
-                    episode.type === "special" ? "Specials" :
-                        episode.type === "other" ? "Others" : "Episodes",
+                heading: episode.type === "next" ? t("mediaDetail.episodes.nextEpisode") :
+                    episode.type === "special" ? t("mediaDetail.episodes.specials") :
+                        episode.type === "other" ? t("mediaDetail.episodes.others") : t("mediaDetail.episodes.mainHeading"),
                 priority: episode.type === "next" ? 2 :
                     episode.type === "main" ? 1 : 0,
                 render: () => (
@@ -94,7 +96,7 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
         })
 
         return () => remove("library-episodes")
-    }, [media, episodesToWatch, mainEpisodes, specialEpisodes, ncEpisodes, currentView])
+    }, [currentView, entry.mediaId, episodesToWatch, mainEpisodes, media, ncEpisodes, playMediaFile, remove, specialEpisodes, t])
 
     if (!media) return null
 
@@ -107,10 +109,10 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
     if (!!media && ((!entry.listData && !entry._isNakamaEntry) || !entry.libraryData) && !serverStatus?.isOffline) {
         return <div className="space-y-10">
             {media?.status !== "NOT_YET_RELEASED"
-                ? <h4 className="text-yellow-50 flex items-center gap-2"><IoLibrarySharp /> Not in {entry._isNakamaEntry
-                    ? "the Nakama's"
-                    : "your"} library</h4>
-                : <h5 className="text-yellow-50">Not yet released</h5>}
+                ? <h4 className="text-yellow-50 flex items-center gap-2"><IoLibrarySharp /> {entry._isNakamaEntry
+                    ? t("mediaDetail.states.notInSharedLibrary")
+                    : t("mediaDetail.states.notInYourLibrary")}</h4>
+                : <h5 className="text-yellow-50">{t("mediaDetail.states.notYetReleased")}</h5>}
             <div className="overflow-y-auto pt-4 lg:pt-0 space-y-10 overflow-x-hidden">
                 {!entry._isNakamaEntry && <UndownloadedEpisodeList
                     downloadInfo={entry.downloadInfo}
@@ -128,7 +130,7 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
 
                 {hasInvalidEpisodes && <Alert
                     intent="alert"
-                    description="Some episodes are invalid. Update the metadata to fix this."
+                    description={t("mediaDetail.states.invalidEpisodes")}
                 />}
 
 
@@ -186,7 +188,7 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
                                                         })
                                                     }}
                                                 >
-                                                    <LuTvMinimalPlay /> Play externally
+                                                    <LuTvMinimalPlay /> {t("mediaDetail.actions.playExternally")}
                                                 </ContextMenuItem>}
                                             </>}
                                         />
@@ -228,7 +230,7 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
                     />}
 
                     {specialEpisodes.length > 0 && <>
-                        <h2>Specials</h2>
+                        <h2>{t("mediaDetail.episodes.specials")}</h2>
                         <EpisodeListGrid data-episode-list-specials maxCol={maxCol}>
                             {specialEpisodes.map(episode => (
                                 <EpisodeItem
@@ -249,7 +251,7 @@ export function EpisodeSection({ entry, details, bottomSection, hideCarousel, ma
                     </>}
 
                     {ncEpisodes.length > 0 && <>
-                        <h2>Others</h2>
+                        <h2>{t("mediaDetail.episodes.others")}</h2>
                         <EpisodeListGrid data-episode-list-others maxCol={maxCol}>
                             {ncEpisodes.map(episode => (
                                 <EpisodeItem

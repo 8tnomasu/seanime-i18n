@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { MdClear } from "react-icons/md"
 import { PiWarningOctagonDuotone } from "react-icons/pi"
 import { TbWorldDownload } from "react-icons/tb"
@@ -25,6 +26,7 @@ export const __manga_chapterDownloadsDrawerIsOpenAtom = atom(false)
 type ChapterDownloadQueueDrawerProps = {}
 
 export function ChapterDownloadsDrawer(props: ChapterDownloadQueueDrawerProps) {
+    const { t } = useTranslation()
 
     const {} = props
 
@@ -38,7 +40,7 @@ export function ChapterDownloadsDrawer(props: ChapterDownloadQueueDrawerProps) {
                 open={isOpen}
                 onOpenChange={setIsOpen}
                 contentClass="max-w-5xl"
-                title="Downloaded chapters"
+                title={t("mediaDetail.chapters.downloadedChapters")}
                 data-chapter-downloads-modal
             >
 
@@ -60,6 +62,7 @@ type ChapterDownloadQueueProps = {
 }
 
 export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
+    const { t } = useTranslation()
 
     const {
         mangaCollection,
@@ -87,7 +90,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
             <div className="space-y-4" data-chapter-download-queue-container>
 
                 <div className="flex w-full items-center" data-chapter-download-queue-header>
-                    <h3>Queue</h3>
+                    <h3>{t("mediaDetail.chapters.queue")}</h3>
                     <div className="flex flex-1" data-chapter-download-queue-header-spacer></div>
                     {(!downloadQueueLoading && !downloadQueueError) &&
                         <div className="flex gap-2 items-center" data-chapter-download-queue-header-actions>
@@ -99,7 +102,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
                                 onClick={() => resetErroredChapters()}
                                 loading={isResettingErroredChapters}
                             >
-                                Reset errored chapters
+                                {t("mediaDetail.downloads.resetErroredChapters")}
                             </Button>}
 
                             {!!downloadQueue?.find(n => n.status === "downloading") ? (
@@ -110,7 +113,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
                                         onClick={() => stopDownloadQueue()}
                                         loading={isStoppingDownloadQueue}
                                     >
-                                        Stop
+                                        {t("common.buttons.stop")}
                                     </Button>
                                 </>
                             ) : (
@@ -123,7 +126,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
                                         leftIcon={<MdClear className="text-xl" />}
                                         loading={isClearingDownloadQueue}
                                     >
-                                        Clear all
+                                        {t("common.buttons.clearAll")}
                                     </Button>}
 
                                     {(!!downloadQueue?.length && !!downloadQueue?.find(n => n.status === "not_started")) && <Button
@@ -134,7 +137,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
                                         leftIcon={<TbWorldDownload className="text-xl" />}
                                         loading={isStartingDownloadQueue}
                                     >
-                                        Start
+                                        {t("common.buttons.start")}
                                     </Button>}
                                 </>
                             )}
@@ -145,8 +148,8 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
 
                     {downloadQueueLoading
                         ? <LoadingSpinner />
-                        : (downloadQueueError ? <LuffyError title="Oops!">
-                            <p>Could not fetch the download queue</p>
+                        : (downloadQueueError ? <LuffyError title={t("common.states.oops")}>
+                            <p>{t("mediaDetail.downloads.couldNotFetchQueue")}</p>
                         </LuffyError> : null)}
 
                     {!!downloadQueue?.length ? (
@@ -168,13 +171,13 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
                                                     className="font-semibold max-w-[180px] text-ellipsis truncate underline"
                                                     href={`/manga/entry?id=${media.id}`}
                                                 >{media.title?.userPreferred}</SeaLink>}
-                                                <p>Chapter {item.chapterNumber} <span className="text-[--muted] italic">(id: {item.chapterId})</span>
+                                                <p>{t("mediaDetail.chapters.chapter")} {item.chapterNumber} <span className="text-[--muted] italic">(id: {item.chapterId})</span>
                                                 </p>
                                                 {item.status === "errored" && (
                                                     <div className="flex gap-1 items-center text-[--orange]">
                                                         <PiWarningOctagonDuotone className="text-2xl text-[--orange]" />
                                                         <p>
-                                                            Errored
+                                                            {t("mediaDetail.downloads.errored")}
                                                         </p>
                                                     </div>
                                                 )}
@@ -189,7 +192,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
                         </ScrollArea>
                     ) : ((!downloadQueueLoading && !downloadQueueError) && (
                         <p className="text-center text-[--muted] text-sm" data-chapter-download-queue-empty-state>
-                            Nothing in the queue
+                            {t("mediaDetail.downloads.emptyQueue")}
                         </p>
                     ))}
 
@@ -205,6 +208,7 @@ export function ChapterDownloadQueue(props: ChapterDownloadQueueProps) {
 type ChapterDownloadListProps = {}
 
 export function ChapterDownloadList(props: ChapterDownloadListProps) {
+    const { t } = useTranslation()
 
     const {} = props
 
@@ -215,7 +219,7 @@ export function ChapterDownloadList(props: ChapterDownloadListProps) {
             <div className="space-y-4" data-chapter-download-list-container>
 
                 <div className="flex w-full items-center" data-chapter-download-list-header>
-                    <h3>Downloaded</h3>
+                    <h3>{t("mediaDetail.chapters.downloaded")}</h3>
                     <div className="flex flex-1" data-chapter-download-list-header-spacer></div>
                 </div>
 
@@ -223,8 +227,8 @@ export function ChapterDownloadList(props: ChapterDownloadListProps) {
 
                     {isLoading
                         ? <LoadingSpinner />
-                        : (isError ? <LuffyError title="Oops!">
-                            <p>Could not fetch the download queue</p>
+                        : (isError ? <LuffyError title={t("common.states.oops")}>
+                            <p>{t("mediaDetail.downloads.couldNotFetchQueue")}</p>
                         </LuffyError> : null)}
 
                     {!!data?.length ? (
@@ -247,8 +251,9 @@ export function ChapterDownloadList(props: ChapterDownloadListProps) {
 
                                             <div className="flex items-center gap-2">
                                                 <p>{Object.values(item.downloadData)
-                                                    .flatMap(n => n).length} chapters</p> - <em className="text-[--muted]">Not in your AniList
-                                                                                                                           collection</em>
+                                                    .flatMap(n => n).length && t("mediaDetail.chapters.chapterCount", {
+                                                        count: Object.values(item.downloadData).flatMap(n => n).length,
+                                                    })}</p> - <em className="text-[--muted]">{t("mediaDetail.chapters.notInAniListCollection")}</em>
                                             </div>
                                         </Card>
                                     )
@@ -272,7 +277,7 @@ export function ChapterDownloadList(props: ChapterDownloadListProps) {
                                                 hideAnilistEntryEditButton
                                                 overlay={<p
                                                     className="font-semibold text-white bg-gray-950 z-[-1] absolute right-0 w-fit px-4 py-1.5 text-center !bg-opacity-90 text-sm lg:text-base rounded-none rounded-bl-lg"
-                                                >{nb} chapter{nb === 1 ? "" : "s"}</p>}
+                                                >{t("mediaDetail.chapters.chapterCount", { count: nb })}</p>}
                                             />
                                         </div>
                                     })}
@@ -280,7 +285,7 @@ export function ChapterDownloadList(props: ChapterDownloadListProps) {
                         </>
                     ) : ((!isLoading && !isError) && (
                         <p className="text-center text-[--muted] italic" data-chapter-download-list-empty-state>
-                            No chapters downloaded
+                            {t("mediaDetail.states.noChaptersDownloaded")}
                         </p>
                     ))}
 

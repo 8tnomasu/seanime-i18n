@@ -1,13 +1,20 @@
 import { AL_BaseAnime } from "@/api/generated/types"
 import { cn } from "@/components/ui/core/styling"
+import { getDateFnsLocale } from "@/i18n/labels"
 import { ThemeMediaPageInfoBoxSize, useThemeSettings } from "@/lib/theme/theme-hooks"
 import { addSeconds, format, formatDistanceToNow } from "date-fns"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiCalendarAlt } from "react-icons/bi"
 
 export function NextAiringEpisode(props: { media: AL_BaseAnime }) {
-    const distance = formatDistanceToNow(addSeconds(new Date(), props.media.nextAiringEpisode?.timeUntilAiring || 0), { addSuffix: true })
-    const day = format(addSeconds(new Date(), props.media.nextAiringEpisode?.timeUntilAiring || 0), "EEEE")
+    const { t, i18n } = useTranslation()
+    const locale = getDateFnsLocale(i18n.resolvedLanguage)
+    const distance = formatDistanceToNow(addSeconds(new Date(), props.media.nextAiringEpisode?.timeUntilAiring || 0), {
+        addSuffix: true,
+        locale,
+    })
+    const day = format(addSeconds(new Date(), props.media.nextAiringEpisode?.timeUntilAiring || 0), "EEEE", { locale })
     const ts = useThemeSettings()
     return <>
         {!!props.media.nextAiringEpisode && (
@@ -17,7 +24,9 @@ export function NextAiringEpisode(props: { media: AL_BaseAnime }) {
                     ts.mediaPageBannerInfoBoxSize === ThemeMediaPageInfoBoxSize.Fluid && "justify-start",
                 )}
             >
-                <span className="font-semibold">Episode {props.media.nextAiringEpisode?.episode}</span> {distance}
+                <span className="font-semibold">
+                    {t("mediaDetail.episodes.episode", { number: props.media.nextAiringEpisode?.episode })}
+                </span> {distance}
                 <BiCalendarAlt className="text-lg text-[--muted]" />
                 <span className="text-[--muted]">{day}</span>
             </div>

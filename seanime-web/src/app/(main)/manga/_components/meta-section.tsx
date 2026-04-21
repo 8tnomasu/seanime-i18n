@@ -18,6 +18,7 @@ import { Tooltip } from "@/components/ui/tooltip"
 import { getCustomSourceExtensionId, getCustomSourceMediaSiteUrl, isCustomSource } from "@/lib/server/utils"
 import { ThemeMediaPageInfoBoxSize, useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiExtension } from "react-icons/bi"
 import { LuExternalLink } from "react-icons/lu"
 import { SiAnilist } from "react-icons/si"
@@ -25,6 +26,7 @@ import { PluginMangaPageButtons } from "../../_features/plugin/actions/plugin-ac
 
 
 export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL_MangaDetailsById_Media | undefined }) {
+    const { t } = useTranslation()
 
     const { entry, details } = props
     const ts = useThemeSettings()
@@ -89,7 +91,7 @@ export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL
                                 </SeaLink>
                             </div>}
                         >
-                            Custom source
+                            {t("mediaDetail.metadata.customSource")}
                         </Tooltip>
                     )}
 
@@ -104,7 +106,7 @@ export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL
                             </SeaLink>
                         </div>}
                     >
-                        Open in website
+                        {t("mediaDetail.actions.openOnWebsite")}
                     </Tooltip>}
 
                     {ts.mediaPageBannerInfoBoxSize !== ThemeMediaPageInfoBoxSize.Fluid && <div className="flex-1 hidden lg:flex"></div>}

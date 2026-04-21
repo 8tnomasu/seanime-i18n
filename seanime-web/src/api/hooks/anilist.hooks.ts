@@ -16,6 +16,7 @@ import {
     AL_StudioDetails,
     Nullish,
 } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -45,7 +46,7 @@ export function useRefreshAnimeCollection() {
         method: API_ENDPOINTS.ANILIST.GetAnimeCollection.methods[1],
         mutationKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key],
         onSuccess: async () => {
-            toast.success("AniList is up-to-date")
+            toast.success(i18n.t("toasts.mediaDetail.anilistUpToDate"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollection.key] })
@@ -66,7 +67,7 @@ export function useEditAnilistListEntry(id: Nullish<string | number>, type: "ani
         method: API_ENDPOINTS.ANILIST.EditAnilistListEntry.methods[0],
         mutationKey: [API_ENDPOINTS.ANILIST.EditAnilistListEntry.key, String(id)],
         onSuccess: async () => {
-            toast.success("Entry updated")
+            toast.success(i18n.t("toasts.mediaDetail.entryUpdated"))
             if (type === "anime") {
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key, String(id)] })
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
@@ -98,7 +99,7 @@ export function useDeleteAnilistListEntry(id: Nullish<string | number>, type: "a
         method: API_ENDPOINTS.ANILIST.DeleteAnilistListEntry.methods[0],
         mutationKey: [API_ENDPOINTS.ANILIST.DeleteAnilistListEntry.key],
         onSuccess: async () => {
-            toast.success("Entry deleted")
+            toast.success(i18n.t("toasts.mediaDetail.entryDeleted"))
             if (type === "anime") {
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key, String(id)] })
                 await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
