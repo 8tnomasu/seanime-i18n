@@ -17,10 +17,12 @@ import { Tooltip } from "@/components/ui/tooltip"
 import { useAtomValue } from "jotai"
 import { useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiFillInfoCircle } from "react-icons/ai"
 import { LuCaptions, LuPaintbrush } from "react-icons/lu"
 
 export function VideoCoreSubtitleMenu({ inline }: { inline?: boolean }) {
+    const { t } = useTranslation()
     const action = useSetAtom(vc_dispatchAction)
     const isMiniPlayer = useAtomValue(vc_miniPlayer)
     const state = useAtomValue(nativePlayer_stateAtom)
@@ -107,19 +109,19 @@ export function VideoCoreSubtitleMenu({ inline }: { inline?: boolean }) {
                 }}
             />}
         >
-            <VideoCoreMenuTitle>Subtitles {(!!subtitleManager && !inline) && <Tooltip
+            <VideoCoreMenuTitle>{t("player.menus.subtitles")} {(!!subtitleManager && !inline) && <Tooltip
                 trigger={<AiFillInfoCircle className="text-sm" />}
                 className="z-[150]"
                 portalContainer={containerElement ?? undefined}
             >
-                You can add subtitles by dragging and dropping files onto the player.
+                {t("player.subtitles.dragDropHelp")}
             </Tooltip>}
                 <IconButton
                     intent="gray-link" size="xs"
                     onClick={() => {
                         setMenuOpen("settings")
                         React.startTransition(() => {
-                            setMenuSectionOpen("Subtitle Styles")
+                            setMenuSectionOpen("subtitle-styles")
                         })
                     }}
                     icon={<LuPaintbrush />}
@@ -131,13 +133,13 @@ export function VideoCoreSubtitleMenu({ inline }: { inline?: boolean }) {
                     containerElement={containerElement}
                     options={[
                         {
-                            label: "Off",
+                            label: t("player.common.off"),
                             value: -1,
                         },
                         ...subtitleTracks.map(track => {
                             // MKV subtitle tracks
                             return {
-                                label: `${track.label || track.language?.toUpperCase() || track.languageIETF?.toUpperCase()}`,
+                                label: `${track.label || track.language?.toUpperCase() || track.languageIETF?.toUpperCase() || t("player.overlay.track", { number: track.number })}`,
                                 value: track.number,
                                 moreInfo: track.language && track.language !== track.label
                                     ? `${track.language.toUpperCase()}${track.codecID ? "/" + getSubtitleTrackType(track.codecID) : ``}`

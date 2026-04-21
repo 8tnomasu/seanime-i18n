@@ -7,6 +7,7 @@ import { VideoCoreMenu, VideoCoreMenuBody, VideoCoreMenuTitle, VideoCoreSettingS
 import { VideoCore_VideoSource, VideoCoreLifecycleState } from "@/app/(main)/_features/video-core/video-core.atoms"
 import { atom, useAtomValue } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuFilm } from "react-icons/lu"
 
 export const vc_videoSources = atom<VideoCore_VideoSource[]>([])
@@ -15,6 +16,7 @@ export function VideoCoreResolutionMenu({ state, onVideoSourceChange }: {
     state: VideoCoreLifecycleState,
     onVideoSourceChange: ((source: VideoCore_VideoSource) => void) | undefined
 }) {
+    const { t } = useTranslation()
     const isFullscreen = useAtomValue(vc_isFullscreen)
     const isMiniPlayer = useAtomValue(vc_miniPlayer)
     const containerElement = useAtomValue(vc_containerElement)
@@ -56,14 +58,14 @@ export function VideoCoreResolutionMenu({ state, onVideoSourceChange }: {
                 className="text-xl lg:text-2xl"
             />}
         >
-            <VideoCoreMenuTitle>Quality</VideoCoreMenuTitle>
+            <VideoCoreMenuTitle>{t("player.menus.quality")}</VideoCoreMenuTitle>
             <VideoCoreMenuBody>
                 <VideoCoreSettingSelect
                     isFullscreen={isFullscreen}
                     containerElement={containerElement}
                     options={[
                         ...(isHls ? [{
-                            label: "Auto",
+                            label: t("player.common.auto"),
                             value: -1,
                         }] : []),
                         ...levels.map(level => ({

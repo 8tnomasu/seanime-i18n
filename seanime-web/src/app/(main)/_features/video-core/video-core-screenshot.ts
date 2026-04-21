@@ -4,10 +4,12 @@ import { vc_videoElement } from "@/app/(main)/_features/video-core/video-core-at
 import { vc_showOverlayFeedback } from "@/app/(main)/_features/video-core/video-core-overlay-display"
 import { useAtomValue, useSetAtom } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { vc_anime4kOption } from "./video-core-anime-4k"
 
 export function useVideoCoreScreenshot() {
 
+    const { t } = useTranslation()
     const videoElement = useAtomValue(vc_videoElement)
     const subtitleManager = useAtomValue(vc_subtitleManager)
     const showOverlayFeedback = useSetAtom(vc_showOverlayFeedback)
@@ -18,7 +20,7 @@ export function useVideoCoreScreenshot() {
 
     async function saveToClipboard(blob: Blob, isAnime4K: boolean = false) {
         await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
-        showOverlayFeedback({ message: "Screenshot saved to clipboard", type: "message" })
+        showOverlayFeedback({ message: t("player.screenshot.savedToClipboard"), type: "message" })
     }
 
     async function addSubtitles(canvas: HTMLCanvasElement): Promise<void> {
@@ -93,7 +95,7 @@ export function useVideoCoreScreenshot() {
         const isPaused = videoElement.paused
 
         videoElement.pause()
-        showOverlayFeedback({ message: "Taking screenshot..." })
+        showOverlayFeedback({ message: t("player.screenshot.taking") })
 
         try {
             let blob: Blob | null = null
@@ -122,7 +124,7 @@ export function useVideoCoreScreenshot() {
         }
         catch (error) {
             console.error("Screenshot failed:", error)
-            showOverlayFeedback({ message: "Screenshot failed" })
+            showOverlayFeedback({ message: t("player.screenshot.failed") })
         }
         finally {
             if (!isPaused) {

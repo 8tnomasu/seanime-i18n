@@ -44,6 +44,7 @@ import { upath } from "@/lib/helpers/upath"
 import { useAtomValue } from "jotai"
 import { useAtom, useSetAtom } from "jotai/react"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { HiFastForward } from "react-icons/hi"
 import { ImFileText } from "react-icons/im"
 import { IoCaretForwardCircleOutline } from "react-icons/io5"
@@ -54,35 +55,35 @@ import { TbArrowForwardUp } from "react-icons/tb"
 import { VscTextSize } from "react-icons/vsc"
 
 const SUBTITLE_STYLES_FONT_SIZE_OPTIONS = [
-    { label: "Small", value: 54 },
-    { label: "Medium", value: 62 },
-    { label: "Large", value: 72 },
-    { label: "Extra Large", value: 82 },
+    { labelKey: "player.options.size.small", value: 54 },
+    { labelKey: "player.options.size.medium", value: 62 },
+    { labelKey: "player.options.size.large", value: 72 },
+    { labelKey: "player.options.size.extraLarge", value: 82 },
 ]
 
 const SUBTITLE_STYLES_COLOR_OPTIONS = [
-    { label: "White", value: "#FFFFFF" },
-    { label: "Black", value: "#000000" },
-    { label: "Gray", value: "#808080" },
-    { label: "Yellow", value: "#FFD700" },
-    { label: "Cyan", value: "#00FFFF" },
-    { label: "Pink", value: "#FF69B4" },
-    { label: "Purple", value: "#9370DB" },
-    { label: "Lime", value: "#00FF00" },
+    { labelKey: "player.options.colors.white", value: "#FFFFFF" },
+    { labelKey: "player.options.colors.black", value: "#000000" },
+    { labelKey: "player.options.colors.gray", value: "#808080" },
+    { labelKey: "player.options.colors.yellow", value: "#FFD700" },
+    { labelKey: "player.options.colors.cyan", value: "#00FFFF" },
+    { labelKey: "player.options.colors.pink", value: "#FF69B4" },
+    { labelKey: "player.options.colors.purple", value: "#9370DB" },
+    { labelKey: "player.options.colors.lime", value: "#00FF00" },
 ]
 
 const SUBTITLE_STYLES_OUTLINE_WIDTH_OPTIONS = [
-    { label: "None", value: 0 },
-    { label: "Small", value: 2 },
-    { label: "Medium", value: 3 },
-    { label: "Large", value: 4 },
+    { labelKey: "player.common.none", value: 0 },
+    { labelKey: "player.options.size.small", value: 2 },
+    { labelKey: "player.options.size.medium", value: 3 },
+    { labelKey: "player.options.size.large", value: 4 },
 ]
 
 const SUBTITLE_STYLES_SHADOW_DEPTH_OPTIONS = [
-    { label: "None", value: 0 },
-    { label: "Small", value: 1 },
-    { label: "Medium", value: 2 },
-    { label: "Large", value: 3 },
+    { labelKey: "player.common.none", value: 0 },
+    { labelKey: "player.options.size.small", value: 1 },
+    { labelKey: "player.options.size.medium", value: 2 },
+    { labelKey: "player.options.size.large", value: 3 },
 ]
 
 export const SUBTITLE_STYLES_BACK_COLOR_OPACITY_OPTIONS = [
@@ -106,6 +107,42 @@ export const vc_subtitleStylesDefaults: VideoCoreSettings["subtitleCustomization
     shadow: SUBTITLE_STYLES_SHADOW_DEPTH_OPTIONS[0].value,
 }
 
+type TranslationFunction = (key: string) => string
+type LocalizedSelectOption<T> = { labelKey: string, value: T }
+
+const PLAYER_MENU_SECTION_IDS = {
+    anime4k: "anime4k",
+    autoNext: "auto-next",
+    autoPlay: "auto-play",
+    captionStyles: "caption-styles",
+    playerAppearance: "player-appearance",
+    playbackSpeed: "playback-speed",
+    skipOpEd: "skip-op-ed",
+    subtitleDelay: "subtitle-delay",
+    subtitleStyles: "subtitle-styles",
+} as const
+
+function translateSelectOptions<T>(t: TranslationFunction, options: Array<LocalizedSelectOption<T>>) {
+    return options.map(option => ({
+        label: t(option.labelKey),
+        value: option.value,
+    }))
+}
+
+function getLocalizedOptionLabel<T>(t: TranslationFunction, options: Array<LocalizedSelectOption<T>>, value: T) {
+    const option = options.find(option => option.value === value)
+    return option ? t(option.labelKey) : ""
+}
+
+function getAnime4KOptionLabel(t: TranslationFunction, option: ReturnType<typeof getAnime4KOptionByValue>) {
+    if (!option || option.value === "off") return t("player.common.off")
+    return option.label
+}
+
+function getAnime4KOptionDescription(t: TranslationFunction, option: (typeof anime4kOptions)[number]) {
+    return t(`player.anime4k.descriptions.${option.value}`)
+}
+
 export function vc_getSubtitleStyle<T extends keyof VideoCoreSettings["subtitleCustomization"]>(settings: VideoCoreSettings["subtitleCustomization"] | undefined,
     key: T,
 ): NonNullable<VideoCoreSettings["subtitleCustomization"][T]> {
@@ -114,18 +151,19 @@ export function vc_getSubtitleStyle<T extends keyof VideoCoreSettings["subtitleC
 
 export function vc_getSubtitleStyleLabel<T extends keyof VideoCoreSettings["subtitleCustomization"]>(settings: VideoCoreSettings["subtitleCustomization"] | undefined,
     key: T,
+    t: TranslationFunction,
 ): string {
     switch (key) {
         case "fontSize":
-            return SUBTITLE_STYLES_FONT_SIZE_OPTIONS.find(o => o.value === vc_getSubtitleStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, SUBTITLE_STYLES_FONT_SIZE_OPTIONS, vc_getSubtitleStyle(settings, key) as number)
         case "outline":
-            return SUBTITLE_STYLES_OUTLINE_WIDTH_OPTIONS.find(o => o.value === vc_getSubtitleStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, SUBTITLE_STYLES_OUTLINE_WIDTH_OPTIONS, vc_getSubtitleStyle(settings, key) as number)
         case "shadow":
-            return SUBTITLE_STYLES_SHADOW_DEPTH_OPTIONS.find(o => o.value === vc_getSubtitleStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, SUBTITLE_STYLES_SHADOW_DEPTH_OPTIONS, vc_getSubtitleStyle(settings, key) as number)
         case "primaryColor":
         case "outlineColor":
         case "backColor":
-            return SUBTITLE_STYLES_COLOR_OPTIONS.find(o => o.value === vc_getSubtitleStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, SUBTITLE_STYLES_COLOR_OPTIONS, vc_getSubtitleStyle(settings, key) as string)
         // case "backColorOpacity":
         //     return `${((vc_getSubtitleStyle(settings, "backColorOpacity")-255) / 255 * 100).toFixed(0)}%`
     }
@@ -136,17 +174,17 @@ export function vc_getSubtitleStyleLabel<T extends keyof VideoCoreSettings["subt
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const CAPTION_STYLES_FONT_SIZE_OPTIONS = [
-    { label: "Small", value: 4 },
-    { label: "Medium", value: 5 },
-    { label: "Large", value: 5.7 },
-    { label: "Extra Large", value: 6.1 },
+    { labelKey: "player.options.size.small", value: 4 },
+    { labelKey: "player.options.size.medium", value: 5 },
+    { labelKey: "player.options.size.large", value: 5.7 },
+    { labelKey: "player.options.size.extraLarge", value: 6.1 },
 ]
 
 export const CAPTION_STYLES_TEXT_SHADOW_OPTIONS = [
-    { label: "None", value: 0 },
-    { label: "Small", value: 2 },
-    { label: "Medium", value: 4 },
-    { label: "Large", value: 6 },
+    { labelKey: "player.common.none", value: 0 },
+    { labelKey: "player.options.size.small", value: 2 },
+    { labelKey: "player.options.size.medium", value: 4 },
+    { labelKey: "player.options.size.large", value: 6 },
 ]
 
 export const CAPTION_STYLES_BACKGROUND_OPACITY_OPTIONS = [
@@ -177,16 +215,17 @@ export function vc_getCaptionStyle<T extends keyof VideoCoreSettings["captionCus
 
 export function vc_getCaptionStyleLabel<T extends keyof VideoCoreSettings["captionCustomization"]>(settings: VideoCoreSettings["captionCustomization"] | undefined,
     key: T,
+    t: TranslationFunction,
 ): string {
     switch (key) {
         case "fontSize":
-            return CAPTION_STYLES_FONT_SIZE_OPTIONS.find(o => o.value === vc_getCaptionStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, CAPTION_STYLES_FONT_SIZE_OPTIONS, vc_getCaptionStyle(settings, key) as number)
         case "textShadow":
-            return CAPTION_STYLES_TEXT_SHADOW_OPTIONS.find(o => o.value === vc_getCaptionStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, CAPTION_STYLES_TEXT_SHADOW_OPTIONS, vc_getCaptionStyle(settings, key) as number)
         case "backgroundColor":
         case "textShadowColor":
         case "textColor":
-            return CAPTION_STYLES_COLOR_OPTIONS.find(o => o.value === vc_getCaptionStyle(settings, key))?.label ?? ""
+            return getLocalizedOptionLabel(t, CAPTION_STYLES_COLOR_OPTIONS, vc_getCaptionStyle(settings, key) as string)
         case "backgroundOpacity":
             return `${(vc_getCaptionStyle(settings, "backgroundOpacity") * 100).toFixed(0)}%`
     }
@@ -196,6 +235,7 @@ export function vc_getCaptionStyleLabel<T extends keyof VideoCoreSettings["capti
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function VideoCoreSettingsMenu() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const isMobile = useAtomValue(vc_isMobile)
     const action = useSetAtom(vc_dispatchAction)
@@ -240,13 +280,13 @@ export function VideoCoreSettingsMenu() {
     const [subFontName, setSubFontName] = useState<string>(editedSubCustomization?.fontName || "")
 
     React.useEffect(() => {
-        if (openMenuSection === "Subtitle Styles") {
+        if (openMenuSection === PLAYER_MENU_SECTION_IDS.subtitleStyles) {
             setEditedSubCustomization(settings.subtitleCustomization || vc_initialSettings.subtitleCustomization)
         }
-        if (openMenuSection === "Caption Styles") {
+        if (openMenuSection === PLAYER_MENU_SECTION_IDS.captionStyles) {
             setEditedCaptionCustomization(settings.captionCustomization || vc_initialSettings.captionCustomization)
         }
-        if (openMenuSection === "Subtitle Delay") {
+        if (openMenuSection === PLAYER_MENU_SECTION_IDS.subtitleDelay) {
             setEditedSubtitleDelay(settings.subtitleDelay)
         }
     }, [openMenuSection, settings])
@@ -320,7 +360,7 @@ export function VideoCoreSettingsMenu() {
                     className="text-sm text-[--muted] cursor-pointer" onClick={() => {
                     setMenuOpen("settings")
                     React.startTransition(() => {
-                        setOpenMenuSection("Playback Speed")
+                        setOpenMenuSection(PLAYER_MENU_SECTION_IDS.playbackSpeed)
                     })
                 }}
                 >
@@ -340,82 +380,91 @@ export function VideoCoreSettingsMenu() {
                 />}
             >
                 <VideoCoreMenuSectionBody>
-                    <VideoCoreMenuTitle>Settings</VideoCoreMenuTitle>
-                    <VideoCoreMenuOption title="Playback Speed" icon={MdSpeed} value={`${(playbackRate).toFixed(2)}x`} />
-                    <VideoCoreMenuOption title="Auto Play" icon={IoCaretForwardCircleOutline} value={autoPlay ? "On" : "Off"} />
-                    <VideoCoreMenuOption title="Auto Next" icon={HiFastForward} value={autoNext ? "On" : "Off"} />
-                    <VideoCoreMenuOption title="Skip OP/ED" icon={TbArrowForwardUp} value={autoSkipOPED ? "On" : "Off"} />
-                    <VideoCoreMenuOption title="Anime4K" icon={LuSparkles} value={currentAnime4kOption?.label || "Off"} />
+                    <VideoCoreMenuTitle>{t("player.menus.settings")}</VideoCoreMenuTitle>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.playbackSpeed} title={t("player.settings.playbackSpeed")} icon={MdSpeed} value={`${(playbackRate).toFixed(2)}x`} />
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.autoPlay} title={t("player.settings.autoPlay")} icon={IoCaretForwardCircleOutline} value={autoPlay ? t("player.common.on") : t("player.common.off")} />
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.autoNext} title={t("player.settings.autoNext")} icon={HiFastForward} value={autoNext ? t("player.common.on") : t("player.common.off")} />
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.skipOpEd} title={t("player.settings.skipOpEd")} icon={TbArrowForwardUp} value={autoSkipOPED ? t("player.common.on") : t("player.common.off")} />
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.anime4k} title="Anime4K" icon={LuSparkles} value={getAnime4KOptionLabel(t, currentAnime4kOption)} />
                     {(subtitleManager || mediaCaptionsManager) && <VideoCoreMenuOption
-                        title="Subtitle Delay"
+                        id={PLAYER_MENU_SECTION_IDS.subtitleDelay}
+                        title={t("player.settings.subtitleDelay")}
                         icon={MdOutlineAccessTime}
                         value={`${settings.subtitleDelay.toFixed(1)}s`}
                     />}
                     {subtitleManager && <VideoCoreMenuOption
-                        title="Subtitle Styles"
+                        id={PLAYER_MENU_SECTION_IDS.subtitleStyles}
+                        title={t("player.settings.subtitleStyles")}
                         icon={MdOutlineSubtitles}
-                        value={editedSubCustomization?.enabled ? `On${!!editedSubCustomization?.fontName ? ", Font" : ""}` : "Off"}
+                        value={editedSubCustomization?.enabled
+                            ? (!!editedSubCustomization?.fontName ? t("player.settings.values.onWithFont") : t("player.common.on"))
+                            : t("player.common.off")}
                     />}
                     {mediaCaptionsManager && <VideoCoreMenuOption
-                        title="Caption Styles"
+                        id={PLAYER_MENU_SECTION_IDS.captionStyles}
+                        title={t("player.settings.captionStyles")}
                         icon={MdOutlineSubtitles}
                     />}
-                    <VideoCoreMenuOption title="Player Appearance" icon={LuTvMinimalPlay} />
-                    <VideoCoreMenuOption title="Preferences" icon={LuSettings2} onClick={() => setKeybindingsModelOpen(true)} />
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.playerAppearance} title={t("player.settings.playerAppearance")} icon={LuTvMinimalPlay} />
+                    <VideoCoreMenuOption title={t("player.settings.preferences")} icon={LuSettings2} onClick={() => setKeybindingsModelOpen(true)} />
                 </VideoCoreMenuSectionBody>
                 <VideoCoreMenuSubmenuBody>
-                    <VideoCoreMenuOption title="Subtitle Styles" icon={MdOutlineSubtitles}>
-                        <p className="text-sm text-[--muted] mb-2">Subtitle customization will not override ASS/SSA tracks that contain multiple
-                                                                   styles.</p>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.subtitleStyles} title={t("player.settings.subtitleStyles")} icon={MdOutlineSubtitles}>
+                        <p className="text-sm text-[--muted] mb-2">{t("player.settings.subtitleCustomizationHelp")}</p>
                         <VideoCoreSettingSelect
                             options={[
-                                { label: "On", value: 1 },
-                                { label: "Off", value: 0 },
+                                { label: t("player.common.on"), value: 1 },
+                                { label: t("player.common.off"), value: 0 },
                             ]}
                             onValueChange={(v: number) => handleSubtitleCustomizationChange("enabled", v === 1)}
                             value={editedSubCustomization.enabled ? 1 : 0}
                         />
                         {editedSubCustomization.enabled && <>
-                            <p className="text-[--muted] text-sm my-2">Options</p>
+                            <p className="text-[--muted] text-sm my-2">{t("player.common.options")}</p>
                             <VideoCoreMenuSubOption
-                                title="Font"
+                                id="font"
+                                title={t("player.settings.font")}
                                 icon={LuHeading}
-                                parentId="Subtitle Styles"
-                                value={!editedSubCustomization.fontName ? "Default" : editedSubCustomization.fontName?.slice(0,
+                                parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}
+                                value={!editedSubCustomization.fontName ? t("player.common.default") : editedSubCustomization.fontName?.slice(0,
                                     11) + (!!editedSubCustomization.fontName?.length && editedSubCustomization.fontName?.length > 10
                                     ? "..."
                                     : "")}
                             />
                             <VideoCoreMenuSubOption
-                                title="Font Size"
+                                id="font-size"
+                                title={t("player.settings.fontSize")}
                                 icon={VscTextSize}
-                                parentId="Subtitle Styles"
-                                value={vc_getSubtitleStyleLabel(settings.subtitleCustomization, "fontSize")}
+                                parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}
+                                value={vc_getSubtitleStyleLabel(settings.subtitleCustomization, "fontSize", t)}
                             />
                             <VideoCoreMenuSubOption
-                                title="Text Color"
+                                id="text-color"
+                                title={t("player.settings.textColor")}
                                 icon={LuPalette}
-                                parentId="Subtitle Styles"
-                                value={vc_getSubtitleStyleLabel(settings.subtitleCustomization, "primaryColor")}
+                                parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}
+                                value={vc_getSubtitleStyleLabel(settings.subtitleCustomization, "primaryColor", t)}
                             />
                             <VideoCoreMenuSubOption
-                                title="Outline"
+                                id="outline"
+                                title={t("player.settings.outline")}
                                 icon={ImFileText}
-                                parentId="Subtitle Styles"
+                                parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}
                                 value={`${vc_getSubtitleStyleLabel(settings.subtitleCustomization,
-                                    "outline")}, ${vc_getSubtitleStyleLabel(settings.subtitleCustomization, "outlineColor")}`}
+                                    "outline", t)}, ${vc_getSubtitleStyleLabel(settings.subtitleCustomization, "outlineColor", t)}`}
                             />
                             <VideoCoreMenuSubOption
-                                title="Shadow"
+                                id="shadow"
+                                title={t("player.settings.shadow")}
                                 icon={RiShadowLine}
-                                parentId="Subtitle Styles"
+                                parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}
                                 value={`${vc_getSubtitleStyleLabel(settings.subtitleCustomization,
-                                    "shadow")}, ${vc_getSubtitleStyleLabel(settings.subtitleCustomization, "backColor")}`}
+                                    "shadow", t)}, ${vc_getSubtitleStyleLabel(settings.subtitleCustomization, "backColor", t)}`}
                             />
                         </>}
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Caption Styles" icon={MdOutlineSubtitles}>
-                        <p className="text-sm text-[--muted] mb-2">This only applies to non-ASS subtitles.</p>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.captionStyles} title={t("player.settings.captionStyles")} icon={MdOutlineSubtitles}>
+                        <p className="text-sm text-[--muted] mb-2">{t("player.settings.captionStylesHelp")}</p>
                         {/*<VideoCoreSettingSelect*/}
                         {/*    options={[*/}
                         {/*        { label: "On", value: 1 },*/}
@@ -425,39 +474,43 @@ export function VideoCoreSettingsMenu() {
                         {/*    value={editedCaptionCustomization.enabled ? 1 : 0}*/}
                         {/*/>*/}
                         {/*{editedCaptionCustomization.enabled && <>*/}
-                        <p className="text-[--muted] text-sm my-2">Options</p>
+                        <p className="text-[--muted] text-sm my-2">{t("player.common.options")}</p>
                         <VideoCoreMenuSubOption
-                            title="Font Size"
+                            id="font-size"
+                            title={t("player.settings.fontSize")}
                             icon={VscTextSize}
-                            parentId="Caption Styles"
-                            value={vc_getCaptionStyleLabel(settings.captionCustomization, "fontSize")}
+                            parentId={PLAYER_MENU_SECTION_IDS.captionStyles}
+                            value={vc_getCaptionStyleLabel(settings.captionCustomization, "fontSize", t)}
                         />
                         {/*<VideoCoreMenuSubOption title="Font Family" icon={LuHeading} parentId="Caption Styles" />*/}
                         <VideoCoreMenuSubOption
-                            title="Text Color"
+                            id="text-color"
+                            title={t("player.settings.textColor")}
                             icon={LuPalette}
-                            parentId="Caption Styles"
-                            value={vc_getCaptionStyleLabel(settings.captionCustomization, "textColor")}
+                            parentId={PLAYER_MENU_SECTION_IDS.captionStyles}
+                            value={vc_getCaptionStyleLabel(settings.captionCustomization, "textColor", t)}
                         />
                         <VideoCoreMenuSubOption
-                            title="Background"
+                            id="background"
+                            title={t("player.settings.background")}
                             icon={LuPaintbrush}
-                            parentId="Caption Styles"
+                            parentId={PLAYER_MENU_SECTION_IDS.captionStyles}
                             value={`${vc_getCaptionStyleLabel(settings.captionCustomization,
-                                "backgroundOpacity")}, ${vc_getCaptionStyleLabel(settings.captionCustomization, "backgroundColor")}`}
+                                "backgroundOpacity", t)}, ${vc_getCaptionStyleLabel(settings.captionCustomization, "backgroundColor", t)}`}
                         />
                         {/*<VideoCoreMenuSubOption title="Outline" icon={ImFileText} parentId="Caption Styles" />*/}
                         <VideoCoreMenuSubOption
-                            title="Shadow"
+                            id="shadow"
+                            title={t("player.settings.shadow")}
                             icon={RiShadowLine}
-                            parentId="Caption Styles"
+                            parentId={PLAYER_MENU_SECTION_IDS.captionStyles}
                             value={`${vc_getCaptionStyleLabel(settings.captionCustomization,
-                                "textShadow")}, ${vc_getCaptionStyleLabel(settings.captionCustomization, "textShadowColor")}`}
+                                "textShadow", t)}, ${vc_getCaptionStyleLabel(settings.captionCustomization, "textShadowColor", t)}`}
                         />
                         {/*</>}*/}
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Subtitle Delay" icon={MdOutlineAccessTime}>
-                        <p className="text-sm text-[--muted] mb-2">Positive values delay subtitles, negative values advance them.</p>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.subtitleDelay} title={t("player.settings.subtitleDelay")} icon={MdOutlineAccessTime}>
+                        <p className="text-sm text-[--muted] mb-2">{t("player.settings.subtitleDelayHelp")}</p>
                         <div className="flex gap-1.5 items-center mt-3">
                             <Button
                                 className="px-1 !text-xs flex-1"
@@ -511,7 +564,7 @@ export function VideoCoreSettingsMenu() {
                             value={[-2.0, -1.0, -0.5, 0, 0.5, 0.1, 2.0].includes(editedSubtitleDelay) ? editedSubtitleDelay : null}
                         />
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Playback Speed" icon={MdSpeed}>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.playbackSpeed} title={t("player.settings.playbackSpeed")} icon={MdSpeed}>
                         <VideoCoreSettingSelect
                             options={[
                                 { label: "0.5x", value: 0.5 },
@@ -527,11 +580,11 @@ export function VideoCoreSettingsMenu() {
                             value={playbackRate}
                         />
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Auto Play" icon={IoCaretForwardCircleOutline}>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.autoPlay} title={t("player.settings.autoPlay")} icon={IoCaretForwardCircleOutline}>
                         <VideoCoreSettingSelect
                             options={[
-                                { label: "On", value: 1 },
-                                { label: "Off", value: 0 },
+                                { label: t("player.common.on"), value: 1 },
+                                { label: t("player.common.off"), value: 0 },
                             ]}
                             onValueChange={(v: number) => {
                                 setAutoPlay(!!v)
@@ -539,11 +592,11 @@ export function VideoCoreSettingsMenu() {
                             value={autoPlay ? 1 : 0}
                         />
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Auto Next" icon={HiFastForward}>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.autoNext} title={t("player.settings.autoNext")} icon={HiFastForward}>
                         <VideoCoreSettingSelect
                             options={[
-                                { label: "On", value: 1 },
-                                { label: "Off", value: 0 },
+                                { label: t("player.common.on"), value: 1 },
+                                { label: t("player.common.off"), value: 0 },
                             ]}
                             onValueChange={(v: number) => {
                                 setAutoNext(!!v)
@@ -551,11 +604,11 @@ export function VideoCoreSettingsMenu() {
                             value={autoNext ? 1 : 0}
                         />
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Skip OP/ED" icon={TbArrowForwardUp}>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.skipOpEd} title={t("player.settings.skipOpEd")} icon={TbArrowForwardUp}>
                         <VideoCoreSettingSelect
                             options={[
-                                { label: "On", value: 1 },
-                                { label: "Off", value: 0 },
+                                { label: t("player.common.on"), value: 1 },
+                                { label: t("player.common.off"), value: 0 },
                             ]}
                             onValueChange={(v: number) => {
                                 setAutoSkipOPED(!!v)
@@ -563,18 +616,18 @@ export function VideoCoreSettingsMenu() {
                             value={autoSkipOPED ? 1 : 0}
                         />
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Anime4K" icon={LuSparkles}>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.anime4k} title="Anime4K" icon={LuSparkles}>
                         <p className="text-[--muted] text-sm mb-2">
-                            Real-time sharpening. GPU-intensive.
+                            {t("player.settings.anime4kHelp")}
                         </p>
                         <VideoCoreSettingSelect
                             isFullscreen={isFullscreen}
                             containerElement={containerElement}
                             options={anime4kOptions.map(option => ({
-                                label: `${option.label}`,
+                                label: getAnime4KOptionLabel(t, option),
                                 value: option.value,
-                                moreInfo: option.performance === "heavy" ? "Heavy" : undefined,
-                                description: option.description,
+                                moreInfo: option.performance === "heavy" ? t("player.common.heavy") : undefined,
+                                description: getAnime4KOptionDescription(t, option),
                             }))}
                             onValueChange={(value: Anime4KOption) => {
                                 setAnime4kOption(value)
@@ -582,9 +635,9 @@ export function VideoCoreSettingsMenu() {
                             value={anime4kOption}
                         />
                     </VideoCoreMenuOption>
-                    <VideoCoreMenuOption title="Player Appearance" icon={LuPaintbrush}>
+                    <VideoCoreMenuOption id={PLAYER_MENU_SECTION_IDS.playerAppearance} title={t("player.settings.playerAppearance")} icon={LuPaintbrush}>
                         <Switch
-                            label="Show Chapter Markers"
+                            label={t("player.settings.showChapterMarkers")}
                             side="right"
                             fieldClass="hover:bg-transparent hover:border-transparent px-0 ml-0 w-full"
                             size="sm"
@@ -592,7 +645,7 @@ export function VideoCoreSettingsMenu() {
                             onValueChange={setShowChapterMarkers}
                         />
                         <Switch
-                            label="Highlight OP/ED Chapters"
+                            label={t("player.settings.highlightOpEdChapters")}
                             side="right"
                             fieldClass="hover:bg-transparent hover:border-transparent px-0 ml-0 w-full"
                             size="sm"
@@ -600,7 +653,7 @@ export function VideoCoreSettingsMenu() {
                             onValueChange={setHighlightOPEDChapters}
                         />
                         <Switch
-                            label="Increase Saturation"
+                            label={t("player.settings.increaseSaturation")}
                             side="right"
                             fieldClass="hover:bg-transparent hover:border-transparent px-0 ml-0 w-full"
                             size="sm"
@@ -610,24 +663,23 @@ export function VideoCoreSettingsMenu() {
                     </VideoCoreMenuOption>
                 </VideoCoreMenuSubmenuBody>
                 <VideoCoreMenuSubSubmenuBody>
-                    <VideoCoreMenuSubOption title="Font" icon={VscTextSize} parentId="Subtitle Styles">
+                    <VideoCoreMenuSubOption id="font" title={t("player.settings.font")} icon={VscTextSize} parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}>
                         <div className="">
-                            <p className="text-sm mb-2">Custom Font</p>
+                            <p className="text-sm mb-2">{t("player.settings.customFont")}</p>
                             <p className="text-sm text-[--muted] mb-2">
-                                Place the font file in the <span
+                                {t("player.settings.customFontDescriptionBefore")} <span
                                 className="text-indigo-300 cursor-pointer underline underline-offset-2"
                                 onClick={() => {
                                     openInExplorer({ path: upath.normalize(`${serverStatus?.dataDir}/assets`) })
                                 }}
-                            >Seanime assets directory</span>. The file name must match
-                                the font name exactly.
+                            >{t("player.settings.seanimeAssetsDirectory")}</span>. {t("player.settings.customFontDescriptionAfter")}
                             </p>
                             <div className="space-y-2">
                                 <VideoCoreSettingTextInput
-                                    label="File Name"
+                                    label={t("player.settings.fileName")}
                                     value={subFontName ?? ""}
                                     onValueChange={(v: string) => setSubFontName(v)}
-                                    help="Example: Noto Sans JP.woff2"
+                                    help={t("player.settings.fileNameHelp")}
                                 />
                                 <div className="flex w-full">
                                     <Button
@@ -635,65 +687,65 @@ export function VideoCoreSettingsMenu() {
                                         handleSubtitleCustomizationChange("fontName", subFontName)
                                     }}
                                     >
-                                        Save
+                                        {t("common.buttons.save")}
                                     </Button>
                                 </div>
                             </div>
                         </div>
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Font Size" icon={LuHeading} parentId="Subtitle Styles">
-                        <p className="text-[--muted] text-sm mb-2">Font Size</p>
+                    <VideoCoreMenuSubOption id="font-size" title={t("player.settings.fontSize")} icon={LuHeading} parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}>
+                        <p className="text-[--muted] text-sm mb-2">{t("player.settings.fontSize")}</p>
                         <VideoCoreSettingSelect
-                            options={SUBTITLE_STYLES_FONT_SIZE_OPTIONS}
+                            options={translateSelectOptions(t, SUBTITLE_STYLES_FONT_SIZE_OPTIONS)}
                             onValueChange={(v: number) => handleSubtitleCustomizationChange("fontSize", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "fontSize")}
                         />
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Text Color" icon={LuPalette} parentId="Subtitle Styles">
+                    <VideoCoreMenuSubOption id="text-color" title={t("player.settings.textColor")} icon={LuPalette} parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}>
                         <VideoCoreSettingSelect
-                            options={SUBTITLE_STYLES_COLOR_OPTIONS}
+                            options={translateSelectOptions(t, SUBTITLE_STYLES_COLOR_OPTIONS)}
                             onValueChange={(v: string) => handleSubtitleCustomizationChange("primaryColor", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "primaryColor")}
                         />
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Outline" icon={LuPalette} parentId="Subtitle Styles">
-                        <p className="text-[--muted] text-sm mb-2">Outline Width</p>
+                    <VideoCoreMenuSubOption id="outline" title={t("player.settings.outline")} icon={LuPalette} parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}>
+                        <p className="text-[--muted] text-sm mb-2">{t("player.settings.outlineWidth")}</p>
                         <VideoCoreSettingSelect
-                            options={SUBTITLE_STYLES_OUTLINE_WIDTH_OPTIONS}
+                            options={translateSelectOptions(t, SUBTITLE_STYLES_OUTLINE_WIDTH_OPTIONS)}
                             onValueChange={(v: number) => handleSubtitleCustomizationChange("outline", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "outline")}
                         />
-                        <p className="text-[--muted] text-sm my-2">Outline Color</p>
+                        <p className="text-[--muted] text-sm my-2">{t("player.settings.outlineColor")}</p>
                         <VideoCoreSettingSelect
-                            options={SUBTITLE_STYLES_COLOR_OPTIONS}
+                            options={translateSelectOptions(t, SUBTITLE_STYLES_COLOR_OPTIONS)}
                             onValueChange={(v: string) => handleSubtitleCustomizationChange("outlineColor", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "outlineColor")}
                         />
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Shadow" icon={LuPalette} parentId="Subtitle Styles">
-                        <p className="text-[--muted] text-sm mb-2">Shadow Depth</p>
+                    <VideoCoreMenuSubOption id="shadow" title={t("player.settings.shadow")} icon={LuPalette} parentId={PLAYER_MENU_SECTION_IDS.subtitleStyles}>
+                        <p className="text-[--muted] text-sm mb-2">{t("player.settings.shadowDepth")}</p>
                         <VideoCoreSettingSelect
-                            options={SUBTITLE_STYLES_SHADOW_DEPTH_OPTIONS}
+                            options={translateSelectOptions(t, SUBTITLE_STYLES_SHADOW_DEPTH_OPTIONS)}
                             onValueChange={(v: number) => handleSubtitleCustomizationChange("shadow", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "shadow")}
                         />
-                        <p className="text-[--muted] text-sm my-2">Shadow Opacity</p>
+                        <p className="text-[--muted] text-sm my-2">{t("player.settings.shadowOpacity")}</p>
                         <VideoCoreSettingSelect
                             options={SUBTITLE_STYLES_BACK_COLOR_OPACITY_OPTIONS}
                             onValueChange={(v: number) => handleSubtitleCustomizationChange("backColorOpacity", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "backColorOpacity")}
                         />
-                        <p className="text-[--muted] text-sm my-2">Shadow Color</p>
+                        <p className="text-[--muted] text-sm my-2">{t("player.settings.shadowColor")}</p>
                         <VideoCoreSettingSelect
-                            options={SUBTITLE_STYLES_COLOR_OPTIONS}
+                            options={translateSelectOptions(t, SUBTITLE_STYLES_COLOR_OPTIONS)}
                             onValueChange={(v: string) => handleSubtitleCustomizationChange("backColor", v)}
                             value={vc_getSubtitleStyle(editedSubCustomization, "backColor")}
                         />
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Font Size" icon={VscTextSize} parentId="Caption Styles">
+                    <VideoCoreMenuSubOption id="font-size" title={t("player.settings.fontSize")} icon={VscTextSize} parentId={PLAYER_MENU_SECTION_IDS.captionStyles}>
                         {/*<p className="text-[--muted] text-sm mb-2">Font size as percentage of video height</p>*/}
                         <VideoCoreSettingSelect
-                            options={CAPTION_STYLES_FONT_SIZE_OPTIONS}
+                            options={translateSelectOptions(t, CAPTION_STYLES_FONT_SIZE_OPTIONS)}
                             onValueChange={(v: number) => handleCaptionCustomizationChange("fontSize", v)}
                             value={vc_getCaptionStyle(editedCaptionCustomization, "fontSize")}
                         />
@@ -712,37 +764,37 @@ export function VideoCoreSettingsMenu() {
                     {/*        value={editedCaptionCustomization.fontFamily ?? "Inter, Arial, sans-serif"}*/}
                     {/*    />*/}
                     {/*</VideoCoreMenuSubOption>*/}
-                    <VideoCoreMenuSubOption title="Text Color" icon={LuPalette} parentId="Caption Styles">
+                    <VideoCoreMenuSubOption id="text-color" title={t("player.settings.textColor")} icon={LuPalette} parentId={PLAYER_MENU_SECTION_IDS.captionStyles}>
                         <VideoCoreSettingSelect
-                            options={CAPTION_STYLES_COLOR_OPTIONS}
+                            options={translateSelectOptions(t, CAPTION_STYLES_COLOR_OPTIONS)}
                             onValueChange={(v: string) => handleCaptionCustomizationChange("textColor", v)}
                             value={vc_getCaptionStyle(editedCaptionCustomization, "textColor")}
                         />
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Background" icon={LuPaintbrush} parentId="Caption Styles">
-                        <p className="text-[--muted] text-sm my-2">Background Opacity</p>
+                    <VideoCoreMenuSubOption id="background" title={t("player.settings.background")} icon={LuPaintbrush} parentId={PLAYER_MENU_SECTION_IDS.captionStyles}>
+                        <p className="text-[--muted] text-sm my-2">{t("player.settings.backgroundOpacity")}</p>
                         <VideoCoreSettingSelect
                             options={CAPTION_STYLES_BACKGROUND_OPACITY_OPTIONS}
                             onValueChange={(v: number) => handleCaptionCustomizationChange("backgroundOpacity", v)}
                             value={vc_getCaptionStyle(editedCaptionCustomization, "backgroundOpacity")}
                         />
-                        <p className="text-[--muted] text-sm mb-2">Background Color</p>
+                        <p className="text-[--muted] text-sm mb-2">{t("player.settings.backgroundColor")}</p>
                         <VideoCoreSettingSelect
-                            options={CAPTION_STYLES_COLOR_OPTIONS}
+                            options={translateSelectOptions(t, CAPTION_STYLES_COLOR_OPTIONS)}
                             onValueChange={(v: string) => handleCaptionCustomizationChange("backgroundColor", v)}
                             value={vc_getCaptionStyle(editedCaptionCustomization, "backgroundColor")}
                         />
                     </VideoCoreMenuSubOption>
-                    <VideoCoreMenuSubOption title="Shadow" icon={RiShadowLine} parentId="Caption Styles">
-                        <p className="text-[--muted] text-sm mb-2">Text shadow</p>
+                    <VideoCoreMenuSubOption id="shadow" title={t("player.settings.shadow")} icon={RiShadowLine} parentId={PLAYER_MENU_SECTION_IDS.captionStyles}>
+                        <p className="text-[--muted] text-sm mb-2">{t("player.settings.textShadow")}</p>
                         <VideoCoreSettingSelect
-                            options={CAPTION_STYLES_TEXT_SHADOW_OPTIONS}
+                            options={translateSelectOptions(t, CAPTION_STYLES_TEXT_SHADOW_OPTIONS)}
                             onValueChange={(v: number) => handleCaptionCustomizationChange("textShadow", v)}
                             value={vc_getCaptionStyle(editedCaptionCustomization, "textShadow")}
                         />
-                        <p className="text-[--muted] text-sm my-2">Shadow Color</p>
+                        <p className="text-[--muted] text-sm my-2">{t("player.settings.shadowColor")}</p>
                         <VideoCoreSettingSelect
-                            options={CAPTION_STYLES_COLOR_OPTIONS}
+                            options={translateSelectOptions(t, CAPTION_STYLES_COLOR_OPTIONS)}
                             onValueChange={(v: string) => handleCaptionCustomizationChange("textShadowColor", v)}
                             value={vc_getCaptionStyle(editedCaptionCustomization, "textShadowColor")}
                         />

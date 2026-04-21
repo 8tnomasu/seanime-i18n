@@ -13,9 +13,11 @@ import { vc_dispatchAction } from "@/app/(main)/_features/video-core/video-core.
 import { useAtomValue } from "jotai"
 import { useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuHeadphones } from "react-icons/lu"
 
 export function VideoCoreAudioMenu() {
+    const { t } = useTranslation()
     const action = useSetAtom(vc_dispatchAction)
     const isMiniPlayer = useAtomValue(vc_miniPlayer)
     const state = useAtomValue(nativePlayer_stateAtom)
@@ -76,7 +78,7 @@ export function VideoCoreAudioMenu() {
                 }}
             />}
         >
-            <VideoCoreMenuTitle>Audio</VideoCoreMenuTitle>
+            <VideoCoreMenuTitle>{t("player.menus.audio")}</VideoCoreMenuTitle>
             <VideoCoreMenuBody>
                 <VideoCoreSettingSelect
                     isFullscreen={isFullscreen}
@@ -86,7 +88,7 @@ export function VideoCoreAudioMenu() {
                             // HLS track format
                             const hlsTrack = track as HlsAudioTrack
                             return {
-                                label: hlsTrack.name || hlsTrack.language?.toUpperCase() || `Track ${hlsTrack.id + 1}`,
+                                label: hlsTrack.name || hlsTrack.language?.toUpperCase() || t("player.overlay.track", { number: hlsTrack.id + 1 }),
                                 value: hlsTrack.id,
                                 moreInfo: hlsTrack.language?.toUpperCase(),
                             }
@@ -94,7 +96,7 @@ export function VideoCoreAudioMenu() {
                             // Event track format
                             const eventTrack = track as MKVParser_TrackInfo
                             return {
-                                label: `${eventTrack.name || eventTrack.language?.toUpperCase() || eventTrack.languageIETF?.toUpperCase()}`,
+                                label: `${eventTrack.name || eventTrack.language?.toUpperCase() || eventTrack.languageIETF?.toUpperCase() || t("player.overlay.track", { number: eventTrack.number })}`,
                                 value: eventTrack.number,
                                 moreInfo: eventTrack.language?.toUpperCase(),
                             }

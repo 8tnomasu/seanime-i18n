@@ -5,6 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { cva, VariantProps } from "class-variance-authority"
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { RemoveScrollBar } from "react-remove-scroll-bar"
 
 /* -------------------------------------------------------------------------------------------------
@@ -123,6 +124,7 @@ type DrawerProps = Omit<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Ro
 }
 
 export function VideoCoreDrawer(props: DrawerProps) {
+    const { t } = useTranslation()
 
     const {
         allowOutsideInteraction = false,
@@ -439,7 +441,7 @@ export function VideoCoreDrawer(props: DrawerProps) {
                 >
                     {!title && !description ? (
                         <VisuallyHidden>
-                            <DialogPrimitive.Title>Drawer</DialogPrimitive.Title>
+                            <DialogPrimitive.Title>{t("player.drawer.title")}</DialogPrimitive.Title>
                         </VisuallyHidden>
                     ) : (
                         <div className={cn(DrawerAnatomy.header(), headerClass)}>

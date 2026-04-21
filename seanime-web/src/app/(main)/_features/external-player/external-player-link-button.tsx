@@ -4,6 +4,7 @@ import { useRouter } from "@/lib/navigation"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 type ExternalPlayerLinkButtonProps = {}
 
@@ -13,6 +14,7 @@ export function ExternalPlayerLinkButton(props: ExternalPlayerLinkButtonProps) {
 
     const {} = props
 
+    const { t } = useTranslation()
     const router = useRouter()
 
     const [link, setLink] = useAtom(__externalPlayerLinkButton_linkAtom)
@@ -33,7 +35,7 @@ export function ExternalPlayerLinkButton(props: ExternalPlayerLinkButtonProps) {
                             })
                         }}
                     >
-                        Open media in external player
+                        {t("player.actions.openInExternalPlayer")}
                     </Button>
                 </SeaLink>
             </div>

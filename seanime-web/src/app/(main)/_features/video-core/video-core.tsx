@@ -136,6 +136,7 @@ import { atom } from "jotai"
 import { ScopeProvider } from "jotai-scope"
 import { useAtom, useAtomValue, useSetAtom } from "jotai/react"
 import React, { useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { BiExpand, BiX } from "react-icons/bi"
 import { FiMinimize2 } from "react-icons/fi"
 import { ImSpinner2 } from "react-icons/im"
@@ -300,6 +301,7 @@ const PlayerContent = React.memo<PlayerContentProps>(({
     onTerminateStream,
     onVideoSourceChange,
 }) => {
+    const { t } = useTranslation()
     const isMobile = useAtomValue(vc_isMobile)
     const isMiniPlayer = useAtomValue(vc_miniPlayer)
     const busy = useAtomValue(vc_busy)
@@ -334,16 +336,17 @@ const PlayerContent = React.memo<PlayerContentProps>(({
                 >
                     <div className="text-white text-center" data-vc-element="playback-error-content">
                         {!isMiniPlayer ? (
-                            <LuffyError title="Playback Error" imageContainerClass="size-[3.5rem] lg:size-[8rem]" />
+                            <LuffyError title={t("player.errors.playbackTitle")} imageContainerClass="size-[3.5rem] lg:size-[8rem]" />
                         ) : (
-                            <h1 data-vc-element="playback-error-title" className={cn("text-2xl font-bold", isMiniPlayer && "text-lg")}>Playback
-                                                                                                                                       Error</h1>
+                            <h1 data-vc-element="playback-error-title" className={cn("text-2xl font-bold", isMiniPlayer && "text-lg")}>
+                                {t("player.errors.playbackTitle")}
+                            </h1>
                         )}
                         <p
                             data-vc-element="playback-error-message"
                             className={cn("text-base text-white/50 max-w-xl", isMiniPlayer && "text-sm max-w-lg mx-auto")}
                         >
-                            {state.playbackError || "An error occurred while playing the stream. Please try again later."}
+                            {state.playbackError || t("player.errors.playbackFallback")}
                         </p>
                     </div>
                 </div>
@@ -409,7 +412,7 @@ const PlayerContent = React.memo<PlayerContentProps>(({
                                             }}
                                             onPointerMove={e => e.stopPropagation()}
                                         >
-                                            Skip Opening
+                                            {t("player.controls.skipOpening")}
                                         </Button>
                                     </div>
                                 )}
@@ -429,7 +432,7 @@ const PlayerContent = React.memo<PlayerContentProps>(({
                                             }}
                                             onPointerMove={e => e.stopPropagation()}
                                         >
-                                            Skip Ending
+                                            {t("player.controls.skipEnding")}
                                         </Button>
                                     </div>
                                 )}
@@ -522,7 +525,7 @@ const PlayerContent = React.memo<PlayerContentProps>(({
                                         pipManager?.togglePip()
                                     }}
                                 >
-                                    Exit PiP
+                                    {t("player.actions.exitPip")}
                                 </Button>
                             </div>
                         )}
@@ -583,7 +586,7 @@ const PlayerContent = React.memo<PlayerContentProps>(({
                         {!inline && <FloatingButtons part="loading" onTerminateStream={onTerminateStream} />}
                         {state.loadingState && (
                             <LoadingSpinner
-                                title={state.loadingState || "Loading..."}
+                                title={state.loadingState || t("player.states.loading")}
                                 spinner={<ImSpinner2 className="size-20 text-white animate-spin" />}
                                 containerClass="z-[1]"
                             />
@@ -662,6 +665,7 @@ export function VideoCore(props: VideoCoreProps) {
         onChangePlaybackType,
         mRef,
     } = props
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const { getHMACTokenQueryParam } = useServerHMACAuth()
     const [streamType, setStreamType] = useState<VideoCore_VideoPlaybackInfo["streamType"]>(state.playbackInfo?.streamType ?? "unknown")
@@ -1323,7 +1327,7 @@ export function VideoCore(props: VideoCoreProps) {
             return
         }
 
-        const error = `Video playback error occurred. (Code: ${(e.currentTarget.error && e.currentTarget.error.code) || "unknown"})`
+        const error = t("player.errors.videoPlaybackWithCode", { code: (e.currentTarget.error && e.currentTarget.error.code) || t("player.errors.unknown") })
         onError?.(error)
         dispatchVideoErrorEvent(error)
     }
@@ -1335,7 +1339,7 @@ export function VideoCore(props: VideoCoreProps) {
     function restoreSeekTime(time: number, showMessage: boolean, paused?: boolean) {
         if (!videoRef.current) return
         if (anime4kOption === "off" || anime4kManager?.canvas !== null) {
-            if (showMessage) showOverlayFeedback({ message: "Progress restored", duration: 1500 })
+            if (showMessage) showOverlayFeedback({ message: t("player.overlay.progressRestored"), duration: 1500 })
             videoRef.current.currentTime = time
             if (paused && !videoRef.current.paused) {
                 videoRef.current.pause()
@@ -1344,7 +1348,7 @@ export function VideoCore(props: VideoCoreProps) {
             }
         } else if (anime4kOption !== ("off" as Anime4KOption)) {
             videoRef.current.pause()
-            if (showMessage) showOverlayFeedback({ message: "Restoring progress", duration: 1500 })
+            if (showMessage) showOverlayFeedback({ message: t("player.overlay.restoringProgress"), duration: 1500 })
             anime4kManager.registerOnCanvasCreatedOnce(() => {
                 if (!videoRef.current) return
                 videoRef.current.currentTime = time

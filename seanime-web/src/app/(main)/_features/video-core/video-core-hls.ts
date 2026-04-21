@@ -1,5 +1,6 @@
 import { vc_audioManager } from "@/app/(main)/_features/video-core/video-core"
 import { vc_autoPlayVideoAtom } from "@/app/(main)/_features/video-core/video-core.atoms"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import Hls, { ErrorData, Events, Level } from "hls.js"
 import { atom, useAtomValue } from "jotai"
@@ -244,7 +245,7 @@ export function useVideoCoreHls({
             setSetAudioTrack(() => {})
         } else {
             hlsLog.error("HLS not supported on this browser")
-            toast.error("HLS playback not supported on this browser")
+            toast.error(i18n.t("player.toasts.hlsUnsupported"))
         }
     }, [streamUrl, videoElement, streamType])
 

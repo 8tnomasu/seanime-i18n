@@ -26,6 +26,7 @@ import { logger } from "@/lib/helpers/debug"
 import { atom, useAtomValue } from "jotai"
 import { useAtom, useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { FaDiamond } from "react-icons/fa6"
 
 export type VideoCoreTimeRangeChapter = {
@@ -48,6 +49,7 @@ export function VideoCoreTimeRange(props: VideoCoreTimeRangeProps) {
     const {
         chapterCues,
     } = props
+    const { t } = useTranslation()
 
     const { isPeer: isWatchPartyPeer } = useNakamaWatchParty()
 
@@ -137,7 +139,7 @@ export function VideoCoreTimeRange(props: VideoCoreTimeRangeProps) {
             if (autoSkipIntroOutro && !restoreProgressTo) {
                 console.log("auto skip", opEdChapters.opening.end)
                 action({ type: "seekTo", payload: { time: opEdChapters.opening.end } })
-                showOverlayFeedback({ message: "Skipped OP", duration: 1000 })
+                showOverlayFeedback({ message: t("player.overlay.skippedOpening"), duration: 1000 })
             } else {
                 setSkipOpeningTime(opEdChapters.opening.end)
             }
@@ -155,7 +157,7 @@ export function VideoCoreTimeRange(props: VideoCoreTimeRangeProps) {
             if (autoSkipIntroOutro && !restoreProgressTo) {
                 console.log("auto skip", opEdChapters.ending.end)
                 action({ type: "seekTo", payload: { time: opEdChapters.ending.end } })
-                showOverlayFeedback({ message: "Skipped ED", duration: 1000 })
+                showOverlayFeedback({ message: t("player.overlay.skippedEnding"), duration: 1000 })
             } else {
                 setSkipEndingTime(opEdChapters.ending.end)
             }
@@ -163,7 +165,7 @@ export function VideoCoreTimeRange(props: VideoCoreTimeRangeProps) {
             setSkipEndingTime(0)
         }
 
-    }, [currentTime, autoSkipIntroOutro, opEdChapters, duration, restoreProgressTo, isWatchPartyPeer])
+    }, [currentTime, autoSkipIntroOutro, opEdChapters, duration, restoreProgressTo, isWatchPartyPeer, t])
 
     // start seeking
     function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
@@ -277,7 +279,7 @@ export function VideoCoreTimeRange(props: VideoCoreTimeRangeProps) {
             aria-valuenow={0}
             aria-valuetext="0%"
             aria-orientation="horizontal"
-            aria-label="Video playback time"
+                aria-label={t("player.accessibility.playbackTime")}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerLeave}

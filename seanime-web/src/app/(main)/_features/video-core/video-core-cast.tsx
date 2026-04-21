@@ -4,12 +4,14 @@ import { Button, IconButton } from "@/components/ui/button"
 import { cn } from "@/components/ui/core/styling"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Modal } from "@/components/ui/modal"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import { WSEvents } from "@/lib/server/ws-events"
 import { __CAST_ENABLED__, __isElectronDesktop__ } from "@/types/constants"
 import { atom } from "jotai"
 import { useAtom, useAtomValue } from "jotai/react"
 import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { BiCast } from "react-icons/bi"
 import { toast } from "sonner"
 
@@ -69,7 +71,7 @@ export function useCastManager() {
 
         const c4 = window.electron.on("cast:error", (err: any) => {
             log.error("Cast error:", err)
-            toast.error(`Cast error: ${err?.message || "Unknown error"}`)
+            toast.error(i18n.t("player.toasts.castError", { message: err?.message || i18n.t("player.errors.unknown") }))
         })
         if (c4) cleanups.push(c4)
 
@@ -96,7 +98,7 @@ export function useCastManager() {
         if (!window.electron?.cast) return
         try {
             await window.electron.cast.connect(deviceId)
-            toast.success("Connected to Chromecast")
+            toast.success(i18n.t("player.toasts.connectedToChromecast"))
             // Poll media status
             statusPollRef.current = setInterval(() => {
                 window.electron?.cast?.getStatus().then(s => {
@@ -105,7 +107,7 @@ export function useCastManager() {
             }, 2000)
         }
         catch (err: any) {
-            toast.error(`Failed to connect: ${err?.message || "Unknown error"}`)
+            toast.error(i18n.t("player.toasts.castConnectFailed", { message: err?.message || i18n.t("player.errors.unknown") }))
         }
     }, [])
 
@@ -114,7 +116,7 @@ export function useCastManager() {
         await window.electron.cast.disconnect()
         setIsCasting(false)
         setMediaStatus(null)
-        toast.info("Disconnected from Chromecast")
+        toast.info(i18n.t("player.toasts.disconnectedFromChromecast"))
     }, [])
 
     return {
@@ -203,6 +205,7 @@ export async function castCurrentMedia(playbackInfo: any) {
 
 // Only visible in Electron when cast dev flag is on
 export function VideoCoreCastButton() {
+    const { t } = useTranslation()
     const [modalOpen, setModalOpen] = useState(false)
     const isCasting = useAtomValue(vc_isCasting)
 
@@ -215,7 +218,7 @@ export function VideoCoreCastButton() {
                 size="sm"
                 icon={<BiCast className={cn("text-lg", isCasting && "text-brand-300")} />}
                 onClick={() => setModalOpen(true)}
-                title={isCasting ? "Casting" : "Cast to device"}
+                title={isCasting ? t("player.cast.casting") : t("player.cast.castToDevice")}
             />
             <CastDeviceModal open={modalOpen} onOpenChange={setModalOpen} />
         </>
@@ -223,6 +226,7 @@ export function VideoCoreCastButton() {
 }
 
 function CastDeviceModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+    const { t } = useTranslation()
     const { devices, isDiscovering, discover, connect, disconnect, isCasting, session } = useCastManager()
 
     useEffect(() => {
@@ -232,16 +236,16 @@ function CastDeviceModal({ open, onOpenChange }: { open: boolean; onOpenChange: 
     }, [open])
 
     return (
-        <Modal open={open} onOpenChange={onOpenChange} title="Cast to Device" contentClass="max-w-md">
+        <Modal open={open} onOpenChange={onOpenChange} title={t("player.cast.castToDevice")} contentClass="max-w-md">
             <div className="space-y-4">
                 {isCasting && session.device && (
                     <div className="flex items-center justify-between p-3 bg-gray-900 rounded-md border border-brand-700">
                         <div>
-                            <p className="text-sm font-medium text-brand-300">Connected to</p>
+                            <p className="text-sm font-medium text-brand-300">{t("player.cast.connectedTo")}</p>
                             <p className="text-base font-semibold">{session.device.name}</p>
                         </div>
                         <Button intent="alert-subtle" size="sm" onClick={disconnect}>
-                            Disconnect
+                            {t("player.cast.disconnect")}
                         </Button>
                     </div>
                 )}
@@ -249,15 +253,15 @@ function CastDeviceModal({ open, onOpenChange }: { open: boolean; onOpenChange: 
                 {isDiscovering && (
                     <div className="flex items-center gap-2 text-sm text-[--muted]">
                         <LoadingSpinner />
-                        <span>Searching for devices...</span>
+                        <span>{t("player.cast.searchingForDevices")}</span>
                     </div>
                 )}
 
                 {devices.length === 0 && !isDiscovering && (
                     <div className="text-center py-6">
-                        <p className="text-sm text-[--muted]">No devices found</p>
+                        <p className="text-sm text-[--muted]">{t("player.cast.noDevicesFound")}</p>
                         <Button intent="gray-subtle" size="sm" className="mt-2" onClick={discover}>
-                            Scan again
+                            {t("player.cast.scanAgain")}
                         </Button>
                     </div>
                 )}
@@ -290,7 +294,7 @@ function CastDeviceModal({ open, onOpenChange }: { open: boolean; onOpenChange: 
 
                 {!isDiscovering && devices.length > 0 && (
                     <Button intent="gray-subtle" size="sm" className="w-full" onClick={discover}>
-                        Scan again
+                        {t("player.cast.scanAgain")}
                     </Button>
                 )}
             </div>
@@ -300,6 +304,7 @@ function CastDeviceModal({ open, onOpenChange }: { open: boolean; onOpenChange: 
 
 // Shown when casting, replaces local video controls
 export function CastPlaybackControls({ onStop }: { onStop?: () => void }) {
+    const { t } = useTranslation()
     const isCasting = useAtomValue(vc_isCasting)
     const mediaStatus = useAtomValue(vc_castMediaStatus)
     const session = useAtomValue(vc_castSession)
@@ -322,7 +327,7 @@ export function CastPlaybackControls({ onStop }: { onStop?: () => void }) {
         <div className="flex flex-col gap-2 p-3 bg-gray-950/80 rounded-lg">
             <div className="flex items-center gap-2 text-sm text-brand-300">
                 <BiCast className="text-lg" />
-                <span>Casting to {session.device?.name}</span>
+                <span>{t("player.cast.castingTo", { device: session.device?.name })}</span>
                 {isBuffering && <LoadingSpinner className="ml-1" />}
             </div>
 
@@ -358,7 +363,7 @@ export function CastPlaybackControls({ onStop }: { onStop?: () => void }) {
                     size="sm"
                     onClick={() => isPlaying ? window.electron?.cast?.pause() : window.electron?.cast?.play()}
                 >
-                    {isPlaying ? "Pause" : "Play"}
+                    {isPlaying ? t("player.controls.pause") : t("player.controls.play")}
                 </Button>
                 <Button
                     intent="gray-subtle"
@@ -375,7 +380,7 @@ export function CastPlaybackControls({ onStop }: { onStop?: () => void }) {
                         onStop?.()
                     }}
                 >
-                    Stop
+                    {t("player.controls.stop")}
                 </Button>
             </div>
         </div>

@@ -13,6 +13,7 @@ import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import { useRef } from "react"
 import React, { useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { BiX } from "react-icons/bi"
 
 export const vc_inSight_open = atom(false)
@@ -44,6 +45,7 @@ export function useVideoCoreInSight() {
 }
 
 export function VideoCoreInSight() {
+    const { t } = useTranslation()
     const { open, toggleOpen, data } = useVideoCoreInSight()
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const scrollContentRef = useRef<HTMLDivElement>(null)
@@ -57,7 +59,7 @@ export function VideoCoreInSight() {
         const res = list.filter(c => c.name?.toLowerCase().includes(searchQuery.toLowerCase()))
         if (res.length === 0) return [{
             mal_id: 0,
-            name: "No results",
+            name: t("player.inSight.noResults"),
             images: {
                 webp: {
                     image_url: "/no-cover.png",
@@ -65,7 +67,7 @@ export function VideoCoreInSight() {
             },
         }] as VideoCore_InSightCharacter[]
         return res
-    }, [data, searchQuery])
+    }, [data, searchQuery, t])
 
     React.useEffect(() => {
         if (!open) return
@@ -200,9 +202,9 @@ export function VideoCoreInSight() {
                 <div className="w-fit flex items-center gap-3">
                     <div className="w-fit">
                         <p className="text-2xl font-semibold text-white text-shadow-md">
-                            Characters
+                            {t("player.inSight.characters")}
                         </p>
-                        <p className="text-white/60">May contain spoilers.</p>
+                        <p className="text-white/60">{t("player.inSight.spoilerWarning")}</p>
                     </div>
                     <IconButton
                         icon={<BiX />}
@@ -216,7 +218,7 @@ export function VideoCoreInSight() {
                 <TextInput
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Search characters..."
+                    placeholder={t("player.inSight.searchPlaceholder")}
                     value={searchQuery}
                     onValueChange={(v) => setSearchQuery(v)}
                     fieldClass="w-[300px] !rounded-full"
@@ -283,13 +285,14 @@ export function VideoCoreInSight() {
 }
 
 function CharacterPopoverContent({ character }: { character: VideoCore_InSightCharacter }) {
+    const { t } = useTranslation()
     const { data: details, isLoading } = useVideoCoreInSightGetCharacterDetails(character.mal_id)
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <p>{t("player.states.loading")}</p>
 
     return (
         <p className="text-justify text-white">
-            {details?.about || "No details available."}
+            {details?.about || t("player.inSight.noDetails")}
         </p>
     )
 }

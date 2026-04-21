@@ -11,6 +11,7 @@ import { WSEvents } from "@/lib/server/ws-events"
 import { useQueryClient } from "@tanstack/react-query"
 import { useAtom, useAtomValue } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { useWebsocketMessageListener, useWebsocketSender } from "../../_hooks/handle-websockets"
 import { useSkipData } from "../video-core/_lib/aniskip"
@@ -23,6 +24,7 @@ const SUBTITLE_FLUSH_INTERVAL_MS = 300
 
 export function NativePlayer() {
     const qc = useQueryClient()
+    const { t } = useTranslation()
     const clientId = useAtomValue(clientIdAtom)
     const { sendMessage } = useWebsocketSender()
 
@@ -129,7 +131,9 @@ export function NativePlayer() {
                         break
                     }
                     setState(draft => {
-                        draft.loadingState = "An error occurred while loading the stream: " + ((payload as string) || "Unknown error")
+                        draft.loadingState = t("player.errors.loadingStream", {
+                            message: (payload as string) || t("player.errors.unknown"),
+                        })
                         draft.playbackError = payload as string
                         draft.playbackInfo = null
                         return
@@ -164,7 +168,7 @@ export function NativePlayer() {
                     break
                 case "error":
                     log.error("Error event received", payload)
-                    toast.error("An error occurred while playing the stream. " + ((payload as { error: string }).error))
+                    toast.error(t("player.toasts.playingStreamError", { message: ((payload as { error: string }).error) }))
                     setState(draft => {
                         draft.playbackError = (payload as { error: string }).error
                         return
@@ -192,7 +196,7 @@ export function NativePlayer() {
         setState(draft => {
             draft.playbackInfo = null
             draft.playbackError = null
-            draft.loadingState = "Ending stream..."
+            draft.loadingState = t("player.states.endingStream")
             return
         })
 

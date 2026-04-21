@@ -25,6 +25,7 @@ import {
 } from "@/app/(main)/entry/_containers/torrent-stream/torrent-stream-page"
 import { useHandlePlayMedia } from "@/app/(main)/entry/_lib/handle-play-media"
 import { HoverCard } from "@/components/ui/hover-card"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import { atom, useAtomValue } from "jotai"
 import { useAtom, useSetAtom } from "jotai/react"
@@ -233,11 +234,11 @@ export function useVideoCorePlaylist() {
         if (isWatchPartyPeer) return
 
         if (!playlistState) {
-            toast.error("Unexpected error: No playlist state")
+            toast.error(i18n.t("player.toasts.noPlaylistState"))
             return
         }
         if (!animeEntry) {
-            toast.error("Unexpected error: No entry")
+            toast.error(i18n.t("player.toasts.noEntry"))
             return
         }
 
@@ -289,7 +290,7 @@ export function useVideoCorePlaylist() {
             case "localfile":
             case "nakama":
                 if (!episode?.localFile?.path) {
-                    toast.error("Local file not found")
+                    toast.error(i18n.t("player.toasts.localFileNotFound"))
                     return
                 }
                 playMediaFile({

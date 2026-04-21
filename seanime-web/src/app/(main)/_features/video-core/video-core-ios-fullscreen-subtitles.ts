@@ -4,6 +4,7 @@ import { vc_subtitleManager } from "@/app/(main)/_features/video-core/video-core
 import { vc_mediaCaptionsManager } from "@/app/(main)/_features/video-core/video-core"
 
 import { vc_isFullscreen } from "@/app/(main)/_features/video-core/video-core-atoms"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import { isApple } from "@/lib/utils/browser-detection"
 import { useAtomValue } from "jotai"
@@ -69,7 +70,7 @@ export function useVideoCoreIOSFullscreenSubtitles({
             try {
                 let subtitleSrc: string | null = null
                 let subtitleContent: string | null = null
-                let subtitleLabel = "Subtitles"
+                let subtitleLabel = i18n.t("player.menus.subtitles")
                 let subtitleLanguage = "en"
                 let subtitleType = "vtt"
 
@@ -94,7 +95,7 @@ export function useVideoCoreIOSFullscreenSubtitles({
                         if (fileTrack?.info?.src) {
                             subtitleSrc = fileTrack.info.src
                             subtitleContent = fileTrack.info.content ?? null
-                            subtitleLabel = fileTrack.info.label || selectedTrack?.label || "Subtitles"
+                            subtitleLabel = fileTrack.info.label || selectedTrack?.label || i18n.t("player.menus.subtitles")
                             subtitleLanguage = fileTrack.info.language || selectedTrack?.language || "en"
                             subtitleType = fileTrack.info.type || "vtt"
                             log.info("Using SubtitleManager file track", fileTrack)

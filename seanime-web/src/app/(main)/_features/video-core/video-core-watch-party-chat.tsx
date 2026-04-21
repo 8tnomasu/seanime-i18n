@@ -16,9 +16,11 @@ import { vc_showOverlayFeedback } from "@/app/(main)/_features/video-core/video-
 import { useAtom, useAtomValue } from "jotai"
 import { useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuMessagesSquare } from "react-icons/lu"
 
 export function VideoCoreWatchPartyChat() {
+    const { t } = useTranslation()
     const isMiniPlayer = useAtomValue(vc_miniPlayer)
     const state = useAtomValue(nativePlayer_stateAtom)
     const videoElement = useAtomValue(vc_videoElement)
@@ -53,9 +55,9 @@ export function VideoCoreWatchPartyChat() {
         }
         previousCountRef.current = unreadCount
         if (!!unreadCount) {
-            showOverlayFeedback({ message: `New chat message (${unreadCount})`, duration: 1000 })
+            showOverlayFeedback({ message: t("player.watchParty.newChatMessage", { count: unreadCount }), duration: 1000 })
         }
-    }, [unreadCount])
+    }, [unreadCount, t])
 
     if (shouldHide) return null
 

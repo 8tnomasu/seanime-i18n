@@ -199,15 +199,18 @@ export function VideoCoreMenuSubSubmenuBody(props: { children: React.ReactNode }
 }
 
 export function VideoCoreMenuOption(props: {
+    id?: string,
     title: string,
     value?: string,
     icon: React.ElementType,
     children?: React.ReactNode,
     onClick?: () => void
 }) {
-    const { children, title, icon: Icon, onClick, value, ...rest } = props
+    const { children, id, title, icon: Icon, onClick, value, ...rest } = props
 
     const [openSection, setOpen] = useAtom(vc_menuSectionOpen)
+
+    const itemId = id ?? title
 
     function handleClick() {
         if (onClick) {
@@ -216,7 +219,7 @@ export function VideoCoreMenuOption(props: {
         }
 
         // open the section
-        setOpen(title)
+        setOpen(itemId)
     }
 
     return (
@@ -239,10 +242,10 @@ export function VideoCoreMenuOption(props: {
                 <LuChevronRight className="text-lg" />
             </button>}
 
-            {openSection === title && (
+            {openSection === itemId && (
                 <div
                     data-vc-element="menu-section"
-                    key={title}
+                    key={itemId}
                 >
                     <button
                         data-vc-element="menu-section-close"
@@ -268,6 +271,7 @@ export function VideoCoreMenuOption(props: {
 }
 
 export function VideoCoreMenuSubOption(props: {
+    id?: string,
     title: string,
     value?: string,
     icon: React.ElementType,
@@ -275,12 +279,12 @@ export function VideoCoreMenuSubOption(props: {
     onClick?: () => void,
     parentId: string
 }) {
-    const { children, title, icon: Icon, onClick, value, parentId, ...rest } = props
+    const { children, id, title, icon: Icon, onClick, value, parentId, ...rest } = props
 
     const [openSection] = useAtom(vc_menuSectionOpen)
     const [openSubSection, setOpenSubSection] = useAtom(vc_menuSubSectionOpen)
 
-    const itemId = `${parentId}::${title}`
+    const itemId = `${parentId}::${id ?? title}`
 
     function handleClick() {
         if (onClick) {

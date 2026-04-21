@@ -22,6 +22,7 @@ import { vc_autoNextAtom, VideoCore_VideoSubtitleTrack, VideoCoreLifecycleState 
 import { detectSubtitleType, isSubtitleFile } from "@/app/(main)/_features/video-core/video-core.utils"
 import { useWebsocketMessageListener, useWebsocketSender } from "@/app/(main)/_hooks/handle-websockets"
 import { clientIdAtom } from "@/app/websocket-provider"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import { WSEvents } from "@/lib/server/ws-events"
 import { useAtomValue, useSetAtom } from "jotai"
@@ -435,7 +436,7 @@ export function useVideoCoreSetupEvents(id: string,
     }
     const handleUpload = useCallback(async (e: UploadEvent & Event) => {
         e.preventDefault()
-        toast.info("Adding subtitle file...")
+        toast.info(i18n.t("player.toasts.addingSubtitleFile"))
         log.info("Upload event", e)
         const items = [...(e.dataTransfer ?? e.clipboardData)?.items ?? []]
 
@@ -472,7 +473,7 @@ export function useVideoCoreSetupEvents(id: string,
                     const type = detectSubtitleType(str)
                     log.info("Detected subtitle type", type)
                     if (type === "unknown") {
-                        toast.error("Unknown subtitle type")
+                        toast.error(i18n.t("player.toasts.unknownSubtitleType"))
                         log.info("Unknown subtitle type, skipping")
                         return
                     }
@@ -595,7 +596,11 @@ export function useVideoCoreSetupEvents(id: string,
                     } else if (mediaCaptionsManager) {
                         mediaCaptionsManager.addCaptionTrack({ ...fileTrack })
                     }
-                    showOverlayFeedback({ message: `Subtitle track added: ${fileTrack.label}`, type: "message", duration: 1500 })
+                    showOverlayFeedback({
+                        message: i18n.t("player.overlay.subtitleTrackAdded", { trackName: fileTrack.label }),
+                        type: "message",
+                        duration: 1500,
+                    })
                     break
                 case "set-media-caption-track":
                     log.info("Set media caption track event received", payload)

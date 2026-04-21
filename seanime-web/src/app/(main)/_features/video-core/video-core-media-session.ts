@@ -1,5 +1,6 @@
 import { VideoCore_VideoPlaybackInfo } from "@/app/(main)/_features/video-core/video-core.atoms"
 import { logger } from "@/lib/helpers/debug"
+import i18n from "@/i18n"
 import { atom } from "jotai"
 
 const log = logger("VIDEO CORE MEDIA SESSION")
@@ -124,7 +125,7 @@ export class VideoCoreMediaSessionManager {
         const anime = episode?.baseAnime
 
         const title = episode?.displayTitle || "Seanime"
-        const artist = anime?.title?.userPreferred || anime?.title?.romaji || anime?.title?.english || "Video Player"
+        const artist = anime?.title?.userPreferred || anime?.title?.romaji || anime?.title?.english || i18n.t("player.mediaSession.artistFallback")
 
         const artwork: MediaImage[] = []
         const imageUrl = episode?.episodeMetadata?.image || anime?.coverImage?.large || anime?.coverImage?.medium

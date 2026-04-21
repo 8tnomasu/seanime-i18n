@@ -3,6 +3,7 @@ import { MKVParser_SubtitleEvent, MKVParser_TrackInfo } from "@/api/generated/ty
 import { VideoCorePgsRenderer } from "@/app/(main)/_features/video-core/video-core-pgs-renderer"
 import { vc_getSubtitleStyle } from "@/app/(main)/_features/video-core/video-core-settings-menu"
 import { VideoCore_VideoPlaybackInfo, VideoCore_VideoSubtitleTrack, VideoCoreSettings } from "@/app/(main)/_features/video-core/video-core.atoms"
+import i18n from "@/i18n"
 import { logger } from "@/lib/helpers/debug"
 import { detectTrackLanguage } from "@/lib/helpers/language"
 import { getAssetUrl } from "@/lib/server/assets"
@@ -268,7 +269,7 @@ Style: Default, Roboto Medium,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0
             }
             catch (e) {
                 subtitleLog.error("Error initializing libass renderer", e)
-                toast.error("Error initializing libass renderer: " + e)
+                toast.error(i18n.t("player.toasts.libassInitFailed", { message: String(e) }))
             }
         }
 
@@ -1119,7 +1120,7 @@ Style: Default, Roboto Medium,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0
             }
             catch (error) {
                 subtitleLog.error("Error fetching subtitle content", error)
-                toast.error("Failed to load subtitle track")
+                toast.error(i18n.t("player.toasts.subtitleLoadFailed"))
             }
         } else {
             try {
@@ -1128,7 +1129,7 @@ Style: Default, Roboto Medium,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0
 
                 if (!assContent) {
                     subtitleLog.error("Failed to convert subtitle to ASS format")
-                    toast.error("Failed to convert subtitle track")
+                    toast.error(i18n.t("player.toasts.subtitleConvertFailed"))
                     return
                 }
                 // Cache the converted content
@@ -1141,7 +1142,7 @@ Style: Default, Roboto Medium,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0
             }
             catch (error) {
                 subtitleLog.error("Error loading track", error)
-                toast.error("Failed to load subtitle track: " + error)
+                toast.error(i18n.t("player.toasts.subtitleLoadFailedWithMessage", { message: String(error) }))
             }
         }
 
