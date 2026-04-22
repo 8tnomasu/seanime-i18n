@@ -16,15 +16,17 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Popover } from "@/components/ui/popover"
 import { TextInput } from "@/components/ui/text-input"
 import { Tooltip } from "@/components/ui/tooltip"
+import { getDownloadStatusLabel } from "@/i18n/labels"
 import { upath } from "@/lib/helpers/upath"
-import capitalize from "lodash/capitalize"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiDownArrow, BiLinkExternal, BiPause, BiPlay, BiStop, BiTime, BiTrash, BiUpArrow } from "react-icons/bi"
 import { LuListCheck } from "react-icons/lu"
 import { TbSortAscending, TbSortDescending } from "react-icons/tb"
 
 
 export default function Page() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
 
     return (
@@ -36,15 +38,15 @@ export default function Page() {
             >
                 <div data-torrent-list-page-header className="flex items-center w-full justify-between">
                     <div data-torrent-list-page-header-title>
-                        <h2>Active torrents</h2>
+                        <h2>{t("torrent.active.title")}</h2>
                         <p className="text-[--muted]">
-                            See torrents currently being downloaded or seeded
+                            {t("torrent.active.description")}
                         </p>
                     </div>
                     <div data-torrent-list-page-header-actions>
                         {/*Show embedded client button only for qBittorrent*/}
                         {serverStatus?.settings?.torrent?.defaultTorrentClient === "qbittorrent" && <SeaLink href={`/qbittorrent`}>
-                            <Button intent="white" rightIcon={<BiLinkExternal />}>Embedded client</Button>
+                            <Button intent="white" rightIcon={<BiLinkExternal />}>{t("torrent.actions.embeddedClient")}</Button>
                         </SeaLink>}
                     </div>
                 </div>
@@ -64,6 +66,7 @@ const getSortIcon = (sortDirection: SortDirection) => {
 }
 
 function Content() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const [enabled, setEnabled] = React.useState(true)
     const [categoryInput, setCategoryInput] = React.useState("")
@@ -88,8 +91,8 @@ function Content() {
 
 
     const confirmStopAllSeedingProps = useConfirmationDialog({
-        title: "Stop seeding all torrents",
-        description: "This action will cause seeding to stop for all completed torrents.",
+        title: t("torrent.dialogs.stopSeedingAll.title"),
+        description: t("torrent.dialogs.stopSeedingAll.description"),
         actionIntent: "warning",
         onConfirm: () => {
             for (const torrent of data ?? []) {
@@ -103,14 +106,14 @@ function Content() {
         },
     })
 
-    if (!enabled) return <LuffyError title="Failed to connect">
+    if (!enabled) return <LuffyError title={t("torrent.errors.clientConnectionTitle")}>
         <div className="flex flex-col gap-4 items-center">
-            <p className="max-w-md">Failed to connect to the torrent client, verify your settings and make sure it is running.</p>
+            <p className="max-w-md">{t("torrent.errors.clientConnectionDescription")}</p>
             <Button
                 intent="primary-subtle" onClick={() => {
                 setEnabled(true)
             }}
-            >Retry</Button>
+            >{t("common.buttons.retry")}</Button>
         </div>
     </LuffyError>
 
@@ -121,14 +124,14 @@ function Content() {
 
             <div>
                 <ul className="text-[--muted] flex flex-wrap gap-4 items-center">
-                    <li>Downloading: {data?.filter(t => t.status === "downloading" || t.status === "paused")?.length ?? 0}</li>
-                    <li>Seeding: {data?.filter(t => t.status === "seeding")?.length ?? 0}</li>
+                    <li>{t("torrent.active.downloadingCount", { count: data?.filter(t => t.status === "downloading" || t.status === "paused")?.length ?? 0 })}</li>
+                    <li>{t("torrent.active.seedingCount", { count: data?.filter(t => t.status === "seeding")?.length ?? 0 })}</li>
                     {!!data?.filter(t => t.status === "seeding")?.length && <li>
                         <Button
                             size="xs"
                             intent="primary-link"
                             onClick={() => confirmStopAllSeedingProps.open()}
-                        >Stop seeding</Button>
+                        >{t("torrent.actions.stopSeeding")}</Button>
                     </li>}
                     <div className="flex flex-1"></div>
                     {serverStatus?.settings?.torrent?.defaultTorrentClient === "qbittorrent" && <Popover
@@ -137,11 +140,11 @@ function Content() {
                             intent="gray-basic"
                             leftIcon={<LuListCheck className="text-[--muted] text-lg" />}
                         >
-                            Category{!!category ? `: ${category}` : ""}
+                            {!!category ? t("torrent.category.withValue", { category }) : t("torrent.category.label")}
                         </Button>}
                     >
                         <TextInput
-                            placeholder="Filter by category"
+                            placeholder={t("torrent.category.placeholder")}
                             value={categoryInput}
                             onChange={e => setCategoryInput(e.target.value)}
                         />
@@ -154,7 +157,7 @@ function Content() {
                                 setCategoryInput(categoryInput)
                             }}
                         >
-                            Ok
+                            {t("torrent.category.apply")}
                         </Button>
                     </Popover>}
                     <Button
@@ -173,7 +176,7 @@ function Content() {
                             })
                         }}
                     >
-                        {sort === "newest" ? "Newest" : sort === "oldest" ? "Oldest" : sort === "name" ? "Name (A-Z)" : "Name (Z-A)"}
+                        {sort === "newest" ? t("torrent.sort.newest") : sort === "oldest" ? t("torrent.sort.oldest") : sort === "name" ? t("torrent.sort.nameAsc") : t("torrent.sort.nameDesc")}
                     </Button>
                 </ul>
             </div>
@@ -187,7 +190,7 @@ function Content() {
                         isPending={isPending}
                     />
                 })}
-                {(!isLoading && !data?.length) && <LuffyError title="Nothing to see"></LuffyError>}
+                {(!isLoading && !data?.length) && <LuffyError title={t("torrent.errors.emptyTitle")}></LuffyError>}
             </Card>
 
             <ConfirmationDialog {...confirmStopAllSeedingProps} />
@@ -204,12 +207,13 @@ type TorrentItemProps = {
 }
 
 const TorrentItem = React.memo(function TorrentItem({ torrent, onTorrentAction, isPending }: TorrentItemProps) {
+    const { t } = useTranslation()
 
     const progress = `${(torrent.progress * 100).toFixed(1)}%`
 
     const confirmDeleteTorrentProps = useConfirmationDialog({
-        title: "Remove torrent",
-        description: "This action cannot be undone.",
+        title: t("torrent.dialogs.removeTorrent.title"),
+        description: t("torrent.dialogs.removeTorrent.description"),
         onConfirm: () => {
             onTorrentAction({
                 hash: torrent.hash,
@@ -255,7 +259,7 @@ const TorrentItem = React.memo(function TorrentItem({ torrent, onTorrentAction, 
                         {torrent.eta}
                     </>}
                     {` - `}
-                    <span>{torrent.seeds} {torrent.seeds !== 1 ? "seeds" : "seed"}</span>
+                    <span>{torrent.seeds === 1 ? t("torrent.fields.seedSingular", { count: torrent.seeds }) : t("torrent.fields.seedPlural", { count: torrent.seeds })}</span>
                     {/*{` - `}*/}
                     {/*<span>{torrent.peers} {torrent.peers !== 1 ? "peers" : "peer"}</span>*/}
                     {` - `}
@@ -263,7 +267,7 @@ const TorrentItem = React.memo(function TorrentItem({ torrent, onTorrentAction, 
                         className={cn({
                             "text-blue-300": torrent.status === "seeding",
                         }, "text-sm")}
-                    >{capitalize(torrent.status)}</strong>
+                    >{getDownloadStatusLabel(t, torrent.status)}</strong>
                 </div>
                 {torrent.status !== "seeding" &&
                     <div data-torrent-item-progress-bar className="w-full h-1 mr-4 mt-2 relative z-[1] bg-gray-700 left-0 overflow-hidden rounded-xl">
@@ -297,7 +301,7 @@ const TorrentItem = React.memo(function TorrentItem({ torrent, onTorrentAction, 
                                 }}
                                 disabled={isPending}
                             />}
-                        >Pause</Tooltip>}
+                        >{t("downloads.actions.pause")}</Tooltip>}
                         {torrent.status !== "downloading" && <Tooltip
                             trigger={<IconButton
                                 icon={<BiPlay />}
@@ -314,7 +318,7 @@ const TorrentItem = React.memo(function TorrentItem({ torrent, onTorrentAction, 
                                 disabled={isPending}
                             />}
                         >
-                            Resume
+                            {t("downloads.actions.resume")}
                         </Tooltip>}
                     </>
                 ) : <Tooltip
@@ -332,7 +336,7 @@ const TorrentItem = React.memo(function TorrentItem({ torrent, onTorrentAction, 
                         }}
                         disabled={isPending}
                     />}
-                >End</Tooltip>}
+                >{t("torrent.actions.end")}</Tooltip>}
 
                 <div data-torrent-item-actions-buttons className="flex-none flex gap-2 items-center">
                     {/*<IconButton*/}

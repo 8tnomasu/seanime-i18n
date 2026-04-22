@@ -7,6 +7,7 @@ import {
 } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { HibikeTorrent_AnimeTorrent, Nullish, TorrentClient_Torrent } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import React from "react"
 import { toast } from "sonner"
@@ -38,7 +39,7 @@ export function useTorrentClientAction(onSuccess?: () => void) {
         mutationKey: [API_ENDPOINTS.TORRENT_CLIENT.TorrentClientAction.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.TORRENT_CLIENT.GetActiveTorrentList.key] })
-            toast.success("Action performed")
+            toast.success(i18n.t("toasts.torrent.actionPerformed"))
             onSuccess?.()
         },
     })
@@ -50,7 +51,7 @@ export function useTorrentClientDownload(onSuccess?: () => void) {
         method: API_ENDPOINTS.TORRENT_CLIENT.TorrentClientDownload.methods[0],
         mutationKey: [API_ENDPOINTS.TORRENT_CLIENT.TorrentClientDownload.key],
         onSuccess: async () => {
-            toast.success("Download started")
+            toast.success(i18n.t("toasts.downloads.downloadStarted"))
             onSuccess?.()
         },
     })
@@ -64,7 +65,7 @@ export function useTorrentClientAddMagnetFromRule() {
         method: API_ENDPOINTS.TORRENT_CLIENT.TorrentClientAddMagnetFromRule.methods[0],
         mutationKey: [API_ENDPOINTS.TORRENT_CLIENT.TorrentClientAddMagnetFromRule.key],
         onSuccess: async () => {
-            toast.success("Download started")
+            toast.success(i18n.t("toasts.downloads.downloadStarted"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderItems.key] })
         },
     })

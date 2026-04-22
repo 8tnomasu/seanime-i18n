@@ -24,6 +24,7 @@ import { atom } from "jotai"
 import { useAtom, useSetAtom } from "jotai/react"
 import { atomWithStorage } from "jotai/utils"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiOutlineExclamationCircle } from "react-icons/ai"
 import { BiX } from "react-icons/bi"
 
@@ -37,6 +38,7 @@ export const __torrentStream_autoSelectFileAtom = atomWithStorage("sea-torrentst
 export const __torrentStream_currentSessionAutoSelectAtom = atom(false)
 
 export function TorrentStreamPage(props: TorrentStreamPageProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -245,10 +247,10 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
         if (!episodeCollection?.episodes?.length) return
 
         inject("torrent-stream-episodes", {
-            items: episodeCollection.episodes.map(episode => ({
-                id: `episode-${episode.episodeNumber}`,
-                value: `${episode.episodeNumber}`,
-                heading: "Episodes",
+                items: episodeCollection.episodes.map(episode => ({
+                    id: `episode-${episode.episodeNumber}`,
+                    value: `${episode.episodeNumber}`,
+                    heading: t("mediaDetail.episodes.mainHeading"),
                 render: () => (
                     <div className="flex gap-1 items-center w-full">
                         <p className="max-w-[70%] truncate">{episode.displayTitle}</p>
@@ -267,7 +269,7 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
         })
 
         return () => remove("torrent-stream-episodes")
-    }, [episodeCollection?.episodes])
+    }, [episodeCollection?.episodes, t])
 
     if (!entry.media) return null
     if (isLoading) return <LoadingSpinner />
@@ -300,7 +302,7 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
                         data-torrent-stream-page-content-actions-container
                     >
                         <Switch
-                            label="Auto-select"
+                            label={t("torrent.stream.autoSelect")}
                             value={autoSelect}
                             onValueChange={v => {
                                 setAutoSelect(v)
@@ -311,12 +313,12 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
 
                         {!autoSelect && !usePreviousBatch && (
                             <Switch
-                                label="Auto-select file"
+                                label={t("torrent.stream.autoSelectFile")}
                                 value={autoSelectFile}
                                 onValueChange={v => {
                                     setAutoSelectFile(v)
                                 }}
-                                moreHelp="The episode file will be automatically selected from your chosen batch torrent"
+                                moreHelp={t("torrent.stream.autoSelectFileHelp")}
                                 fieldClass="w-fit flex-none"
                                 disabled={!autoSelect && usePreviousBatch}
                             />
@@ -336,7 +338,7 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
                                             />
                                         </div>
                                         <div className="flex-1 flex items-center gap-2">
-                                            <div className="flex items-center flex-none gap-1">Auto-selecting from previous torrent
+                                            <div className="flex items-center flex-none gap-1">{t("torrent.stream.autoSelectingPrevious")}
                                                 <Popover
                                                     className="text-sm"
                                                     trigger={
@@ -358,7 +360,7 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
                     {episodeCollection?.hasMappingError && (
                         <div data-torrent-stream-page-no-metadata-message-container>
                             <p className="text-red-200 opacity-50">
-                                No metadata info available for this anime. You may need to manually select the file to stream.
+                                {t("torrent.stream.noMetadata")}
                             </p>
                         </div>
 

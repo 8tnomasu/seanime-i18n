@@ -19,6 +19,7 @@ import { LuffyError } from "@/components/shared/luffy-error"
 import { ScrollAreaBox } from "@/components/shared/scroll-area-box"
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 type TorrentPreviewList = {
     entry: Anime_Entry
@@ -44,6 +45,7 @@ export const TorrentPreviewList = React.memo((
         torrentMetadata,
         includedSpecialProviders = [],
     }: TorrentPreviewList) => {
+    const { t } = useTranslation()
     // Use hooks for sorting and filtering
     const { sortField, sortDirection, handleSortChange } = useTorrentSorting()
     const { filters, handleFilterChange } = useTorrentFiltering()
@@ -57,7 +59,7 @@ export const TorrentPreviewList = React.memo((
     </div>
 
     if (!isLoading && !previews?.length) {
-        return <LuffyError title="Nothing found" />
+        return <LuffyError title={t("torrent.errors.nothingFound")} />
     }
 
     // Apply filters using the generic helper

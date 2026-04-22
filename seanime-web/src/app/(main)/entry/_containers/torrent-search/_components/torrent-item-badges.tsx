@@ -4,6 +4,7 @@ import { cn } from "@/components/ui/core/styling"
 import { Tooltip } from "@/components/ui/tooltip"
 import startCase from "lodash/startCase"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LiaMicrophoneSolid } from "react-icons/lia"
 import { LuGauge } from "react-icons/lu"
 import {
@@ -39,6 +40,7 @@ export function TorrentResolutionBadge({ resolution }: { resolution?: string }) 
 }
 
 export function TorrentSeedersBadge({ seeders }: { seeders: number }) {
+    const { t } = useTranslation()
 
     let Icon = seeders >= 50 ? PiBatteryFullDuotone : seeders >= 20 ? PiBatteryHighDuotone :
         seeders >= 10 ? PiBatteryMediumDuotone :
@@ -65,9 +67,9 @@ export function TorrentSeedersBadge({ seeders }: { seeders: number }) {
                 className={cn("text-[.9rem] font-normal",
                     seeders >= 50 ? "text-[--indigo]" : seeders >= 10 ? "text-[--green]" : seeders >= 5 ? "text-orange-300" : "text-[--red]",
                 )}
-            >{seeders || "No"}</span><span className="text-[--muted] text-[.9rem]">seeder{seeders != 1
-            ? "s"
-            : ""}</span>
+            >{seeders || t("torrent.fields.noSeeders")}</span>{seeders > 0 && <span className="text-[--muted] text-[.9rem]">{seeders === 1
+            ? t("torrent.fields.seeder")
+            : t("torrent.fields.seeders")}</span>}
         </Badge>
     )
 
@@ -75,6 +77,7 @@ export function TorrentSeedersBadge({ seeders }: { seeders: number }) {
 
 
 export function TorrentParsedMetadata({ metadata }: { metadata: Habari_Metadata | undefined }) {
+    const { t } = useTranslation()
 
     if (!metadata) return null
 
@@ -119,7 +122,7 @@ export function TorrentParsedMetadata({ metadata }: { metadata: Habari_Metadata 
                 trigger={<Badge
                     className="rounded-md bg-transparent border-transparent px-1"
                 >
-                    <PiChatTextDuotone className="text-lg text-[--blue]" /> Languages
+                    <PiChatTextDuotone className="text-lg text-[--blue]" /> {t("torrent.badges.languages")}
                 </Badge>}
             >
                 <span>
@@ -133,7 +136,7 @@ export function TorrentParsedMetadata({ metadata }: { metadata: Habari_Metadata 
                 >
                     {/* <LuAudioWaveform className="text-lg text-[--blue]" /> {term} */}
                     <LiaMicrophoneSolid className="text-lg text-[--rose]" /> {term.toLowerCase().includes("dual")
-                    ? "Original + Dub"
+                    ? t("torrent.badges.originalPlusDub")
                     : startCase(term)}
                 </Badge>
             ))}
@@ -141,14 +144,14 @@ export function TorrentParsedMetadata({ metadata }: { metadata: Habari_Metadata 
                 <Badge
                     className="rounded-md border-transparent bg-indigo-300 px-1"
                 >
-                    <LiaMicrophoneSolid className="text-lg text-[--red]" /> Dubbed
+                    <LiaMicrophoneSolid className="text-lg text-[--red]" /> {t("torrent.filters.dubbed")}
                 </Badge>
             )}
             {hasMultiSubs && (
                 <Badge
                     className="rounded-md border-transparent bg-indigo-300 px-1"
                 >
-                    <PiChatCircleDotsDuotone className="text-lg text-[--blue]" /> Multi Subs
+                    <PiChatCircleDotsDuotone className="text-lg text-[--blue]" /> {t("torrent.filters.multiSubs")}
                 </Badge>
             )}
         </div>
@@ -157,6 +160,7 @@ export function TorrentParsedMetadata({ metadata }: { metadata: Habari_Metadata 
 
 
 export function TorrentDebridInstantAvailabilityBadge() {
+    const { t } = useTranslation()
 
     return (
         <Tooltip
@@ -168,7 +172,7 @@ export function TorrentDebridInstantAvailabilityBadge() {
                 <LuGauge className="text-xl" />
             </Badge>}
         >
-            Instantly available on Debrid service
+            {t("debrid.availability.instant")}
         </Tooltip>
     )
 

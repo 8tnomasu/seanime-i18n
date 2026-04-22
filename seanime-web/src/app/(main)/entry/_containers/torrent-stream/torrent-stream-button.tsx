@@ -3,6 +3,7 @@ import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
 import { AnimeMetaActionButton } from "@/app/(main)/entry/_components/meta-section"
 import { useAnimeEntryPageView } from "@/app/(main)/entry/_containers/anime-entry-page"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiOutlineArrowLeft } from "react-icons/ai"
 import { PiMonitorPlayDuotone } from "react-icons/pi"
 
@@ -12,6 +13,7 @@ type TorrentStreamButtonProps = {
 }
 
 export function TorrentStreamButton(props: TorrentStreamButtonProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -40,7 +42,7 @@ export function TorrentStreamButton(props: TorrentStreamButtonProps) {
                 leftIcon={isTorrentStreamingView ? <AiOutlineArrowLeft className="text-xl" /> : <PiMonitorPlayDuotone className="text-2xl" />}
                 onClick={() => toggleTorrentStreamingView()}
             >
-                {isTorrentStreamingView ? "Close torrent streaming" : "Torrent streaming"}
+                {isTorrentStreamingView ? t("torrent.stream.actions.close") : t("torrent.stream.title")}
             </AnimeMetaActionButton>
         </>
     )

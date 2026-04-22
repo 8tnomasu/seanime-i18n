@@ -40,6 +40,7 @@
             "start": "Start",
             "stop": "Stop",
             "undo": "Undo",
+            "update": "Update",
             "upload": "Upload",
             "preview": "Preview",
             "scan": "Scan",
@@ -833,6 +834,35 @@
         "manga": {
             "sourcesRefreshed": "Sources refreshed"
         },
+        "downloads": {
+            "downloadStarted": "Download started",
+            "downloadCancelled": "Download cancelled",
+            "filesDownloaded": "Files downloaded",
+            "updateDownloaded": "Update downloaded successfully!",
+            "updateInstalledRestart": "Update installed successfully! Please restart the app."
+        },
+        "torrent": {
+            "actionPerformed": "Action performed"
+        },
+        "debrid": {
+            "refreshed": "Refreshed",
+            "torrentAdded": "Torrent added",
+            "torrentDeleted": "Torrent deleted",
+            "streamCancelled": "Stream cancelled"
+        },
+        "autoDownloader": {
+            "started": "Auto downloader started",
+            "ruleCreated": "Rule created",
+            "ruleUpdated": "Rule updated",
+            "ruleDeleted": "Rule deleted",
+            "itemDeleted": "Item deleted",
+            "profileCreated": "Profile created",
+            "profileUpdated": "Profile updated",
+            "profileDeleted": "Profile deleted",
+            "intervalAdjusted": "Interval changed to be at least 15 minutes",
+            "episodeRequired": "You must specify at least one episode number",
+            "verifyFields": "An error occurred, verify the fields."
+        },
         "mediaDetail": {
             "anilistUpToDate": "AniList is up-to-date",
             "entryDeleted": "Entry deleted",
@@ -1302,7 +1332,8 @@
         },
         "actions": {
             "exitPip": "Exit PiP",
-            "openInExternalPlayer": "Open media in external player"
+            "openInExternalPlayer": "Open media in external player",
+            "playExternally": "Play externally"
         },
         "anime4k": {
             "descriptions": {
@@ -1644,6 +1675,382 @@
         },
         "watchParty": {
             "newChatMessage": "New chat message ({{count}})"
+        }
+    },
+    "downloads": {
+        "actions": {
+            "cancelDownload": "Cancel download",
+            "chooseFiles": "Choose files to download",
+            "downloadAll": "Download all",
+            "downloadMissingEpisodes": "Download missing episodes",
+            "downloadSelectedFiles": "Download selected files",
+            "downloadTorrentFiles": "Download '.torrent' files",
+            "downloadWithDebrid": "Download with Debrid service",
+            "downloadWithTorrentClient": "Download with torrent client",
+            "pause": "Pause",
+            "resume": "Resume",
+            "selectFiles": "Select files to download",
+            "stream": "Stream"
+        },
+        "destination": {
+            "title": "Choose the destination",
+            "label": "Destination",
+            "torrentHelp": "Where to save the torrent"
+        },
+        "fields": {
+            "date": "Date",
+            "eta": "ETA",
+            "progress": "Progress",
+            "size": "Size",
+            "speed": "Speed"
+        },
+        "selectedFiles": "{{selected}} of {{total}} files selected",
+        "status": {
+            "checking": "Checking",
+            "completed": "Completed",
+            "downloading": "Downloading",
+            "failed": "Failed",
+            "other": "Other",
+            "paused": "Paused",
+            "queued": "Queued",
+            "ready": "Ready",
+            "seeding": "Seeding",
+            "stalled": "Stalled"
+        }
+    },
+    "torrent": {
+        "actions": {
+            "addExtensions": "Add extensions",
+            "embeddedClient": "Embedded client",
+            "end": "End",
+            "openInBrowser": "Open in browser",
+            "stopSeeding": "Stop seeding"
+        },
+        "active": {
+            "title": "Active torrents",
+            "description": "See torrents currently being downloaded or seeded",
+            "downloadingCount": "Downloading: {{count}}",
+            "seedingCount": "Seeding: {{count}}"
+        },
+        "badges": {
+            "languages": "Languages",
+            "originalPlusDub": "Original + Dub"
+        },
+        "category": {
+            "label": "Category",
+            "withValue": "Category: {{category}}",
+            "placeholder": "Filter by category",
+            "apply": "Ok"
+        },
+        "common": {
+            "any": "Any"
+        },
+        "dialogs": {
+            "removeTorrent": {
+                "title": "Remove torrent",
+                "description": "This action cannot be undone."
+            },
+            "stopSeedingAll": {
+                "title": "Stop seeding all torrents",
+                "description": "This action will cause seeding to stop for all completed torrents."
+            }
+        },
+        "errors": {
+            "clientConnectionTitle": "Failed to connect",
+            "clientConnectionDescription": "Failed to connect to the torrent client, verify your settings and make sure it is running.",
+            "emptyTitle": "Nothing to see",
+            "noExtensionSelected": "No extension selected",
+            "nothingFound": "Nothing found"
+        },
+        "fields": {
+            "provider": "Provider",
+            "providers": "Providers",
+            "seeders": "Seeders",
+            "seeder": "seeder",
+            "seedSingular": "{{count}} seed",
+            "seedPlural": "{{count}} seeds",
+            "noSeeders": "No seeders"
+        },
+        "filters": {
+            "title": "Filters",
+            "description": "Filters are based on torrent names and can miss some results.",
+            "dubbed": "Dubbed",
+            "multiSubs": "Multi Subs"
+        },
+        "preview": {
+            "batch": "Batch",
+            "episode": "Episode {{number}}",
+            "episodeImageAlt": "episode image",
+            "episodesTo": "Episodes {{start}} to {{end}}",
+            "highestQuality": "Highest quality",
+            "part": "Part {{number}}",
+            "partsAnd": "Parts {{start}} and {{end}}",
+            "partsTo": "Parts {{start}} to {{end}}",
+            "season": "Season {{number}}",
+            "seasonsAnd": "Seasons {{start}} and {{end}}",
+            "seasonsTo": "Seasons {{start}} to {{end}}",
+            "unidentified": "Unidentified"
+        },
+        "search": {
+            "fields": {
+                "batches": "Batches",
+                "bestReleases": "Best releases",
+                "episodeNumber": "Episode number",
+                "resolution": "Resolution"
+            },
+            "missingEpisodes": "Missing episodes",
+            "previousSelection": "Previous selection",
+            "refineTitlePlaceholder": "Refine the title ({{title}})",
+            "results": "{{count}} results",
+            "selectTorrentToStream": "Select a torrent to stream",
+            "smartSearch": "Smart search",
+            "smartSearchHelp": "Automated search based on given parameters.",
+            "warnings": {
+                "adultContent": "This provider does not support adult content",
+                "batchSearch": "This provider does not support batch search",
+                "bestRelease": "This provider does not support best release search",
+                "smartSearch": "This provider does not support smart search"
+            }
+        },
+        "sort": {
+            "newest": "Newest",
+            "oldest": "Oldest",
+            "nameAsc": "Name (A-Z)",
+            "nameDesc": "Name (Z-A)"
+        },
+        "stream": {
+            "title": "Torrent streaming",
+            "actions": {
+                "close": "Close torrent streaming",
+                "stop": "Stop stream"
+            },
+            "autoSelect": "Auto-select",
+            "autoSelectFile": "Auto-select file",
+            "autoSelectFileHelp": "The episode file will be automatically selected from your chosen batch torrent",
+            "autoSelectingPrevious": "Auto-selecting from previous torrent",
+            "noMetadata": "No metadata info available for this anime. You may need to manually select the file to stream.",
+            "states": {
+                "addingTorrent": "Adding torrent \"{{torrent}}\"",
+                "checkingTorrent": "Checking torrent \"{{torrent}}\"",
+                "ending": "Ending stream...",
+                "gettingMetadata": "Getting metadata...",
+                "loading": "Loading...",
+                "selectingFile": "Selecting file...",
+                "sendingToPlayer": "Sending stream to media player"
+            }
+        }
+    },
+    "debrid": {
+        "actions": {
+            "dashboard": "Dashboard"
+        },
+        "availability": {
+            "instant": "Instantly available on Debrid service"
+        },
+        "download": {
+            "downloadingLocally": "Downloading locally"
+        },
+        "errors": {
+            "connectionTitle": "Failed to connect",
+            "connectionDescription": "Failed to connect to the Debrid service, verify your settings.",
+            "notEnabledTitle": "Debrid not enabled",
+            "notEnabledDescription": "Debrid service is not enabled or configured"
+        },
+        "page": {
+            "description": "See your debrid service torrents",
+            "noActiveTorrents": "No active torrents"
+        },
+        "stream": {
+            "title": "Debrid streaming",
+            "actions": {
+                "cancelAndRemove": "Cancel and remove torrent",
+                "close": "Close Debrid streaming"
+            },
+            "dialogs": {
+                "cancel": {
+                    "title": "Cancel stream",
+                    "description": "Are you sure you want to cancel the stream?"
+                },
+                "cancelAndRemove": {
+                    "title": "Cancel and remove torrent",
+                    "description": "Are you sure you want to cancel the stream and remove the torrent?"
+                }
+            },
+            "modal": {
+                "closeKeepsStream": "Closing this modal will not cancel the stream"
+            },
+            "states": {
+                "awaiting": "Awaiting stream from Debrid service",
+                "fetchingTorrentInfo": "Fetching torrent info...",
+                "launching": "Launching stream...",
+                "sendingToPlayer": "Sending stream to player..."
+            }
+        }
+    },
+    "autoDownloader": {
+        "title": "Auto Downloader",
+        "description": "Automatically download new episodes as they are released.",
+        "actions": {
+            "addCondition": "Add Condition",
+            "addReleaseGroup": "Add Release Group",
+            "addResolution": "Add Resolution",
+            "checkRssFeed": "Check RSS feed",
+            "create": "Create",
+            "deleteThisRule": "Delete this rule",
+            "removeNoLongerAiring": "Remove no longer airing media",
+            "runSimulation": "Run simulation"
+        },
+        "common": {
+            "and": "AND",
+            "minutes": "minutes",
+            "or": "OR"
+        },
+        "conditionActions": {
+            "block": "Block",
+            "require": "Require",
+            "score": "Score"
+        },
+        "dialogs": {
+            "createRule": {
+                "title": "Create a new rule"
+            },
+            "createRules": {
+                "title": "Create new rules",
+                "description": "Create multiple rules at once. Each rule will be created with the same parameters, except for the destination folder. By default, the episode type will be \"Recent releases\"."
+            },
+            "editRule": {
+                "title": "Edit rule"
+            },
+            "removeNoLongerAiring": {
+                "title": "Remove no longer airing media",
+                "description": "This action will remove all rules that no longer have media airing (finished). Are you sure you want to continue?"
+            }
+        },
+        "episodeTypes": {
+            "recent": "Recent releases",
+            "recentHelp": "New episodes you have not yet watched",
+            "select": "Select",
+            "selected": "Select episodes",
+            "selectHelp": "Only the specified episodes that aren't in your library"
+        },
+        "fields": {
+            "action": "Action:",
+            "additionalTerms": "Video, Audio, Source, Subs",
+            "additionalTermsHelp": "Within each option, you can include variations separated by commas. (Case insensitive)",
+            "additionalTermsLead": "All options must be included for the torrent to be accepted.",
+            "alsoUseTitles": "Will also use these titles:",
+            "comparisonTitle": "Comparison title",
+            "comparisonTitleHelp": "Used for comparison purposes. When using 'Exact match', use a title most likely to be used in a torrent name.",
+            "conditionHelp": "Comma-separated case insensitive values or regex pattern",
+            "conditions": "Conditions",
+            "conditionsHelp": "Add conditions to filter torrents or adjust their score.",
+            "constraints": "Constraints",
+            "delay": "Delay",
+            "delayHelp": "Wait for better releases before downloading. The delay period will start once a first match is found. If a higher delay profile is assigned to a rule or applied globally, this one will be ignored.",
+            "delayMinutesHelp": "Wait this many minutes before downloading",
+            "destinationHelp": "Folder in your local library where the files will be saved",
+            "enabled": "Enabled",
+            "episodeNumbers": "Episode numbers",
+            "episodeOffset": "Episode number absolute offset",
+            "episodeOffsetHelp": "For example, if the release group starts numbering at 13 instead of 1, set this to 12.",
+            "episodesToLookFor": "Episodes to look for",
+            "excludeTerms": "Exclude Terms",
+            "excludeTermsHelp": "Torrents containing any of these terms will be rejected. (Case insensitive)",
+            "excludeTermsLead": "All options must be included for the torrent to be rejected.",
+            "minimumScore": "Minimum Score",
+            "minimumScoreHelp": "Torrents with a score lower than this will be rejected",
+            "noExtensionsFound": "No extensions found",
+            "noProvidersFound": "No providers found",
+            "providersHelp": "Select specific providers to look for. If empty, the default provider will be used.",
+            "releaseGroups": "Release Groups",
+            "releaseGroupsHelp": "List of release groups to look for. If empty, any release group will be accepted.",
+            "releaseGroupsProfileHelp": "List of release groups to look for. If empty, any release group will be accepted. Rules can override this.",
+            "resolutions": "Resolutions",
+            "resolutionsHelp": "List of resolutions to look for. If empty, the highest resolution will be accepted.",
+            "resolutionsProfileHelp": "Drag and drop to reorder. The first matching resolution will be picked. Rules can override this.",
+            "score": "Score:",
+            "selectProviders": "Select providers",
+            "skipDelayScore": "Skip Delay Score",
+            "skipDelayScoreHelp": "Skip the delay if torrent score exceeds this value",
+            "thresholds": "Thresholds",
+            "title": "Title",
+            "typeOfSearch": "Type of search",
+            "useDebrid": "Use Debrid service"
+        },
+        "profiles": {
+            "applyHelp": "Select a profile to apply shared filters. Local filters will override profile filters.",
+            "conditionsCount": "{{count}} condition",
+            "createTitle": "Create Profile",
+            "delayMinutes": "{{count}} min. delay",
+            "deleteDescription": "Are you sure you want to delete the profile \"{{name}}\"? This action cannot be undone.",
+            "deleteTitle": "Delete profile",
+            "description": "Profiles allow you to define a set of filters that can be applied to your rules.",
+            "editTitle": "Edit Profile: {{name}}",
+            "empty": "No profiles created yet.",
+            "global": "Global",
+            "globalHelp": "Apply this profile to all rules automatically",
+            "namePlaceholder": "Name",
+            "newProfile": "New Profile",
+            "noProfileFound": "No profile found",
+            "profile": "Profile",
+            "profileName": "Profile Name",
+            "selectProfile": "Select a profile"
+        },
+        "queue": {
+            "addedAt": "Added {{time}}",
+            "delayed": "Delayed",
+            "delayedFor": "for {{duration}}.",
+            "description": "The queue shows items waiting to be downloaded or scanned.",
+            "empty": "Queue is empty",
+            "fileDownloaded": "File downloaded",
+            "manualActionRequired": "Manual action required",
+            "notYetScanned": "Not yet scanned"
+        },
+        "rules": {
+            "addAllCurrentlyWatching": "All Currently Watching",
+            "addAllUpcoming": "All Upcoming",
+            "description": "Rules allow you to programmatically download new episodes based on the parameters you set.",
+            "empty": "No rules",
+            "mediaNotInLibrary": "Media is not in your library",
+            "multipleSeries": "Multiple series at once",
+            "newRule": "New Rule",
+            "noLongerAiring": "No longer airing",
+            "noMediaFound": "No media found in your library",
+            "notInLibrary": "This anime is not in your library",
+            "oneSeries": "One series",
+            "ruleFor": "Rule for",
+            "filters": {
+                "showingAiringOnly": "Showing airing only",
+                "showingAiringUpcoming": "Showing airing & upcoming",
+                "showingAll": "Showing all"
+            }
+        },
+        "searchTypes": {
+            "contains": "Exact match",
+            "containsHelp": "The torrent name must contain the comparison title you set (case insensitive)",
+            "likely": "Most likely",
+            "likelyHelp": "The torrent name will be parsed and analyzed using a comparison algorithm"
+        },
+        "settings": {
+            "debridDisabledDescription": "Debrid service is not enabled or configured. Please enable it in the settings.",
+            "debridDisabledTitle": "Auto Downloader deactivated",
+            "downloadImmediately": "Download episodes immediately",
+            "downloadImmediatelyHelp": "If disabled, torrents will be added to the queue.",
+            "every": "Every",
+            "interval": "Interval",
+            "intervalHelp": "How often to check for new episodes.",
+            "strictSeasonCheck": "Strict season check",
+            "strictSeasonCheckHelp": "If enabled, the torrents and media titles should contain the same season number. This can lead to false negatives."
+        },
+        "simulation": {
+            "checkLogs": "Check the server logs for more details.",
+            "resultTitle": "Result",
+            "resultsForRule": "Simulation results for rule \"{{title}}\" (ID: {{id}})"
+        },
+        "tabs": {
+            "profiles": "Profiles",
+            "queue": "Queue",
+            "rules": "Rules"
         }
     },
     "home": {

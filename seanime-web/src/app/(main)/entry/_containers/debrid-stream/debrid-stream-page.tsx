@@ -23,6 +23,7 @@ import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import { atomWithStorage } from "jotai/utils"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiOutlineExclamationCircle } from "react-icons/ai"
 import { BiX } from "react-icons/bi"
 
@@ -38,6 +39,7 @@ export const __debridStream_currentSessionAutoSelectAtom = atom(false)
 // DEVNOTE: This page uses some utility functions from the TorrentStream feature
 
 export function DebridStreamPage(props: DebridStreamPageProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -269,7 +271,7 @@ export function DebridStreamPage(props: DebridStreamPageProps) {
                         data-debrid-stream-page-content-actions-container
                     >
                         <Switch
-                            label="Auto-select"
+                            label={t("torrent.stream.autoSelect")}
                             value={autoSelect}
                             onValueChange={v => {
                                 setAutoSelect(v)
@@ -280,12 +282,12 @@ export function DebridStreamPage(props: DebridStreamPageProps) {
 
                         {!autoSelect && !usePreviousBatch && (
                             <Switch
-                                label="Auto-select file"
+                                label={t("torrent.stream.autoSelectFile")}
                                 value={autoSelectFile}
                                 onValueChange={v => {
                                     setAutoSelectFile(v)
                                 }}
-                                moreHelp="The episode file will be automatically selected from your chosen batch torrent"
+                                moreHelp={t("torrent.stream.autoSelectFileHelp")}
                                 fieldClass="w-fit flex-none"
                                 disabled={!autoSelect && usePreviousBatch}
                             />
@@ -305,7 +307,7 @@ export function DebridStreamPage(props: DebridStreamPageProps) {
                                             />
                                         </div>
                                         <div className="flex-1 flex items-center gap-2">
-                                            <div className="flex items-center flex-none gap-1">Auto-selecting from previous torrent
+                                            <div className="flex items-center flex-none gap-1">{t("torrent.stream.autoSelectingPrevious")}
                                                 <Popover
                                                     className="text-sm"
                                                     trigger={
@@ -327,7 +329,7 @@ export function DebridStreamPage(props: DebridStreamPageProps) {
                     {episodeCollection?.hasMappingError && (
                         <div data-debrid-stream-page-no-metadata-message-container>
                             <p className="text-red-200 opacity-50">
-                                No metadata info available for this anime. You may need to manually select the file to stream.
+                                {t("torrent.stream.noMetadata")}
                             </p>
                         </div>
 

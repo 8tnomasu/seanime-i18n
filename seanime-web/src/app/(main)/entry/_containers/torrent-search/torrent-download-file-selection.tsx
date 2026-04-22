@@ -17,6 +17,7 @@ import { useRouter } from "@/lib/navigation"
 import { atom } from "jotai"
 import { useAtom, useAtomValue, useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiDownload } from "react-icons/bi"
 import { FcFolder } from "react-icons/fc"
 
@@ -46,6 +47,7 @@ export function sanitizeDirectoryName(input: string): string {
 }
 
 export function TorrentDownloadFileSelection({ entry }: { entry: Anime_Entry }) {
+    const { t } = useTranslation()
     const router = useRouter()
     const serverStatus = useServerStatus()
     const libraryPath = serverStatus?.settings?.library?.libraryPath
@@ -156,12 +158,12 @@ export function TorrentDownloadFileSelection({ entry }: { entry: Anime_Entry }) 
             <VaulContent className="max-w-5xl mx-auto">
                 <AppLayoutStack className="mt-4 p-3 lg:p-6">
                     <h4 className="text-center mb-4">
-                        Select files to download
+                        {t("downloads.actions.selectFiles")}
                     </h4>
 
                     <DirectorySelector
                         name="destination"
-                        label="Destination"
+                        label={t("downloads.destination.label")}
                         leftIcon={<FcFolder />}
                         value={destination}
                         defaultValue={destination}
@@ -186,7 +188,7 @@ export function TorrentDownloadFileSelection({ entry }: { entry: Anime_Entry }) 
                             </ScrollArea>
 
                             <div className="text-sm text-[--muted] mb-2">
-                                {selectedFileIndices.length} of {filePreviews.length} files selected
+                                {t("downloads.selectedFiles", { selected: selectedFileIndices.length, total: filePreviews.length })}
                             </div>
 
                             <Button
@@ -197,7 +199,7 @@ export function TorrentDownloadFileSelection({ entry }: { entry: Anime_Entry }) 
                                 loading={isPending}
                                 onClick={handleDownload}
                             >
-                                Download selected files
+                                {t("downloads.actions.downloadSelectedFiles")}
                             </Button>
 
                         </AppLayoutStack>

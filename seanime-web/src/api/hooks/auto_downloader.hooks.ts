@@ -13,6 +13,7 @@ import {
     Models_AutoDownloaderItem,
     Nullish,
 } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -24,7 +25,7 @@ export function useRunAutoDownloader() {
         method: API_ENDPOINTS.AUTO_DOWNLOADER.RunAutoDownloader.methods[0],
         mutationKey: [API_ENDPOINTS.AUTO_DOWNLOADER.RunAutoDownloader.key],
         onSuccess: async () => {
-            toast.success("Auto downloader started")
+            toast.success(i18n.t("toasts.autoDownloader.started"))
             setTimeout(() => {
                 queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRules.key] })
             }, 1000)
@@ -60,7 +61,7 @@ export function useCreateAutoDownloaderRule() {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRules.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRulesByAnime.key] })
-            toast.success("Rule created")
+            toast.success(i18n.t("toasts.autoDownloader.ruleCreated"))
         },
     })
 }
@@ -75,7 +76,7 @@ export function useUpdateAutoDownloaderRule() {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRules.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRulesByAnime.key] })
-            toast.success("Rule updated")
+            toast.success(i18n.t("toasts.autoDownloader.ruleUpdated"))
         },
     })
 }
@@ -90,7 +91,7 @@ export function useDeleteAutoDownloaderRule(id: Nullish<number>) {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRules.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRulesByAnime.key] })
-            toast.success("Rule deleted")
+            toast.success(i18n.t("toasts.autoDownloader.ruleDeleted"))
         },
     })
 }
@@ -112,7 +113,7 @@ export function useDeleteAutoDownloaderItem() {
         method: API_ENDPOINTS.AUTO_DOWNLOADER.DeleteAutoDownloaderItem.methods[0],
         mutationKey: [API_ENDPOINTS.AUTO_DOWNLOADER.DeleteAutoDownloaderItem.key],
         onSuccess: async () => {
-            toast.success("Item deleted")
+            toast.success(i18n.t("toasts.autoDownloader.itemDeleted"))
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderItems.key] })
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderRulesByAnime.key] })
         },
@@ -155,7 +156,7 @@ export function useCreateAutoDownloaderProfile() {
         mutationKey: [API_ENDPOINTS.AUTO_DOWNLOADER.CreateAutoDownloaderProfile.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderProfiles.key] })
-            toast.success("Profile created")
+            toast.success(i18n.t("toasts.autoDownloader.profileCreated"))
         },
     })
 }
@@ -169,7 +170,7 @@ export function useUpdateAutoDownloaderProfile() {
         mutationKey: [API_ENDPOINTS.AUTO_DOWNLOADER.UpdateAutoDownloaderProfile.key],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderProfiles.key] })
-            toast.success("Profile updated")
+            toast.success(i18n.t("toasts.autoDownloader.profileUpdated"))
         },
     })
 }
@@ -183,7 +184,7 @@ export function useDeleteAutoDownloaderProfile(id: Nullish<number>) {
         mutationKey: [API_ENDPOINTS.AUTO_DOWNLOADER.DeleteAutoDownloaderProfile.key, String(id)],
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderProfiles.key] })
-            toast.success("Profile deleted")
+            toast.success(i18n.t("toasts.autoDownloader.profileDeleted"))
         },
     })
 }

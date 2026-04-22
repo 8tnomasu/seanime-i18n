@@ -210,6 +210,34 @@ export function getCharacterRoleLabel(t: TFunction, value?: string | null) {
     }
 }
 
+export function getDownloadStatusLabel(t: TFunction, value?: string | null) {
+    switch ((value ?? "").toLowerCase()) {
+        case "downloading":
+            return t("downloads.status.downloading")
+        case "completed":
+            return t("downloads.status.completed")
+        case "failed":
+        case "error":
+            return t("downloads.status.failed")
+        case "paused":
+            return t("downloads.status.paused")
+        case "queued":
+            return t("downloads.status.queued")
+        case "stalled":
+            return t("downloads.status.stalled")
+        case "seeding":
+            return t("downloads.status.seeding")
+        case "checking":
+            return t("downloads.status.checking")
+        case "ready":
+            return t("downloads.status.ready")
+        case "other":
+            return t("downloads.status.other")
+        default:
+            return capitalize((value ?? "").toLowerCase().replace(/_/g, " "))
+    }
+}
+
 export function getDateFnsLocale(language?: string) {
     return language === "zh-TW" ? zhTW : enUS
 }

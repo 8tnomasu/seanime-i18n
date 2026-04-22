@@ -14,6 +14,7 @@ import { logger } from "@/lib/helpers/debug"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { IoPlayCircle } from "react-icons/io5"
 
 const log = logger("TORRENT STREAM FILE SELECTION")
@@ -21,6 +22,7 @@ const log = logger("TORRENT STREAM FILE SELECTION")
 export const __torrentSearch_fileSelectionTorrentAtom = atom<HibikeTorrent_AnimeTorrent | undefined>(undefined)
 
 export function TorrentstreamFileSelectionModal({ entry }: { entry: Anime_Entry }) {
+    const { t } = useTranslation()
     const [, setter] = useAtom(__torrentSearch_selectionAtom)
 
     const [selectedTorrent, setSelectedTorrent] = useAtom(__torrentSearch_fileSelectionTorrentAtom)
@@ -154,7 +156,7 @@ export function TorrentstreamFileSelectionModal({ entry }: { entry: Anime_Entry 
                                 disabled={selectedFileIdx === -1 || isLoading}
                                 onClick={onStream}
                             >
-                                Stream
+                                {t("downloads.actions.stream")}
                             </Button>
 
                         </AppLayoutStack>

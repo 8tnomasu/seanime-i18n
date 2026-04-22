@@ -11,6 +11,7 @@ import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React, { useEffect } from "react"
+import { useTranslation } from "react-i18next"
 
 export const __torrentSearch_selectionAtom = atom<TorrentSelectionType | undefined>(undefined)
 export const __torrentSearch_selectionEpisodeAtom = atom<number | undefined>(undefined)
@@ -99,19 +100,20 @@ export function TorrentSearchDrawer(props: { entry: Anime_Entry, isPlaylistDrawe
 
 
 function EpisodeList({ episodes }: { episodes: Anime_EntryDownloadEpisode[] | undefined }) {
+    const { t } = useTranslation()
 
     if (!episodes || !episodes.length) return null
 
     const missingEpisodes = episodes.sort((a, b) => a.episodeNumber - b.episodeNumber)
+    const episodeList = `${missingEpisodes.slice(0, 5)
+        .map(n => n.episodeNumber)
+        .join(", ")}${missingEpisodes.length > 5
+        ? `, ..., ${missingEpisodes[missingEpisodes.length - 1].episodeNumber}`
+        : ""}`
 
     return (
         <div className="space-y-2" data-torrent-search-drawer-episode-list>
-            <p><span className="font-semibold">Missing episode{missingEpisodes.length > 1 ? "s" : ""}</span>: {missingEpisodes.slice(0, 5)
-                .map(n => n.episodeNumber)
-                .join(", ")}{missingEpisodes.length > 5
-                ? `, ..., ${missingEpisodes[missingEpisodes.length - 1].episodeNumber}`
-                : ""}
-            </p>
+            <p><span className="font-semibold">{t("torrent.search.missingEpisodes", { count: missingEpisodes.length })}</span>: {episodeList}</p>
         </div>
     )
 

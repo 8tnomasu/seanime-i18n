@@ -16,6 +16,7 @@ import { logger } from "@/lib/helpers/debug"
 import { DEBRID_SERVICE } from "@/lib/server/settings"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { IoPlayCircle } from "react-icons/io5"
 
 const log = logger("DEBRID STREAM FILE SELECTION")
@@ -25,6 +26,7 @@ type DebridStreamFileSelectionModalProps = {
 }
 
 export function DebridStreamFileSelectionModal(props: DebridStreamFileSelectionModalProps) {
+    const { t } = useTranslation()
 
     const {
         entry,
@@ -141,7 +143,7 @@ export function DebridStreamFileSelectionModal(props: DebridStreamFileSelectionM
             <VaulContent className="max-w-5xl mx-auto">
                 <AppLayoutStack className="mt-4 p-3 lg:p-6">
                     {(isLoading || previews?.length === 1) ? <LoadingSpinner
-                        title={previews?.length === 1 ? "Launching stream..." : "Fetching torrent info..."}
+                        title={previews?.length === 1 ? t("debrid.stream.states.launching") : t("debrid.stream.states.fetchingTorrentInfo")}
                     /> : (
                         <AppLayoutStack className="mt-4">
 
@@ -164,7 +166,7 @@ export function DebridStreamFileSelectionModal(props: DebridStreamFileSelectionM
                                 disabled={selectedFileId === "" || isLoading}
                                 onClick={() => onStream(selectedFileId)}
                             >
-                                Stream
+                                {t("downloads.actions.stream")}
                             </Button>
 
                         </AppLayoutStack>

@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { useAtom } from "jotai/react"
 import { atomWithStorage } from "jotai/utils"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { LiaMicrophoneSolid } from "react-icons/lia"
 import { PiChatCircleDotsDuotone } from "react-icons/pi"
 import { TbArrowsSort, TbFilter, TbSortAscending, TbSortDescending } from "react-icons/tb"
@@ -289,11 +290,12 @@ export const TorrentFilterSortControls: React.FC<{
     onSortChange,
     onFilterChange,
 }) => {
+    const { t } = useTranslation()
     const isAnyFilterActive = anyFilterActive(filters)
 
     return (
         <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-[--muted] flex-none">{resultCount} results</p>
+            <p className="text-sm text-[--muted] flex-none">{t("torrent.search.results", { count: resultCount })}</p>
             <div className="flex items-center gap-1 flex-wrap">
                 <Popover
                     trigger={<Button
@@ -303,16 +305,16 @@ export const TorrentFilterSortControls: React.FC<{
                             {getFilterIcon(isAnyFilterActive)}
                         </>}
                     >
-                        Filters
+                        {t("torrent.filters.title")}
                     </Button>}
                 >
                     <p className="text-xs text-[--muted] flex-none pb-2">
-                        Filters are based on torrent names and can miss some results.
+                        {t("torrent.filters.description")}
                     </p>
                     <div className="space-y-1">
                         <Checkbox
                             label={<div className="flex items-center gap-1">
-                                <PiChatCircleDotsDuotone className="text-lg text-[--blue]" /> Multi Subs
+                                <PiChatCircleDotsDuotone className="text-lg text-[--blue]" /> {t("torrent.filters.multiSubs")}
                             </div>}
                             value={filters.multiSubs}
                             onValueChange={(value) => onFilterChange("multiSubs", value)}
@@ -327,7 +329,7 @@ export const TorrentFilterSortControls: React.FC<{
 
                         <Checkbox
                             label={<div className="flex items-center gap-1">
-                                <LiaMicrophoneSolid className="text-lg text-[--red]" /> Dubbed
+                                <LiaMicrophoneSolid className="text-lg text-[--red]" /> {t("torrent.filters.dubbed")}
                             </div>}
                             value={filters.dubbed}
                             onValueChange={(value) => onFilterChange("dubbed", value)}
@@ -409,7 +411,7 @@ export const TorrentFilterSortControls: React.FC<{
                     </>}
                     onClick={() => onSortChange("seeders")}
                 >
-                    Seeders
+                    {t("torrent.fields.seeders")}
                 </Button>
                 <Button
                     size="xs"
@@ -419,7 +421,7 @@ export const TorrentFilterSortControls: React.FC<{
                     </>}
                     onClick={() => onSortChange("size")}
                 >
-                    Size
+                    {t("downloads.fields.size")}
                 </Button>
                 <Button
                     size="xs"
@@ -429,7 +431,7 @@ export const TorrentFilterSortControls: React.FC<{
                     </>}
                     onClick={() => onSortChange("date")}
                 >
-                    Date
+                    {t("downloads.fields.date")}
                 </Button>
                 <Button
                     size="xs"
@@ -439,7 +441,7 @@ export const TorrentFilterSortControls: React.FC<{
                     </>}
                     onClick={() => onSortChange("resolution")}
                 >
-                    Resolution
+                    {t("torrent.search.fields.resolution")}
                 </Button>
             </div>
         </div>

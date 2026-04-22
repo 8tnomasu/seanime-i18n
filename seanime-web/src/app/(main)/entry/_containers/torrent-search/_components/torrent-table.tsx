@@ -18,6 +18,7 @@ import { ScrollAreaBox } from "@/components/shared/scroll-area-box"
 import { Skeleton } from "@/components/ui/skeleton"
 import { anilist_animeIsSingleEpisode } from "@/lib/helpers/media"
 import React, { memo } from "react"
+import { useTranslation } from "react-i18next"
 import { TorrentList, TorrentListItem } from "./torrent-preview-item"
 
 type TorrentTable = {
@@ -54,6 +55,7 @@ export const TorrentTable = memo((
         torrentMetadata,
         type,
     }: TorrentTable) => {
+    const { t } = useTranslation()
     // Use hooks for sorting and filtering
     const { sortField, sortDirection, handleSortChange } = useTorrentSorting()
     const { filters, handleFilterChange } = useTorrentFiltering()
@@ -72,7 +74,7 @@ export const TorrentTable = memo((
                 <Skeleton className="h-[96px]" />
                 <Skeleton className="h-[96px]" />
             </div> : !torrents?.length ? <div>
-                <LuffyError title="Nothing found" />
+                <LuffyError title={t("torrent.errors.nothingFound")} />
             </div> : (
                 <>
                     <TorrentFilterSortControls
@@ -135,7 +137,7 @@ export const TorrentTable = memo((
                                         overrideProps={{
                                             releaseGroup: releaseGroup,
                                             displayName: (episodeNumber ?? -1) >= 0
-                                                ? `Episode ${episodeNumber}`
+                                                ? t("torrent.preview.episode", { number: episodeNumber })
                                                 : "",
                                             isBatch: torrent.isBestRelease ? true : isBatch,
                                             image: distance <= 20 ? episodeImage : undefined,

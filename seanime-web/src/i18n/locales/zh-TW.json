@@ -40,6 +40,7 @@
             "start": "開始",
             "stop": "停止",
             "undo": "復原",
+            "update": "更新",
             "upload": "上傳",
             "preview": "預覽",
             "scan": "掃描",
@@ -833,6 +834,35 @@
         "manga": {
             "sourcesRefreshed": "???????"
         },
+        "downloads": {
+            "downloadStarted": "已開始下載",
+            "downloadCancelled": "下載已取消",
+            "filesDownloaded": "檔案已下載",
+            "updateDownloaded": "更新已成功下載！",
+            "updateInstalledRestart": "更新已成功安裝！請重新啟動應用程式。"
+        },
+        "torrent": {
+            "actionPerformed": "操作已完成"
+        },
+        "debrid": {
+            "refreshed": "已重新整理",
+            "torrentAdded": "Torrent 已新增",
+            "torrentDeleted": "Torrent 已刪除",
+            "streamCancelled": "串流已取消"
+        },
+        "autoDownloader": {
+            "started": "Auto Downloader 已啟動",
+            "ruleCreated": "規則已建立",
+            "ruleUpdated": "規則已更新",
+            "ruleDeleted": "規則已刪除",
+            "itemDeleted": "項目已刪除",
+            "profileCreated": "Profile 已建立",
+            "profileUpdated": "Profile 已更新",
+            "profileDeleted": "Profile 已刪除",
+            "intervalAdjusted": "間隔已調整為至少 15 分鐘",
+            "episodeRequired": "你必須指定至少一個集數",
+            "verifyFields": "發生錯誤，請確認欄位內容。"
+        },
         "mediaDetail": {
             "anilistUpToDate": "AniList 已是最新狀態",
             "entryDeleted": "項目已刪除",
@@ -1302,7 +1332,8 @@
         },
         "actions": {
             "exitPip": "離開 PiP",
-            "openInExternalPlayer": "用外部播放器開啟媒體"
+            "openInExternalPlayer": "用外部播放器開啟媒體",
+            "playExternally": "外部播放"
         },
         "anime4k": {
             "descriptions": {
@@ -1644,6 +1675,382 @@
         },
         "watchParty": {
             "newChatMessage": "新的聊天訊息（{{count}}）"
+        }
+    },
+    "downloads": {
+        "actions": {
+            "cancelDownload": "取消下載",
+            "chooseFiles": "選擇要下載的檔案",
+            "downloadAll": "全部下載",
+            "downloadMissingEpisodes": "下載缺少的集數",
+            "downloadSelectedFiles": "下載選取的檔案",
+            "downloadTorrentFiles": "下載 .torrent 檔案",
+            "downloadWithDebrid": "使用 Debrid 服務下載",
+            "downloadWithTorrentClient": "使用 Torrent 用戶端下載",
+            "pause": "暫停",
+            "resume": "繼續",
+            "selectFiles": "選擇要下載的檔案",
+            "stream": "串流"
+        },
+        "destination": {
+            "title": "選擇目的地",
+            "label": "目的地",
+            "torrentHelp": "Torrent 的儲存位置"
+        },
+        "fields": {
+            "date": "日期",
+            "eta": "預估剩餘時間",
+            "progress": "進度",
+            "size": "大小",
+            "speed": "速度"
+        },
+        "selectedFiles": "已選擇 {{selected}} / {{total}} 個檔案",
+        "status": {
+            "checking": "檢查中",
+            "completed": "已完成",
+            "downloading": "下載中",
+            "failed": "失敗",
+            "other": "其他",
+            "paused": "已暫停",
+            "queued": "佇列中",
+            "ready": "已就緒",
+            "seeding": "做種中",
+            "stalled": "停滯"
+        }
+    },
+    "torrent": {
+        "actions": {
+            "addExtensions": "新增 extensions",
+            "embeddedClient": "內嵌用戶端",
+            "end": "結束",
+            "openInBrowser": "在瀏覽器開啟",
+            "stopSeeding": "停止做種"
+        },
+        "active": {
+            "title": "作用中的 Torrent",
+            "description": "查看目前正在下載或做種的 Torrent",
+            "downloadingCount": "下載中：{{count}}",
+            "seedingCount": "做種中：{{count}}"
+        },
+        "badges": {
+            "languages": "語言",
+            "originalPlusDub": "原音 + 配音"
+        },
+        "category": {
+            "label": "分類",
+            "withValue": "分類：{{category}}",
+            "placeholder": "依分類篩選",
+            "apply": "確定"
+        },
+        "common": {
+            "any": "任何"
+        },
+        "dialogs": {
+            "removeTorrent": {
+                "title": "移除 Torrent",
+                "description": "此操作無法復原。"
+            },
+            "stopSeedingAll": {
+                "title": "停止所有 Torrent 做種",
+                "description": "此操作會停止所有已完成 Torrent 的做種。"
+            }
+        },
+        "errors": {
+            "clientConnectionTitle": "連線失敗",
+            "clientConnectionDescription": "無法連線到 Torrent 用戶端，請確認設定並確保它正在執行。",
+            "emptyTitle": "沒有內容",
+            "noExtensionSelected": "未選擇 extension",
+            "nothingFound": "找不到結果"
+        },
+        "fields": {
+            "provider": "提供者",
+            "providers": "提供者",
+            "seeders": "種子數",
+            "seeder": "個種子",
+            "seedSingular": "{{count}} 個種子",
+            "seedPlural": "{{count}} 個種子",
+            "noSeeders": "沒有種子"
+        },
+        "filters": {
+            "title": "篩選",
+            "description": "篩選依據 Torrent 名稱判斷，可能會漏掉部分結果。",
+            "dubbed": "配音",
+            "multiSubs": "多字幕"
+        },
+        "preview": {
+            "batch": "批次",
+            "episode": "第 {{number}} 集",
+            "episodeImageAlt": "集數圖片",
+            "episodesTo": "第 {{start}} 到 {{end}} 集",
+            "highestQuality": "最高品質",
+            "part": "Part {{number}}",
+            "partsAnd": "Part {{start}} 和 {{end}}",
+            "partsTo": "Part {{start}} 到 {{end}}",
+            "season": "第 {{number}} 季",
+            "seasonsAnd": "第 {{start}} 和 {{end}} 季",
+            "seasonsTo": "第 {{start}} 到 {{end}} 季",
+            "unidentified": "無法辨識"
+        },
+        "search": {
+            "fields": {
+                "batches": "批次",
+                "bestReleases": "最佳發布",
+                "episodeNumber": "集數",
+                "resolution": "解析度"
+            },
+            "missingEpisodes": "缺少的集數",
+            "previousSelection": "先前選擇",
+            "refineTitlePlaceholder": "細化標題（{{title}}）",
+            "results": "{{count}} 個結果",
+            "selectTorrentToStream": "選擇要串流的 Torrent",
+            "smartSearch": "智慧搜尋",
+            "smartSearchHelp": "根據指定參數自動搜尋。",
+            "warnings": {
+                "adultContent": "此提供者不支援成人內容",
+                "batchSearch": "此提供者不支援批次搜尋",
+                "bestRelease": "此提供者不支援最佳發布搜尋",
+                "smartSearch": "此提供者不支援智慧搜尋"
+            }
+        },
+        "sort": {
+            "newest": "最新",
+            "oldest": "最舊",
+            "nameAsc": "名稱（A-Z）",
+            "nameDesc": "名稱（Z-A）"
+        },
+        "stream": {
+            "title": "Torrent 串流",
+            "actions": {
+                "close": "關閉 Torrent 串流",
+                "stop": "停止串流"
+            },
+            "autoSelect": "自動選擇",
+            "autoSelectFile": "自動選擇檔案",
+            "autoSelectFileHelp": "會從你選擇的批次 Torrent 中自動選取集數檔案",
+            "autoSelectingPrevious": "從先前的 Torrent 自動選擇",
+            "noMetadata": "此動畫沒有可用的 metadata 資訊。你可能需要手動選擇要串流的檔案。",
+            "states": {
+                "addingTorrent": "正在加入 Torrent「{{torrent}}」",
+                "checkingTorrent": "正在檢查 Torrent「{{torrent}}」",
+                "ending": "正在結束串流...",
+                "gettingMetadata": "正在取得 metadata...",
+                "loading": "載入中...",
+                "selectingFile": "正在選擇檔案...",
+                "sendingToPlayer": "正在傳送串流到播放器"
+            }
+        }
+    },
+    "debrid": {
+        "actions": {
+            "dashboard": "儀表板"
+        },
+        "availability": {
+            "instant": "可在 Debrid 服務即時取得"
+        },
+        "download": {
+            "downloadingLocally": "正在下載到本機"
+        },
+        "errors": {
+            "connectionTitle": "連線失敗",
+            "connectionDescription": "無法連線到 Debrid 服務，請確認設定。",
+            "notEnabledTitle": "Debrid 未啟用",
+            "notEnabledDescription": "Debrid 服務尚未啟用或設定"
+        },
+        "page": {
+            "description": "查看你的 Debrid 服務 Torrent",
+            "noActiveTorrents": "沒有作用中的 Torrent"
+        },
+        "stream": {
+            "title": "Debrid 串流",
+            "actions": {
+                "cancelAndRemove": "取消並移除 Torrent",
+                "close": "關閉 Debrid 串流"
+            },
+            "dialogs": {
+                "cancel": {
+                    "title": "取消串流",
+                    "description": "確定要取消串流嗎？"
+                },
+                "cancelAndRemove": {
+                    "title": "取消並移除 Torrent",
+                    "description": "確定要取消串流並移除 Torrent 嗎？"
+                }
+            },
+            "modal": {
+                "closeKeepsStream": "關閉此視窗不會取消串流"
+            },
+            "states": {
+                "awaiting": "正在等待 Debrid 服務串流",
+                "fetchingTorrentInfo": "正在取得 Torrent 資訊...",
+                "launching": "正在啟動串流...",
+                "sendingToPlayer": "正在傳送串流到播放器..."
+            }
+        }
+    },
+    "autoDownloader": {
+        "title": "Auto Downloader",
+        "description": "新集數發布時自動下載。",
+        "actions": {
+            "addCondition": "新增條件",
+            "addReleaseGroup": "新增發布群組",
+            "addResolution": "新增解析度",
+            "checkRssFeed": "檢查 RSS feed",
+            "create": "建立",
+            "deleteThisRule": "刪除此規則",
+            "removeNoLongerAiring": "移除不再播出的媒體",
+            "runSimulation": "執行模擬"
+        },
+        "common": {
+            "and": "且",
+            "minutes": "分鐘",
+            "or": "或"
+        },
+        "conditionActions": {
+            "block": "封鎖",
+            "require": "必須包含",
+            "score": "評分"
+        },
+        "dialogs": {
+            "createRule": {
+                "title": "建立新規則"
+            },
+            "createRules": {
+                "title": "建立多個新規則",
+                "description": "一次建立多個規則。除了目的地資料夾之外，每個規則都會使用相同參數。預設集數類型為「最近發布」。"
+            },
+            "editRule": {
+                "title": "編輯規則"
+            },
+            "removeNoLongerAiring": {
+                "title": "移除不再播出的媒體",
+                "description": "此操作會移除所有媒體已不再播出（已完結）的規則。確定要繼續嗎？"
+            }
+        },
+        "episodeTypes": {
+            "recent": "最近發布",
+            "recentHelp": "你尚未觀看的新集數",
+            "select": "選擇",
+            "selected": "選擇集數",
+            "selectHelp": "只處理指定且不在媒體庫中的集數"
+        },
+        "fields": {
+            "action": "動作：",
+            "additionalTerms": "影片、音訊、來源、字幕",
+            "additionalTermsHelp": "每個選項中可以加入以逗號分隔的變體。（不區分大小寫）",
+            "additionalTermsLead": "Torrent 必須包含所有選項才會被接受。",
+            "alsoUseTitles": "也會使用這些標題：",
+            "comparisonTitle": "比對標題",
+            "comparisonTitleHelp": "用於比對用途。使用「完全符合」時，請使用最可能出現在 Torrent 名稱中的標題。",
+            "conditionHelp": "以逗號分隔且不區分大小寫的值，或 regex pattern",
+            "conditions": "條件",
+            "conditionsHelp": "新增條件來篩選 Torrent 或調整評分。",
+            "constraints": "限制",
+            "delay": "延遲",
+            "delayHelp": "下載前等待更好的發布。延遲期間會在找到第一個符合項目後開始。如果規則指派了較高延遲的 profile，或全域套用了較高延遲 profile，這個設定會被忽略。",
+            "delayMinutesHelp": "下載前等待的分鐘數",
+            "destinationHelp": "檔案會儲存到本機媒體庫中的這個資料夾",
+            "enabled": "啟用",
+            "episodeNumbers": "集數",
+            "episodeOffset": "集數絕對偏移",
+            "episodeOffsetHelp": "例如，若發布群組從 13 而不是 1 開始編號，請設為 12。",
+            "episodesToLookFor": "要尋找的集數",
+            "excludeTerms": "排除條件",
+            "excludeTermsHelp": "包含任一這些條件的 Torrent 會被拒絕。（不區分大小寫）",
+            "excludeTermsLead": "Torrent 必須包含所有選項才會被拒絕。",
+            "minimumScore": "最低評分",
+            "minimumScoreHelp": "評分低於此值的 Torrent 會被拒絕",
+            "noExtensionsFound": "找不到 extensions",
+            "noProvidersFound": "找不到提供者",
+            "providersHelp": "選擇要搜尋的特定提供者。若留空，會使用預設提供者。",
+            "releaseGroups": "發布群組",
+            "releaseGroupsHelp": "要尋找的發布群組清單。若留空，任何發布群組都會被接受。",
+            "releaseGroupsProfileHelp": "要尋找的發布群組清單。若留空，任何發布群組都會被接受。規則可以覆寫此設定。",
+            "resolutions": "解析度",
+            "resolutionsHelp": "要尋找的解析度清單。若留空，會接受最高解析度。",
+            "resolutionsProfileHelp": "拖放以重新排序。會選擇第一個符合的解析度。規則可以覆寫此設定。",
+            "score": "評分：",
+            "selectProviders": "選擇提供者",
+            "skipDelayScore": "略過延遲分數",
+            "skipDelayScoreHelp": "若 Torrent 評分超過此值，就略過延遲",
+            "thresholds": "門檻",
+            "title": "標題",
+            "typeOfSearch": "搜尋類型",
+            "useDebrid": "使用 Debrid 服務"
+        },
+        "profiles": {
+            "applyHelp": "選擇 profile 以套用共用篩選條件。本機篩選會覆寫 profile 篩選。",
+            "conditionsCount": "{{count}} 個條件",
+            "createTitle": "建立 Profile",
+            "delayMinutes": "{{count}} 分鐘延遲",
+            "deleteDescription": "確定要刪除 profile「{{name}}」嗎？此操作無法復原。",
+            "deleteTitle": "刪除 profile",
+            "description": "Profiles 可讓你定義一組能套用到規則的篩選條件。",
+            "editTitle": "編輯 Profile：{{name}}",
+            "empty": "尚未建立 profiles。",
+            "global": "全域",
+            "globalHelp": "自動將此 profile 套用到所有規則",
+            "namePlaceholder": "名稱",
+            "newProfile": "新增 Profile",
+            "noProfileFound": "找不到 profile",
+            "profile": "Profile",
+            "profileName": "Profile 名稱",
+            "selectProfile": "選擇 profile"
+        },
+        "queue": {
+            "addedAt": "已新增 {{time}}",
+            "delayed": "已延遲",
+            "delayedFor": "還有 {{duration}}。",
+            "description": "佇列會顯示等待下載或掃描的項目。",
+            "empty": "佇列是空的",
+            "fileDownloaded": "檔案已下載",
+            "manualActionRequired": "需要手動操作",
+            "notYetScanned": "尚未掃描"
+        },
+        "rules": {
+            "addAllCurrentlyWatching": "所有觀看中",
+            "addAllUpcoming": "所有即將播出",
+            "description": "規則可依你設定的參數自動下載新集數。",
+            "empty": "沒有規則",
+            "mediaNotInLibrary": "媒體不在你的媒體庫中",
+            "multipleSeries": "一次多部作品",
+            "newRule": "新增規則",
+            "noLongerAiring": "不再播出",
+            "noMediaFound": "媒體庫中找不到媒體",
+            "notInLibrary": "此動畫不在你的媒體庫中",
+            "oneSeries": "單部作品",
+            "ruleFor": "規則：",
+            "filters": {
+                "showingAiringOnly": "只顯示播出中",
+                "showingAiringUpcoming": "顯示播出中與即將播出",
+                "showingAll": "顯示全部"
+            }
+        },
+        "searchTypes": {
+            "contains": "完全符合",
+            "containsHelp": "Torrent 名稱必須包含你設定的比對標題（不區分大小寫）",
+            "likely": "最可能符合",
+            "likelyHelp": "會解析 Torrent 名稱並使用比對演算法分析"
+        },
+        "settings": {
+            "debridDisabledDescription": "Debrid 服務尚未啟用或設定。請在設定中啟用。",
+            "debridDisabledTitle": "Auto Downloader 已停用",
+            "downloadImmediately": "立即下載集數",
+            "downloadImmediatelyHelp": "若停用，Torrent 會被加入佇列。",
+            "every": "每",
+            "interval": "間隔",
+            "intervalHelp": "檢查新集數的頻率。",
+            "strictSeasonCheck": "嚴格季度檢查",
+            "strictSeasonCheckHelp": "啟用後，Torrent 與媒體標題必須包含相同季數。這可能導致誤判為不符合。"
+        },
+        "simulation": {
+            "checkLogs": "查看 server logs 以取得更多細節。",
+            "resultTitle": "結果",
+            "resultsForRule": "規則「{{title}}」的模擬結果（ID：{{id}}）"
+        },
+        "tabs": {
+            "profiles": "Profiles",
+            "queue": "佇列",
+            "rules": "規則"
         }
     },
     "home": {

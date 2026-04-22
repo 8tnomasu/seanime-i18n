@@ -29,8 +29,10 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Modal } from "@/components/ui/modal"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useBoolean } from "@/hooks/use-disclosure"
+import i18n from "@/i18n"
 import { useAtomValue } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiDotsVerticalRounded } from "react-icons/bi"
 import { FaSquareRss } from "react-icons/fa6"
 import { LuTrash } from "react-icons/lu"
@@ -46,7 +48,7 @@ const settingsSchema = defineSchema(({ z, presets }) => z.object({
     provider: presets.multiSelect,
     interval: z.number().transform(n => {
         if (n < 15) {
-            toast.info("Interval changed to be at least 15 minutes")
+            toast.info(i18n.t("toasts.autoDownloader.intervalAdjusted"))
             return 15
         }
         return n
@@ -59,6 +61,7 @@ const settingsSchema = defineSchema(({ z, presets }) => z.object({
 }))
 
 export function AutoDownloaderPage() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const userMedia = useAtomValue(__anilist_userAnimeMediaAtom)
     const { data: extensions, isLoading: isLoadingExtensions } = useAnimeListTorrentProviderExtensions()
@@ -78,8 +81,8 @@ export function AutoDownloaderPage() {
     const { mutate: deleteNoLongerAiring, isPending: deletingRule } = useDeleteAutoDownloaderRule(-1)
 
     const confirmDeleteNoLongerAiring = useConfirmationDialog({
-        title: "Remove no longer airing media",
-        description: "This action will remove all rules that no longer have media airing (finished). Are you sure you want to continue?",
+        title: t("autoDownloader.dialogs.removeNoLongerAiring.title"),
+        description: t("autoDownloader.dialogs.removeNoLongerAiring.description"),
         onConfirm: () => {
             deleteNoLongerAiring()
         },
@@ -119,17 +122,17 @@ export function AutoDownloaderPage() {
                 listClass={"w-full flex flex-wrap md:flex-nowrap h-fit"}
             >
                 <TabsList className="flex-wrap max-w-full bg-[--paper] p-2 border rounded-xl">
-                    <TabsTrigger value="rules">Rules</TabsTrigger>
-                    <TabsTrigger value="profiles">Profiles</TabsTrigger>
+                    <TabsTrigger value="rules">{t("autoDownloader.tabs.rules")}</TabsTrigger>
+                    <TabsTrigger value="profiles">{t("autoDownloader.tabs.profiles")}</TabsTrigger>
                     <TabsTrigger value="queue">
-                        Queue
+                        {t("autoDownloader.tabs.queue")}
                         {!!items?.length && (
                             <Badge className="ml-2 font-bold" intent="alert" size="sm">
                                 {items.length}
                             </Badge>
                         )}
                     </TabsTrigger>
-                    <TabsTrigger value="settings">Settings</TabsTrigger>
+                    <TabsTrigger value="settings">{t("settings.title")}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="rules" className={tabContentClass}>
                     <div className="pt-4">
@@ -139,8 +142,7 @@ export function AutoDownloaderPage() {
 
                                 <Card className="p-4 space-y-4">
                                     <ul className="text-base text-[--muted]">
-                                        <li>Rules allow you to programmatically download new episodes based on the
-                                            parameters you set.
+                                        <li>{t("autoDownloader.rules.description")}
                                         </li>
                                     </ul>
 
@@ -152,14 +154,14 @@ export function AutoDownloaderPage() {
                                                 leftIcon={<MdOutlineAdd className="text-lg" />}
 
                                             >
-                                                New Rule
+                                                {t("autoDownloader.rules.newRule")}
                                             </Button>}
                                         >
                                             <DropdownMenuItem onClick={createRuleModal.on}>
-                                                One series
+                                                {t("autoDownloader.rules.oneSeries")}
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={createBatchRuleModal.on}>
-                                                Multiple series at once
+                                                {t("autoDownloader.rules.multipleSeries")}
                                             </DropdownMenuItem>
                                         </DropdownMenu>
                                         <div className="flex flex-1"></div>
@@ -173,7 +175,7 @@ export function AutoDownloaderPage() {
                                             loading={isRunning}
                                             disabled={!serverStatus?.settings?.autoDownloader?.enabled}
                                         >
-                                            Check RSS feed
+                                            {t("autoDownloader.actions.checkRssFeed")}
                                         </Button>
                                         <DropdownMenu
                                             trigger={<IconButton
@@ -187,12 +189,12 @@ export function AutoDownloaderPage() {
                                                 className="text-[--red]"
                                                 disabled={deletingRule}
                                             >
-                                                <LuTrash /> Remove no longer airing media
+                                                <LuTrash /> {t("autoDownloader.actions.removeNoLongerAiring")}
                                             </DropdownMenuItem>
                                         </DropdownMenu>
                                     </div>
 
-                                    {(!data?.length) && <div className="p-4 text-[--muted] text-center">No rules</div>}
+                                    {(!data?.length) && <div className="p-4 text-[--muted] text-center">{t("autoDownloader.rules.empty")}</div>}
                                     {(!!data?.length) && <div className="space-y-2">
                                         {data?.toSorted(sortRules)?.map(rule => (
                                             <AutoDownloaderRuleItem
@@ -243,21 +245,21 @@ export function AutoDownloaderPage() {
                                     <SettingsCard>
                                         <Field.Switch
                                             side="right"
-                                            label="Enabled"
+                                            label={t("autoDownloader.fields.enabled")}
                                             name="enabled"
                                         />
 
                                         <Field.Switch
                                             side="right"
-                                            label="Use Debrid service"
+                                            label={t("autoDownloader.fields.useDebrid")}
                                             name="useDebrid"
                                         />
 
                                         {f.watch("useDebrid") && !(serverStatus?.debridSettings?.enabled && !!serverStatus?.debridSettings?.provider) && (
                                             <Alert
                                                 intent="alert"
-                                                title="Auto Downloader deactivated"
-                                                description="Debrid service is not enabled or configured. Please enable it in the settings."
+                                                title={t("autoDownloader.settings.debridDisabledTitle")}
+                                                description={t("autoDownloader.settings.debridDisabledDescription")}
                                             />
                                         )}
 
@@ -268,8 +270,8 @@ export function AutoDownloaderPage() {
                                                 textValue: ext.name,
                                                 value: ext.id,
                                             })) ?? []}
-                                            label="Default Provider"
-                                            emptyMessage="No extensions found"
+                                            label={t("settings.fields.defaultProvider")}
+                                            emptyMessage={t("autoDownloader.fields.noExtensionsFound")}
                                         />
                                     </SettingsCard>
 
@@ -286,16 +288,16 @@ export function AutoDownloaderPage() {
                                         {/*/>*/}
                                         <Field.Switch
                                             side="right"
-                                            label="Download episodes immediately"
+                                            label={t("autoDownloader.settings.downloadImmediately")}
                                             name="downloadAutomatically"
-                                            help="If disabled, torrents will be added to the queue."
+                                            help={t("autoDownloader.settings.downloadImmediatelyHelp")}
                                         />
                                         <Field.Number
-                                            label="Interval"
-                                            help="How often to check for new episodes."
+                                            label={t("autoDownloader.settings.interval")}
+                                            help={t("autoDownloader.settings.intervalHelp")}
                                             name="interval"
-                                            leftAddon="Every"
-                                            rightAddon="minutes"
+                                            leftAddon={t("autoDownloader.settings.every")}
+                                            rightAddon={t("autoDownloader.common.minutes")}
                                             size="sm"
                                             className="text-center w-20"
                                             min={15}
@@ -309,9 +311,9 @@ export function AutoDownloaderPage() {
                                     >
                                         <Field.Switch
                                             side="right"
-                                            label="Strict season check"
+                                            label={t("autoDownloader.settings.strictSeasonCheck")}
                                             name="enableSeasonCheck"
-                                            help="If enabled, the torrents and media titles should contain the same season number. This can lead to false negatives."
+                                            help={t("autoDownloader.settings.strictSeasonCheckHelp")}
                                         />
                                     </SettingsCard>
 
@@ -328,7 +330,7 @@ export function AutoDownloaderPage() {
             <Modal
                 open={createRuleModal.active}
                 onOpenChange={createRuleModal.off}
-                title="Create a new rule"
+                title={t("autoDownloader.dialogs.createRule.title")}
                 contentClass="max-w-4xl"
             >
                 <AutoDownloaderRuleForm type="create" onRuleCreatedOrDeleted={() => createRuleModal.off()} />
@@ -338,12 +340,11 @@ export function AutoDownloaderPage() {
             <Drawer
                 open={createBatchRuleModal.active}
                 onOpenChange={createBatchRuleModal.off}
-                title="Create new rules"
+                title={t("autoDownloader.dialogs.createRules.title")}
                 size="xl"
             >
                 <p className="text-[--muted] py-4">
-                    Create multiple rules at once. Each rule will be created with the same parameters, except for the destination folder.
-                    By default, the episode type will be "Recent releases".
+                    {t("autoDownloader.dialogs.createRules.description")}
                 </p>
                 <AutoDownloaderBatchRuleForm onRuleCreated={() => createBatchRuleModal.off()} rules={data ?? []} />
             </Drawer>

@@ -4,6 +4,7 @@ import { Button, CloseButton, IconButton } from "@/components/ui/button"
 import { Field } from "@/components/ui/form"
 import { TextInput } from "@/components/ui/text-input"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { useFieldArray } from "react-hook-form"
 import { BiPlus } from "react-icons/bi"
 
@@ -90,6 +91,7 @@ type ReleaseGroupsFieldProps = {
 }
 
 export function ReleaseGroupsField(props: ReleaseGroupsFieldProps) {
+    const { t } = useTranslation()
     const suggestions = [
         "SubsPlease",
         "Erai-raws",
@@ -102,9 +104,9 @@ export function ReleaseGroupsField(props: ReleaseGroupsFieldProps) {
 
     return (
         <div className="border rounded-[--radius] p-4 relative !mt-8 space-y-3">
-            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">Release Groups</div>
+            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">{t("autoDownloader.fields.releaseGroups")}</div>
             <p className="text-sm">
-                List of release groups to look for. If empty, any release group will be accepted.
+                {t("autoDownloader.fields.releaseGroupsHelp")}
             </p>
 
             <TextArrayField
@@ -112,7 +114,7 @@ export function ReleaseGroupsField(props: ReleaseGroupsFieldProps) {
                 control={props.control}
                 type="text"
                 placeholder="e.g. SubsPlease"
-                separatorText="OR"
+                separatorText={t("autoDownloader.common.or")}
                 suggestions={suggestions}
             />
         </div>
@@ -125,13 +127,14 @@ type ResolutionsFieldProps = {
 }
 
 export function ResolutionsField(props: ResolutionsFieldProps) {
+    const { t } = useTranslation()
     const suggestions = ["1080p", "720p", "2160p", "480p"]
 
     return (
         <div className="border rounded-[--radius] p-4 relative !mt-8 space-y-3">
-            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">Resolutions</div>
+            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">{t("autoDownloader.fields.resolutions")}</div>
             <p className="text-sm">
-                List of resolutions to look for. If empty, the highest resolution will be accepted.
+                {t("autoDownloader.fields.resolutionsHelp")}
             </p>
 
             <TextArrayField
@@ -139,7 +142,7 @@ export function ResolutionsField(props: ResolutionsFieldProps) {
                 control={props.control}
                 type="text"
                 placeholder="e.g. 1080p"
-                separatorText="OR"
+                separatorText={t("autoDownloader.common.or")}
                 suggestions={suggestions}
             />
         </div>
@@ -153,6 +156,7 @@ type AdditionalTermsFieldProps = {
 }
 
 export function AdditionalTermsField(props: AdditionalTermsFieldProps) {
+    const { t } = useTranslation()
     const suggestions = [
         // Video
         { label: "HEVC / H.265", value: "H265,H.265,x265,HEVC" },
@@ -181,13 +185,11 @@ export function AdditionalTermsField(props: AdditionalTermsFieldProps) {
 
     return (
         <div className="border rounded-[--radius] p-4 relative !mt-8 space-y-3">
-            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">Video, Audio, Source, Subs
+            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">{t("autoDownloader.fields.additionalTerms")}
             </div>
             <div>
                 <p className="text-sm -top-2 relative"><span className="font-semibold">
-                    All options must be included for the torrent to be accepted.</span> Within each option, you can
-                                                                                        include variations separated by
-                                                                                        commas. (Case insensitive)</p>
+                    {t("autoDownloader.fields.additionalTermsLead")}</span> {t("autoDownloader.fields.additionalTermsHelp")}</p>
             </div>
 
             <TextArrayField
@@ -195,7 +197,7 @@ export function AdditionalTermsField(props: AdditionalTermsFieldProps) {
                 control={props.control}
                 type="text"
                 placeholder="e.g. H265,H.265,H 265,x265"
-                separatorText="AND"
+                separatorText={t("autoDownloader.common.and")}
                 suggestions={suggestions.map(s => s.value)}
                 suggestionLabels={suggestions.map(s => s.label)}
             />
@@ -204,6 +206,7 @@ export function AdditionalTermsField(props: AdditionalTermsFieldProps) {
 }
 
 export function ExcludeTermsField(props: AdditionalTermsFieldProps) {
+    const { t } = useTranslation()
     const suggestions = [
         // Video
         { label: "HEVC / H.265", value: "H265,H.265,x265,HEVC" },
@@ -224,10 +227,9 @@ export function ExcludeTermsField(props: AdditionalTermsFieldProps) {
 
     return (
         <div className="border rounded-[--radius] p-4 relative !mt-8 space-y-3">
-            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">Exclude Terms</div>
+            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">{t("autoDownloader.fields.excludeTerms")}</div>
             <p className="text-sm"><span className="font-semibold">
-                All options must be included for the torrent to be rejected.</span> Torrents containing any of these terms will be rejected. (Case
-                                                                                    insensitive)
+                {t("autoDownloader.fields.excludeTermsLead")}</span> {t("autoDownloader.fields.excludeTermsHelp")}
             </p>
 
             <TextArrayField
@@ -235,7 +237,7 @@ export function ExcludeTermsField(props: AdditionalTermsFieldProps) {
                 control={props.control}
                 type="text"
                 placeholder="e.g. H265,H.265,H 265,x265"
-                separatorText="AND"
+                separatorText={t("autoDownloader.common.and")}
                 suggestions={suggestions.map(s => s.value)}
                 suggestionLabels={suggestions.map(s => s.label)}
             />
@@ -249,13 +251,14 @@ type ProvidersFieldProps = {
 }
 
 export function ProvidersField(props: ProvidersFieldProps) {
+    const { t } = useTranslation()
     const { data: extensions } = useAnimeListTorrentProviderExtensions()
 
     return (
         <div className="border rounded-[--radius] p-4 relative !mt-8 space-y-3">
-            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">Providers</div>
+            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">{t("torrent.fields.providers")}</div>
             <p className="text-sm">
-                Select specific providers to look for. If empty, the default provider will be used.
+                {t("autoDownloader.fields.providersHelp")}
             </p>
             <Field.Combobox
                 name={props.name}
@@ -265,8 +268,8 @@ export function ProvidersField(props: ProvidersFieldProps) {
                     value: ext.id,
                 })) ?? []}
                 multiple
-                label="Select providers"
-                emptyMessage="No providers found"
+                label={t("autoDownloader.fields.selectProviders")}
+                emptyMessage={t("autoDownloader.fields.noProvidersFound")}
             />
         </div>
     )
@@ -277,13 +280,14 @@ type ProfileSelectFieldProps = {
 }
 
 export function ProfileSelectField(props: ProfileSelectFieldProps) {
+    const { t } = useTranslation()
     const { data: profiles } = useGetAutoDownloaderProfiles()
 
     return (
         <div className="border rounded-[--radius] p-4 relative !mt-8 space-y-3">
-            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">Profile</div>
+            <div className="absolute -top-2.5 tracking-wide font-semibold uppercase text-sm left-4 bg-gray-950 px-2">{t("autoDownloader.profiles.profile")}</div>
             <p className="text-sm">
-                Select a profile to apply shared filters. Local filters will override profile filters.
+                {t("autoDownloader.profiles.applyHelp")}
             </p>
             <Field.Combobox
                 name={props.name}
@@ -294,8 +298,8 @@ export function ProfileSelectField(props: ProfileSelectFieldProps) {
                         value: String(profile.dbId),
                     })) ?? []),
                 ]}
-                label="Select a profile"
-                emptyMessage="No profile found"
+                label={t("autoDownloader.profiles.selectProfile")}
+                emptyMessage={t("autoDownloader.profiles.noProfileFound")}
             />
         </div>
     )

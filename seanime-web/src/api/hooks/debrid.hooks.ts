@@ -12,6 +12,7 @@ import {
 } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Debrid_TorrentInfo, Debrid_TorrentItem, DebridClient_FilePreview, Models_DebridSettings } from "@/api/generated/types"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -45,7 +46,7 @@ export function useDebridAddTorrents(onSuccess: () => void) {
         mutationKey: [API_ENDPOINTS.DEBRID.DebridAddTorrents.key],
         onSuccess: async () => {
             onSuccess()
-            toast.success("Torrent added")
+            toast.success(i18n.t("toasts.debrid.torrentAdded"))
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.DEBRID.DebridGetTorrents.key] })
         },
     })
@@ -57,7 +58,7 @@ export function useDebridDownloadTorrent() {
         method: API_ENDPOINTS.DEBRID.DebridDownloadTorrent.methods[0],
         mutationKey: [API_ENDPOINTS.DEBRID.DebridDownloadTorrent.key],
         onSuccess: async () => {
-            toast.info("Download started")
+            toast.info(i18n.t("toasts.downloads.downloadStarted"))
         },
     })
 }
@@ -68,7 +69,7 @@ export function useDebridCancelDownload() {
         method: API_ENDPOINTS.DEBRID.DebridCancelDownload.methods[0],
         mutationKey: [API_ENDPOINTS.DEBRID.DebridCancelDownload.key],
         onSuccess: async () => {
-            toast.info("Download cancelled")
+            toast.info(i18n.t("toasts.downloads.downloadCancelled"))
         },
     })
 }
@@ -80,7 +81,7 @@ export function useDebridDeleteTorrent() {
         method: API_ENDPOINTS.DEBRID.DebridDeleteTorrent.methods[0],
         mutationKey: [API_ENDPOINTS.DEBRID.DebridDeleteTorrent.key],
         onSuccess: async () => {
-            toast.success("Torrent deleted")
+            toast.success(i18n.t("toasts.debrid.torrentDeleted"))
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.DEBRID.DebridGetTorrents.key] })
         },
     })
@@ -135,7 +136,7 @@ export function useDebridCancelStream() {
         method: API_ENDPOINTS.DEBRID.DebridCancelStream.methods[0],
         mutationKey: [API_ENDPOINTS.DEBRID.DebridCancelStream.key],
         onSuccess: async () => {
-            toast.success("Stream cancelled")
+            toast.success(i18n.t("toasts.debrid.streamCancelled"))
         },
     })
 }

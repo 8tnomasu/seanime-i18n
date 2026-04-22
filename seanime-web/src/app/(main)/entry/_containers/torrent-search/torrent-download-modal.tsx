@@ -26,6 +26,7 @@ import { TORRENT_CLIENT } from "@/lib/server/settings"
 import { atom } from "jotai"
 import { useAtom, useAtomValue, useSetAtom } from "jotai/react"
 import React, { useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { AiOutlineCloudServer } from "react-icons/ai"
 import { BiCollection, BiDownload, BiX } from "react-icons/bi"
 import { FcFilmReel, FcFolder } from "react-icons/fc"
@@ -39,6 +40,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
     entry: Anime_Entry
 }) {
 
+    const { t } = useTranslation()
     const router = useRouter()
     const serverStatus = useServerStatus()
     const libraryPath = serverStatus?.settings?.library?.libraryPath
@@ -189,12 +191,12 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                 <AppLayoutStack className="p-6">
 
                     <h4 className="text-center">
-                        Choose the destination
+                        {t("downloads.destination.title")}
                     </h4>
 
                     {debridActive && (
                         <Switch
-                            label="Download with Debrid service"
+                            label={t("downloads.actions.downloadWithDebrid")}
                             value={isDebrid}
                             onValueChange={v => setIsDebrid(v)}
                         />
@@ -202,7 +204,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
 
                     <DirectorySelector
                         name="destination"
-                        label="Destination"
+                        label={t("downloads.destination.label")}
                         leftIcon={<FcFolder />}
                         value={destination}
                         defaultValue={destination}
@@ -247,7 +249,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                                 />
                             </div>}
                         >
-                            Open in browser
+                            {t("torrent.actions.openInBrowser")}
                         </Tooltip>
                     ))}
 
@@ -263,7 +265,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                                     loading={isDownloadingDebrid}
                                     className="w-full"
                                 >
-                                    Download with Debrid service
+                                    {t("downloads.actions.downloadWithDebrid")}
                                 </Button>
                             )}
                         </>
@@ -280,7 +282,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                                         disabled={isDisabled}
                                         loading={isDownloadingFiles}
                                         className="w-full"
-                                    >Download '.torrent' files</Button>}
+                                    >{t("downloads.actions.downloadTorrentFiles")}</Button>}
 
                                     {selectedTorrents.length > 0 && (
                                         <Button
@@ -293,8 +295,8 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                                             className="w-full"
                                         >
                                             {!serverStatus?.debridSettings?.enabled
-                                                ? (canSmartSelect ? "Download all" : "Download")
-                                                : "Download with torrent client"}
+                                                ? (canSmartSelect ? t("downloads.actions.downloadAll") : t("common.buttons.download"))
+                                                : t("downloads.actions.downloadWithTorrentClient")}
                                         </Button>
                                     )}
                                 </div>
@@ -309,7 +311,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                                         loading={isPending}
                                         className="w-full"
                                     >
-                                        Choose files to download
+                                        {t("downloads.actions.chooseFiles")}
                                     </Button>
                                 )}
 
@@ -323,7 +325,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
                                         loading={isPending}
                                         className="w-full"
                                     >
-                                        Download missing episodes
+                                        {t("downloads.actions.downloadMissingEpisodes")}
                                     </Button>
                                 )}
 
@@ -339,6 +341,7 @@ export function TorrentDownloadModal({ onToggleTorrent, media, entry }: {
 
 
 export function TorrentConfirmationContinueButton({ type, onTorrentValidated }: { type: TorrentSelectionType, onTorrentValidated: () => void }) {
+    const { t } = useTranslation()
 
     const st = useAtomValue(__torrentSearch_selectedTorrentsAtom)
     const setter = useSetAtom(confirmationModalOpenAtom)
@@ -360,7 +363,7 @@ export function TorrentConfirmationContinueButton({ type, onTorrentValidated }: 
             }}
             leftIcon={type === "download" ? <LuDownload /> : <LuPlay />}
         >
-            {type === "download" ? "Download" : "Stream"}
+            {type === "download" ? t("common.buttons.download") : t("downloads.actions.stream")}
             {type === "download" ? ` (${st.length})` : ""}
         </Button>
     )

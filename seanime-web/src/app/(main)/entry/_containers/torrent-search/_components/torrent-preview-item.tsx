@@ -14,6 +14,7 @@ import { openTab } from "@/lib/helpers/browser"
 import { formatDistanceToNowSafe } from "@/lib/helpers/date"
 import uniqBy from "lodash/uniqBy"
 import React, { memo } from "react"
+import { useTranslation } from "react-i18next"
 import { AiFillWarning } from "react-icons/ai"
 import { BiCalendarAlt, BiLinkExternal } from "react-icons/bi"
 import { BsFileEarmarkPlayFill } from "react-icons/bs"
@@ -39,6 +40,8 @@ export const TorrentListItem = ({ torrent, metadata, debridCached, onClick, isSe
     overrideProps?: Partial<TorrentPreviewItemProps>
     extensionName?: string
 }) => {
+    const { t } = useTranslation()
+
     return (
         <TorrentPreviewItem
             link={overrideProps?.link ?? torrent?.link}
@@ -65,7 +68,7 @@ export const TorrentListItem = ({ torrent, metadata, debridCached, onClick, isSe
                         intent="success-solid"
                         leftIcon={<LuGem className="text-md" />}
                     >
-                        Highest quality
+                        {t("torrent.preview.highestQuality")}
                     </Badge>
                 )}
                 <TorrentSeedersBadge seeders={torrent.seeders} />
@@ -106,6 +109,7 @@ type TorrentPreviewItemProps = {
 }
 
 const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
+    const { t } = useTranslation()
 
     const {
         link,
@@ -138,17 +142,17 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
             if (!!displayName) return displayName
 
             if (episodeNumbers?.length === 1) return (
-                `Episode ${parseInt(episodeNumbers[0])}`
+                t("torrent.preview.episode", { number: parseInt(episodeNumbers[0]) })
             )
 
             if (episodeNumbers?.length === 0) return (
-                `Batch`
+                t("torrent.preview.batch")
             )
 
             if (metadata?.formatted_title) return metadata.formatted_title
             return ""
         }
-        let t = ""
+        let title = ""
         const seasonNumbers = metadata?.season_number
         const partNumbers = metadata?.part_number
         if (partNumbers?.length && partNumbers.length > 1) {
@@ -156,12 +160,12 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
             const lastS = parseInt(partNumbers[partNumbers.length - 1])
             if (s1 != lastS) {
                 if (uniqBy(partNumbers, n => parseInt(n)).length === 2 && lastS - s1 === 1)
-                    t = `Part ${s1} and ${lastS}`
+                    title = t("torrent.preview.partsAnd", { start: s1, end: lastS })
                 else
-                    t = `Parts ${s1} to ${lastS}`
-                return t
+                    title = t("torrent.preview.partsTo", { start: s1, end: lastS })
+                return title
             } else {
-                return `Part ${s1}`
+                return t("torrent.preview.part", { number: s1 })
             }
         }
         if (seasonNumbers?.length && seasonNumbers.length > 1) {
@@ -169,25 +173,25 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
             const lastS = parseInt(seasonNumbers[seasonNumbers.length - 1])
             if (s1 != lastS) {
                 if (uniqBy(seasonNumbers, n => parseInt(n)).length === 2 && lastS - s1 === 1)
-                    t = `Season ${s1} and ${lastS}`
+                    title = t("torrent.preview.seasonsAnd", { start: s1, end: lastS })
                 else
-                    t = `Seasons ${s1} to ${lastS}`
-                return t
+                    title = t("torrent.preview.seasonsTo", { start: s1, end: lastS })
+                return title
             } else {
-                return `Season ${s1}`
+                return t("torrent.preview.season", { number: s1 })
             }
         }
         if (episodeNumbers?.length && episodeNumbers?.length > 1) {
-            t = `Episodes ${parseInt(episodeNumbers[0])} to ${parseInt(episodeNumbers[episodeNumbers.length - 1])}`
+            title = t("torrent.preview.episodesTo", { start: parseInt(episodeNumbers[0]), end: parseInt(episodeNumbers[episodeNumbers.length - 1]) })
             if (seasonNumbers?.length === 1) {
-                t += ` (Season ${parseInt(seasonNumbers[0])})`
+                title += ` (${t("torrent.preview.season", { number: parseInt(seasonNumbers[0]) })})`
             }
-            return t
+            return title
         } else if (seasonNumbers?.length && seasonNumbers.length === 1) {
-            return `Season ${parseInt(seasonNumbers[0])}`
+            return t("torrent.preview.season", { number: parseInt(seasonNumbers[0]) })
         }
-        return "Batch"
-    }, [displayName, metadata])
+        return t("torrent.preview.batch")
+    }, [displayName, metadata, t])
 
     return (
         <div
@@ -223,7 +227,7 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
                     {(image || fallbackImage) && <SeaImage
                         data-torrent-preview-item-image
                         src={image || fallbackImage!}
-                        alt="episode image"
+                        alt={t("torrent.preview.episodeImageAlt")}
                         fill
                         className={cn(
                             "object-cover object-center absolute w-full h-full group-hover/torrent-preview-item:blur-0 transition-opacity opacity-25 group-hover/torrent-preview-item:opacity-60 z-[0] select-none pointer-events-none",
@@ -241,7 +245,7 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
                     {(image) && <SeaImage
                         data-torrent-preview-item-image
                         src={image!}
-                        alt="episode image"
+                        alt={t("torrent.preview.episodeImageAlt")}
                         fill
                         className={cn(
                             "object-cover object-center absolute w-full h-full group-hover/torrent-preview-item:blur-0 transition-opacity opacity-25 z-[0] select-none pointer-events-none",
@@ -308,7 +312,7 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
                 <div className="relative overflow-hidden space-y-1 w-full" data-torrent-preview-item-metadata>
                     {isInvalid && <p className="flex gap-2 text-red-300 items-center"><AiFillWarning
                         className="text-lg text-red-500"
-                    /> Unidentified</p>}
+                    /> {t("torrent.preview.unidentified")}</p>}
 
                     {mainTitle && <div
                         className={cn(
@@ -351,7 +355,7 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
                         size="sm"
                         onClick={() => openTab(link)}
                     />}
-                >Open in browser</Tooltip>}
+                >{t("torrent.actions.openInBrowser")}</Tooltip>}
                 {action}
             </div>
         </div>
