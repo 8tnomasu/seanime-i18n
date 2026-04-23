@@ -11,6 +11,7 @@ import { DataGrid, defineDataGridColumns } from "@/components/ui/datagrid"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useSetAtom } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { GiOpenBook } from "react-icons/gi"
 
 type OfflineChapterListProps = {
@@ -19,6 +20,7 @@ type OfflineChapterListProps = {
 }
 
 export function OfflineChapterList(props: OfflineChapterListProps) {
+    const { t } = useTranslation()
 
     const {
         entry,
@@ -56,18 +58,18 @@ export function OfflineChapterList(props: OfflineChapterListProps) {
     const columns = React.useMemo(() => defineDataGridColumns<HibikeManga_ChapterDetails>(() => [
         {
             accessorKey: "title",
-            header: "Name",
+            header: t("offlineSync.offlineManga.columns.name"),
             size: 90,
         },
         {
             accessorKey: "provider",
-            header: "Provider",
+            header: t("torrent.fields.provider"),
             size: 10,
             enableSorting: true,
         },
         {
             id: "number",
-            header: "Number",
+            header: t("offlineSync.offlineManga.columns.number"),
             size: 10,
             enableSorting: true,
             accessorFn: (row) => {
@@ -103,7 +105,7 @@ export function OfflineChapterList(props: OfflineChapterListProps) {
                 )
             },
         },
-    ]), [entry, chapterNumbersMap])
+    ]), [entry, chapterNumbersMap, t])
 
     const [showUnreadChapter, setShowUnreadChapter] = React.useState(false)
 
@@ -133,7 +135,7 @@ export function OfflineChapterList(props: OfflineChapterListProps) {
 
                 <div className="flex flex-wrap items-center gap-4">
                     <Checkbox
-                        label="Show unread"
+                        label={t("offlineSync.offlineManga.showUnread")}
                         value={showUnreadChapter}
                         onValueChange={v => setShowUnreadChapter(v as boolean)}
                         fieldClass="w-fit"

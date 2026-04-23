@@ -20,9 +20,11 @@ import { useRouter } from "@/lib/navigation"
 import { __isElectronDesktop__ } from "@/types/constants"
 import { useAtomValue, useSetAtom } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 export function useHandlePlayMedia() {
+    const { t } = useTranslation()
     const router = useRouter()
     const serverStatus = useServerStatus()
     const clientId = useAtomValue(clientIdAtom)
@@ -120,7 +122,7 @@ export function useHandlePlayMedia() {
             (forcePlaybackMethod && forcePlaybackMethod === "externalPlayerLink")
         ) {
             if (!externalPlayerLink) {
-                toast.error("External player link is not set.")
+                toast.error(t("toasts.integrations.externalPlayerLinkNotSet"))
                 return
             }
 

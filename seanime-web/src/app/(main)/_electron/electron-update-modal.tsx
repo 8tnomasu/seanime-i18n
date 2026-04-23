@@ -13,6 +13,7 @@ import { WSEvents } from "@/lib/server/ws-events"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiFillExclamationCircle } from "react-icons/ai"
 import { BiLinkExternal } from "react-icons/bi"
 import { FiArrowRight } from "react-icons/fi"
@@ -28,6 +29,7 @@ export const isUpdateInstalledAtom = atom<boolean>(false)
 export const isUpdatingAtom = atom<boolean>(false)
 
 export function ElectronUpdateModal(props: UpdateModalProps) {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const [updateModalOpen, setUpdateModalOpen] = useAtom(electronUpdateModalOpenAtom)
     const [isUpdating, setIsUpdating] = useAtom(isUpdatingAtom)
@@ -88,7 +90,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
             // Register listeners for update events
             const removeUpdateDownloaded = window.electron.on("update-downloaded", () => {
                 if (!isMacOS) {
-                    toast.success("Update downloaded and ready to install")
+                    toast.success(t("toasts.denshi.updateDownloadedReady"))
                     setIsDownloading(false)
                     setIsDownloaded(true)
                     setDownloadProgress(100)
@@ -98,7 +100,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
             const removeUpdateError = window.electron.on("update-error", (error: string) => {
                 logger("ELECTRON").error("Update error", error)
                 if (!isMacOS) {
-                    toast.error(`Update error: ${error}`)
+                    toast.error(t("toasts.denshi.updateError", { message: error }))
                     setIsUpdating(false)
                     setIsDownloading(false)
                 }
@@ -115,7 +117,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                 setIsDownloaded(false)
                 setDownloadProgress(0)
                 if (!isMacOS) {
-                    toast.info("Update found, downloading...")
+                    toast.info(t("toasts.denshi.updateFoundDownloading"))
                 }
             })
 
@@ -154,7 +156,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                 // macOS: Use manual download and install flow
                 if (isMacOS) {
                     if (!updateData?.release?.version) {
-                        toast.error("Update version not found")
+                        toast.error(t("toasts.denshi.updateVersionNotFound"))
                         setIsUpdating(false)
                         return
                     }
@@ -168,12 +170,12 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                     )
 
                     if (!macAsset) {
-                        toast.error("macOS update asset not found")
+                        toast.error(t("toasts.denshi.macUpdateAssetNotFound"))
                         setIsUpdating(false)
                         return
                     }
 
-                    toast.info("Downloading and installing update...")
+                    toast.info(t("toasts.denshi.downloadingAndInstallingUpdate"))
                     setIsDownloading(true)
 
                     downloadMacUpdate({
@@ -182,7 +184,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                     }, {
                         onSuccess: () => {
                             setIsInstalled(true)
-                            toast.success("Update installed! Closing app...")
+                            toast.success(t("toasts.denshi.updateInstalledClosingApp"))
                             // Close the app after a short delay
                             setTimeout(() => {
                                 window.electron?.send("quit-app")
@@ -190,7 +192,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                         },
                         onError: (error) => {
                             logger("ELECTRON").error("Failed to install macOS update", error)
-                            toast.error(`Failed to install update: ${error.message}`)
+                            toast.error(t("toasts.denshi.failedToInstallUpdate", { message: error.message }))
                             setIsUpdating(false)
                             setIsDownloading(false)
                         },
@@ -201,7 +203,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                 // Windows/Linux: Use electron-updater flow
                 // If not downloaded yet, trigger download first
                 if (!isDownloaded) {
-                    toast.info("Downloading update...")
+                    toast.info(t("toasts.denshi.downloadingUpdate"))
                     setIsDownloading(true)
 
                     // Trigger update check which will start download
@@ -214,7 +216,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
 
                 // Kill the currently running server before installing update
                 try {
-                    toast.info("Shutting down server...")
+                    toast.info(t("toasts.denshi.shuttingDownServer"))
                     await window.electron.killServer()
                 }
                 catch (e) {
@@ -222,17 +224,17 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                 }
 
                 // Install update
-                toast.info("Installing update...")
+                toast.info(t("toasts.denshi.installingUpdate"))
                 await window.electron.installUpdate()
                 setIsInstalled(true)
 
                 // Electron will automatically restart the app
-                toast.info("Update installed. Restarting app...")
+                toast.info(t("toasts.denshi.updateInstalledRestartingApp"))
             }
         }
         catch (e) {
             logger("ELECTRON").error("Failed to install update", e)
-            toast.error(`Failed to install update: ${JSON.stringify(e)}`)
+            toast.error(t("toasts.denshi.failedToInstallUpdate", { message: JSON.stringify(e) }))
             setIsUpdating(false)
             setIsDownloading(false)
         }
@@ -247,7 +249,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                     <img src="/seanime-logo.png" alt="logo" className="w-14 h-auto" />
                 </div>
                 <p className="text-center text-lg">
-                    Update installed. Restart the app.
+                    {t("denshi.update.installedRestartApp")}
                 </p>
             </div>
         </div>
@@ -260,7 +262,7 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                 items={[
                     {
                         iconType: AiFillExclamationCircle,
-                        name: "Update available",
+                        name: t("denshi.update.available"),
                         onClick: () => setUpdateModalOpen(true),
                     },
                 ]}
@@ -272,15 +274,14 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                 contentClass="max-w-3xl"
             >
                 <div className="space-y-2">
-                    <h3 className="text-center">A new update is available!</h3>
+                    <h3 className="text-center">{t("denshi.update.newUpdateAvailable")}</h3>
                     <h4 className="font-bold flex gap-2 text-center items-center justify-center">
                         <span className="text-[--muted]">{updateData?.current_version}</span> <FiArrowRight />
                         <span className="text-indigo-200">{updateData?.release?.version}</span></h4>
 
                     {!electronUpdate && !isMacOS && (
                         <Alert intent="warning">
-                            This update is not yet available for desktop clients.
-                            Wait a few minutes or check the GitHub page for more information.
+                            {t("denshi.update.notAvailableForDesktop")}
                         </Alert>
                     )}
 
@@ -294,8 +295,8 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                             disabled={isLoading}
                         >
 
-                            {isDownloading ? `Downloading... ${downloadProgress}%` :
-                                isDownloaded ? "Install now" : "Download & Install"}
+                            {isDownloading ? t("denshi.update.downloadingProgress", { progress: downloadProgress }) :
+                                isDownloaded ? t("denshi.update.installNow") : t("denshi.update.downloadAndInstall")}
                         </Button>}
                         {electronUpdate && isMacOS && <Button
                             leftIcon={<GrInstall className="text-2xl" />}
@@ -303,11 +304,11 @@ export function ElectronUpdateModal(props: UpdateModalProps) {
                             loading={isUpdating || isMacUpdatePending}
                             disabled={isLoading}
                         >
-                            {(isMacUpdatePending) ? "Installing..." : "Install now"}
+                            {(isMacUpdatePending) ? t("denshi.update.installing") : t("denshi.update.installNow")}
                         </Button>}
                         <div className="flex flex-1" />
                         {!updateData?.release?.tag_name?.includes("v2.") && <SeaLink href={updateData?.release?.html_url || ""} target="_blank">
-                            <Button intent="white-subtle" rightIcon={<BiLinkExternal />}>See on GitHub</Button>
+                            <Button intent="white-subtle" rightIcon={<BiLinkExternal />}>{t("denshi.update.seeOnGitHub")}</Button>
                         </SeaLink>}
                     </div>
                 </div>

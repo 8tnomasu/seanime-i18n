@@ -6,8 +6,10 @@ import { PageWrapper } from "@/components/shared/page-wrapper"
 import { usePathname } from "@/lib/navigation"
 import { useRouter, useSearchParams } from "@/lib/navigation"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export default function Page() {
+    const { t } = useTranslation()
     const router = useRouter()
     const mediaId = useSearchParams().get("id")
     const pathname = usePathname()
@@ -29,7 +31,7 @@ export default function Page() {
             <OfflineMetaSection type="manga" entry={mangaEntry} />
             <PageWrapper className="p-4 space-y-6">
 
-                <h2>Chapters</h2>
+                <h2>{t("offlineSync.offlineManga.chapters")}</h2>
 
                 <OfflineChapterList entry={mangaEntry} />
             </PageWrapper>

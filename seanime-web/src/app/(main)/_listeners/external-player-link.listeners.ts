@@ -3,6 +3,7 @@ import { useExternalPlayerLink } from "@/app/(main)/_atoms/playback.atoms"
 import { __mpt_currentExternalPlayerLinkAtom } from "@/app/(main)/_features/progress-tracking/manual-progress-tracking"
 import { useWebsocketMessageListener } from "@/app/(main)/_hooks/handle-websockets"
 import { clientIdAtom } from "@/app/websocket-provider"
+import i18n from "@/i18n"
 import { ExternalPlayerLink } from "@/lib/external-player-link/external-player-link"
 import { openTab } from "@/lib/helpers/browser"
 import { logger } from "@/lib/helpers/debug"
@@ -29,11 +30,11 @@ export function useExternalPlayerLinkListener() {
         type: WSEvents.EXTERNAL_PLAYER_OPEN_URL,
         onMessage: data => {
             if (!externalPlayerLink?.length) {
-                toast.error("External player link is not set.")
+                toast.error(i18n.t("toasts.integrations.externalPlayerLinkNotSet"))
                 return
             }
 
-            toast.info("Opening media file in external player.")
+            toast.info(i18n.t("toasts.integrations.openingInExternalPlayer"))
 
             logger("EXTERNAL PLAYER LINK").info("Opening external player", data)
 

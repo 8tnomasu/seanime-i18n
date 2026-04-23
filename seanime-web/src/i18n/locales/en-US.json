@@ -863,6 +863,55 @@
             "episodeRequired": "You must specify at least one episode number",
             "verifyFields": "An error occurred, verify the fields."
         },
+        "offlineSync": {
+            "localChangesIgnored": "Local changes ignored."
+        },
+        "mediastream": {
+            "codecNotSupportedForDirectPlay": "Codec not supported for direct play",
+            "filePathNotFound": "File path not found for this episode",
+            "playbackErrorOccurred": "Playback error occurred"
+        },
+        "integrations": {
+            "copiedToClipboard": "Copied to clipboard",
+            "episodeNotFound": "Episode not found.",
+            "externalPlayerLinkNotSet": "External player link is not set.",
+            "mappingAdded": "Mapping added",
+            "mappingRemoved": "Mapping removed",
+            "openingInExternalPlayer": "Opening media file in external player.",
+            "playbackErrorTryingAnotherServer": "Playback error, trying another server...",
+            "streamCacheEmptied": "Stream cache emptied"
+        },
+        "nakama": {
+            "disconnectedFromRoom": "Disconnected from room",
+            "failedToCleanup": "Failed to cleanup: {{message}}",
+            "failedToCreateWatchParty": "Failed to create watch party: {{message}}",
+            "failedToDisconnectFromRoom": "Failed to disconnect from room: {{message}}",
+            "failedToReconnect": "Failed to reconnect: {{message}}",
+            "joiningWatchParty": "Joining watch party",
+            "leavingWatchParty": "Leaving watch party",
+            "providerNotInstalled": "Watch Party: The provider used by the host is not installed.",
+            "reconnectionInitiated": "Reconnection initiated",
+            "roomCreated": "Room created successfully",
+            "staleConnectionsCleanedUp": "Stale connections cleaned up",
+            "startingOnlineStreamWatchParty": "Starting online streaming watch party",
+            "watchPartyCreated": "Watch party created"
+        },
+        "denshi": {
+            "devModeNotRestartingServer": "Dev mode: Not restarting server",
+            "downloadingAndInstallingUpdate": "Downloading and installing update...",
+            "downloadingUpdate": "Downloading update...",
+            "failedToInstallUpdate": "Failed to install update: {{message}}",
+            "installingUpdate": "Installing update...",
+            "macUpdateAssetNotFound": "macOS update asset not found",
+            "restartingServer": "Restarting server...",
+            "shuttingDownServer": "Shutting down server...",
+            "updateDownloadedReady": "Update downloaded and ready to install",
+            "updateError": "Update error: {{message}}",
+            "updateFoundDownloading": "Update found, downloading...",
+            "updateInstalledClosingApp": "Update installed! Closing app...",
+            "updateInstalledRestartingApp": "Update installed. Restarting app...",
+            "updateVersionNotFound": "Update version not found"
+        },
         "mediaDetail": {
             "anilistUpToDate": "AniList is up-to-date",
             "entryDeleted": "Entry deleted",
@@ -1675,6 +1724,236 @@
         },
         "watchParty": {
             "newChatMessage": "New chat message ({{count}})"
+        }
+    },
+    "integrations": {
+        "actions": {
+            "disconnect": "Disconnect"
+        },
+        "mediastream": {
+            "actions": {
+                "moreData": "More data",
+                "switchToDirectPlay": "Switch to direct play",
+                "switchToTranscoding": "Switch to transcoding"
+            },
+            "errors": {
+                "mediaContainerLoadFailed": "Could not load media container.",
+                "playbackTriggered": "Playback error triggered. Please try again or switch stream type."
+            },
+            "fields": {
+                "audioCodec": "Audio codec",
+                "streamType": "Stream type",
+                "videoCodec": "Video codec"
+            },
+            "playback": {
+                "compatibleCodecs": "File video and audio codecs are compatible with this client. Direct play is recommended.",
+                "incompatibleCodecs": "File video and audio codecs are not compatible with this client. Transcoding is needed.",
+                "info": "Playback info",
+                "mediaContainerData": "Media Container Data",
+                "preferTranscodingHelp": "Enable 'Prefer transcoding' in the media streaming settings if you want to switch to transcoding",
+                "title": "Playback"
+            },
+            "states": {
+                "loadingStream": "Loading stream..."
+            },
+            "track": "Track {{index}}"
+        },
+        "onlinestream": {
+            "actions": {
+                "findOtherProviders": "Find other providers",
+                "manualMatch": "Manual match",
+                "switchToDub": "Switch to dub",
+                "switchToSubs": "Switch to subs"
+            },
+            "cache": {
+                "description": "Empty the cache if you are experiencing issues with the stream.",
+                "empty": "Empty stream cache",
+                "title": "Cache"
+            },
+            "errors": {
+                "episodeListFetchFailed": "Could not fetch episode list from provider.",
+                "hlsError": "HLS error: {{message}}",
+                "noProviderSelected": "No provider selected",
+                "providerErrorTitle": "Provider error",
+                "streamTerminated": "Stream terminated"
+            },
+            "fields": {
+                "selectProvider": "Select provider"
+            },
+            "stream": {
+                "title": "Stream"
+            }
+        },
+        "streaming": {
+            "actions": {
+                "switchToGridView": "Switch to grid view",
+                "switchToListView": "Switch to list view"
+            },
+            "completeMovie": "Complete movie",
+            "end": "End",
+            "episodeNumber": "Episode {{number}}"
+        }
+    },
+    "offlineSync": {
+        "actions": {
+            "deleteLocalChanges": "Delete local changes",
+            "disableOfflineMode": "Disable offline mode",
+            "enableOfflineMode": "Enable offline mode",
+            "saveLocally": "Save locally",
+            "selectMediaToSave": "Select media to save",
+            "syncNow": "Sync now",
+            "updateLocalData": "Update local data",
+            "uploadLocalChanges": "Upload local changes",
+            "uploadLocalChangesToAniList": "Upload local changes to AniList"
+        },
+        "alerts": {
+            "autoRefreshPaused": "Automatic refreshing of offline data will be paused.",
+            "localChangesNotSynced": "You have local changes that have not been synced to AniList.",
+            "unsavedAnime": "You have not saved {{count}} anime that you're currently watching.",
+            "unsavedAnimeAndManga": "You have not saved {{animeCount}} anime and {{mangaCount}} manga that you're currently watching and reading.",
+            "unsavedManga": "You have not saved {{count}} manga that you're currently reading."
+        },
+        "description": "View the media you've saved locally for offline use.",
+        "dialogs": {
+            "disableOfflineMode": {
+                "description": "Are you sure you want to disable offline mode?",
+                "title": "Disable offline mode"
+            },
+            "removeOfflineData": {
+                "description": "This action will remove the offline data for this media entry. Are you sure you want to proceed?",
+                "title": "Remove offline data"
+            }
+        },
+        "empty": {
+            "noTrackedMedia": "No tracked media"
+        },
+        "errors": {
+            "notAuthenticatedDescription": "This feature is only available for authenticated users.",
+            "notAuthenticatedTitle": "Not authenticated"
+        },
+        "fields": {
+            "localStorageSize": "Local storage size"
+        },
+        "mediaSelector": {
+            "description": "Select the media you want to save locally. Click on already saved media to remove it from local storage.",
+            "title": "Saved media"
+        },
+        "navigation": {
+            "animeLibrary": "Anime Library",
+            "offline": "Offline"
+        },
+        "offlineManga": {
+            "chapters": "Chapters",
+            "columns": {
+                "name": "Name",
+                "number": "Number"
+            },
+            "showUnread": "Show unread"
+        },
+        "sections": {
+            "savedAnime": "Saved anime",
+            "savedManga": "Saved manga"
+        },
+        "status": {
+            "inProgress": "Syncing"
+        },
+        "sync": {
+            "irreversibleWarning": "Changes are irreversible.",
+            "offlineModeSettingsPath": "Settings > App > Offline mode",
+            "title": "Sync",
+            "updateLocalDataAutomation": "You can automate this in",
+            "updateLocalDataDescription": "Update your local snapshots with the data from AniList. This will overwrite your offline changes.",
+            "uploadLocalChangesDescription": "Update your AniList lists with the data from your local snapshots. This should be done after you've made changes offline."
+        },
+        "title": "Offline media"
+    },
+    "nakama": {
+        "actions": {
+            "cleaningUp": "Cleaning up...",
+            "creating": "Creating...",
+            "disconnecting": "Disconnecting...",
+            "joining": "Joining...",
+            "leave": "Leave",
+            "leaving": "Leaving...",
+            "reconnect": "Reconnect",
+            "reconnecting": "Reconnecting...",
+            "removeStaleConnections": "Remove stale connections"
+        },
+        "chat": {
+            "empty": "No messages yet",
+            "me": "Me",
+            "placeholder": "Type a message...",
+            "title": "Watch Party Chat"
+        },
+        "cloudRoom": {
+            "autoJoinHelp": "You will automatically join the room.",
+            "createDescription": "By continuing, you agree to broadcast your playback state through Seanime's servers to sync with peers while the room is active. You are limited to 10 rooms per day and 4 peers per room (subject to change).",
+            "createTitle": "Create a Cloud Room",
+            "description": "Cloud Rooms use Seanime's API to enable hosting watch parties without exposing your server to the internet.",
+            "expires": "Expires",
+            "hostUrl": "Host URL",
+            "hostUrlAndPasscode": "Nakama Host URL and Passcode",
+            "noLocalOrDebridPlayback": "Cloud Rooms do not support local file and Debrid playback.",
+            "noPasswordSet": "No password set",
+            "passcode": "Passcode",
+            "title": "Cloud Room"
+        },
+        "common": {
+            "unknown": "Unknown"
+        },
+        "connectionModes": {
+            "direct": "Direct"
+        },
+        "directConnections": "Direct connections ({{count}})",
+        "empty": {
+            "configureInSettings": "Configure Nakama in settings to connect to a host or start hosting",
+            "noConnectedPeers": "No connected peers",
+            "notActive": "Nakama is not active"
+        },
+        "hostConnection": {
+            "connectionMode": "Connection Mode",
+            "host": "Host",
+            "title": "Host connection"
+        },
+        "status": {
+            "currentlyHosting": "Currently hosting"
+        },
+        "watchParty": {
+            "activeJoinDescription": "There's an active watch party! Join to watch content together in sync.",
+            "buffer": "Buffer",
+            "bufferHealth": "Synchronization buffer health",
+            "buffering": "Buffering",
+            "connectToHost": "Connect to a host to join a watch party",
+            "create": "Create Watch Party",
+            "enableRelayMode": "Enable relay mode",
+            "hostSuffix": "(Host)",
+            "join": "Join Watch Party",
+            "meSuffix": "(me)",
+            "noActive": "No active watch party",
+            "origin": "Origin",
+            "participants": "Participants ({{count}})",
+            "promoteToOrigin": "Promote to origin",
+            "relay": "Relay",
+            "title": "Watch Party"
+        }
+    },
+    "denshi": {
+        "server": {
+            "connectionLostReconnecting": "The server connection has been lost. Please wait while we attempt to reconnect.",
+            "relaunchIfPersists": "If this message persists after multiple tries, please relaunch the application.",
+            "restartServer": "Restart server",
+            "stoppedResponding": "The background server process has stopped responding. Please restart it to continue."
+        },
+        "update": {
+            "available": "Update available",
+            "downloadAndInstall": "Download & Install",
+            "downloadingProgress": "Downloading... {{progress}}%",
+            "installNow": "Install now",
+            "installedRestartApp": "Update installed. Restart the app.",
+            "installing": "Installing...",
+            "newUpdateAvailable": "A new update is available!",
+            "notAvailableForDesktop": "This update is not yet available for desktop clients. Wait a few minutes or check the GitHub page for more information.",
+            "seeOnGitHub": "See on GitHub"
         }
     },
     "downloads": {

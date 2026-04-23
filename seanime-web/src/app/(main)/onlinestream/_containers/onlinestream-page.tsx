@@ -43,6 +43,7 @@ import uniq from "lodash/uniq"
 import uniqBy from "lodash/uniqBy"
 import { AnimatePresence, motion } from "motion/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BsFillGrid3X3GapFill } from "react-icons/bs"
 import { CgMediaPodcast } from "react-icons/cg"
 import { FaSearch } from "react-icons/fa"
@@ -69,6 +70,7 @@ function isValidVideoSourceType(type: string | null | undefined) {
 }
 
 export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton }: OnlinestreamPageProps) {
+    const { t } = useTranslation()
     const serverStatus = useAtomValue(serverStatusAtom)
     const router = useRouter()
     const pathname = usePathname()
@@ -126,7 +128,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
         // Check if we have the provider
         if (!providerExtensionOptions.some(p => p.value === streamToLoad.provider)) {
             log.warning("Provider not found in options", { providerExtensionOptions, provider: streamToLoad.provider })
-            toast.error("Watch Party: The provider used by the host is not installed.")
+            toast.error(t("toasts.nakama.providerNotInstalled"))
             return
         }
 
@@ -146,10 +148,10 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
 
         onLoadedStream()
 
-        const t = setTimeout(() => {
+        const resetLoadingFromWatchPartyTimeout = setTimeout(() => {
             isLoadingFromWatchPartyRef.current = false
         }, 1000)
-        return () => clearTimeout(t)
+        return () => clearTimeout(resetLoadingFromWatchPartyTimeout)
     }, [streamToLoad, providerExtensionOptions])
 
     // get the list of episodes from the provider
@@ -445,7 +447,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
         if (provider == currentProviderRef.current) {
             setUrl(null)
             log.error("Setting stream URL to undefined")
-            toast.warning("Playback error, trying another server...")
+            toast.warning(t("toasts.integrations.playbackErrorTryingAnotherServer"))
             log.error("Player encountered a fatal error")
             setTimeout(() => {
                 log.error("erroredServers", erroredServers)
@@ -472,7 +474,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                     ...providerExtensionOptions,
                     {
                         value: "add-provider",
-                        label: "Find other providers",
+                        label: t("integrations.onlinestream.actions.findOtherProviders"),
                     },
                 ]}
                 onValueChange={(v) => {
@@ -482,7 +484,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                     }
                     changeProvider(v)
                 }}
-                placeholder="Select provider"
+                placeholder={t("integrations.onlinestream.fields.selectProvider")}
                 size="sm"
                 leftAddon={<CgMediaPodcast />}
                 fieldClass="w-fit"
@@ -502,18 +504,18 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                 addonClass="rounded-full rounded-r-none"
             />}
             <IsomorphicPopover
-                title="Stream"
+                title={t("integrations.onlinestream.stream.title")}
                 trigger={<Button
                     intent="gray-basic"
                     size="sm"
                     className="rounded-full"
                     leftIcon={<HiOutlineCog6Tooth className="text-xl" />}
                 >
-                    Cache
+                    {t("integrations.onlinestream.cache.title")}
                 </Button>}
             >
                 <p className="text-sm text-[--muted]">
-                    Empty the cache if you are experiencing issues with the stream.
+                    {t("integrations.onlinestream.cache.description")}
                 </p>
                 <Button
                     size="sm"
@@ -521,7 +523,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                     onClick={() => emptyCache({ mediaId: (mediaId!) })}
                     loading={isEmptyingCache}
                 >
-                    Empty stream cache
+                    {t("integrations.onlinestream.cache.empty")}
                 </Button>
             </IsomorphicPopover>
         </>
@@ -568,7 +570,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                             className="rounded-full"
                             leftIcon={<FaSearch className="" />}
                         >
-                            Manual match
+                            {t("integrations.onlinestream.actions.manualMatch")}
                         </Button>
                     </OnlinestreamManualMappingModal>}
                     <Button
@@ -579,7 +581,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                         leftIcon={!dubbed ? <LuSpeech className="text-xl" /> : <MdOutlineSubtitles className="text-xl" />}
                         onClick={() => toggleDubbed()}
                     >
-                        {dubbed ? "Switch to subs" : "Switch to dub"}
+                        {dubbed ? t("integrations.onlinestream.actions.switchToSubs") : t("integrations.onlinestream.actions.switchToDub")}
                     </Button>
                     <div className="hidden lg:flex flex-1"></div>
                 </>}
@@ -590,17 +592,17 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                         intent={episodeViewMode === "list" ? "gray-basic" : "white-subtle"}
                         icon={<BsFillGrid3X3GapFill />}
                         onClick={() => setEpisodeViewMode(prev => prev === "list" ? "grid" : "list")}
-                        title={episodeViewMode === "list" ? "Switch to grid view" : "Switch to list view"}
+                        title={episodeViewMode === "list" ? t("integrations.streaming.actions.switchToGridView") : t("integrations.streaming.actions.switchToListView")}
                     />
                 </>}
                 mediaPlayer={!provider ? (
                     <div className="flex items-center flex-col justify-center w-full h-full">
-                        <LuffyError title="No provider selected" />
+                        <LuffyError title={t("integrations.onlinestream.errors.noProviderSelected")} />
                         <div className="flex gap-2">
                             {parameters}
                         </div>
                     </div>
-                ) : isEpisodeListError ? <LuffyError title="Provider error">Could not fetch episode list from provider.</LuffyError> : (
+                ) : isEpisodeListError ? <LuffyError title={t("integrations.onlinestream.errors.providerErrorTitle")}>{t("integrations.onlinestream.errors.episodeListFetchFailed")}</LuffyError> : (
                     <>
                         <VideoCoreProvider id="onlinestream">
                             <div data-onlinestream-video-container className="w-full aspect-video mx-auto border rounded-lg overflow-hidden">
@@ -648,7 +650,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                                         playbackError: isErrorEpisodeSource
                                             ? (errorEpisodeSource as AxiosError<{ error: string }>)?.response?.data?.error ?? null
                                             : playbackError,
-                                        loadingState: !url ? "Loading stream" : null,
+                                        loadingState: !url ? t("integrations.mediastream.states.loadingStream") : null,
                                     }}
                                     inline
                                     aniSkipData={aniSkipData}
@@ -656,10 +658,10 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                                     onError={v => onFatalError(v)}
                                     onPlayEpisode={handlePlayEpisode}
                                     onVideoSourceChange={changeQuality}
-                                    onHlsFatalError={(err) => onFatalError(`HLS error: ${err.error.message}`)}
+                                    onHlsFatalError={(err) => onFatalError(t("integrations.onlinestream.errors.hlsError", { message: err.error.message }))}
                                     onTerminateStream={() => {
                                         setUrl(null)
-                                        setPlaybackError("Stream terminated")
+                                        setPlaybackError(t("integrations.onlinestream.errors.streamTerminated"))
                                     }}
                                 />
                             </div>
@@ -683,7 +685,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                                             key={idx + (episode.title || "") + episode.number}
                                             id={`episode-${String(episode.number)}`}
                                             onClick={() => setSelectedEpisodeNumber(episode.number)}
-                                            title={media.format === "MOVIE" ? "Complete movie" : `Episode ${episode.number}`}
+                                            title={media.format === "MOVIE" ? t("integrations.streaming.completeMovie") : t("integrations.streaming.episodeNumber", { number: episode.number })}
                                             episodeTitle={episode.title}
                                             description={episode.description ?? undefined}
                                             image={episode.image}
@@ -697,7 +699,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                                             progressNumber={episode.number}
                                             action={<>
                                                 <MediaEpisodeInfoModal
-                                                    title={media.format === "MOVIE" ? "Complete movie" : `Episode ${episode.number}`}
+                                                    title={media.format === "MOVIE" ? t("integrations.streaming.completeMovie") : t("integrations.streaming.episodeNumber", { number: episode.number })}
                                                     image={episode?.image}
                                                     episodeTitle={episode.title}
                                                     summary={episode?.description}
@@ -708,7 +710,7 @@ export function OnlinestreamPage({ animeEntry, animeEntryLoading, hideBackButton
                                         />
                                     )
                                 })}
-                                {!!episodes?.length && <p className="text-center text-[--muted] py-2">End</p>}
+                                {!!episodes?.length && <p className="text-center text-[--muted] py-2">{t("integrations.streaming.end")}</p>}
                             </motion.div>
                         ) : (
                             <EpisodePillsGrid

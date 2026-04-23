@@ -7,6 +7,7 @@ import { logger } from "@/lib/helpers/debug"
 import { WSEvents } from "@/lib/server/ws-events"
 import { atom, useAtom, useAtomValue } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiChevronDown, BiChevronUp } from "react-icons/bi"
 import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2"
 import { IoSend } from "react-icons/io5"
@@ -69,6 +70,7 @@ export function NakamaWatchPartyChat(props: { layout?: "fixed" | "videocore" }) 
 }
 
 function Content(props: { layout: "fixed" | "videocore" }) {
+    const { t } = useTranslation()
     const { layout } = props
     const { watchPartySession, isParticipant, currentUserPeerId } = useNakamaWatchParty()
     const [messages, setMessages] = useAtom(watchPartyChat_chatMessagesAtom)
@@ -156,7 +158,7 @@ function Content(props: { layout: "fixed" | "videocore" }) {
             >
                 <div className="flex items-center gap-2">
                     <HiOutlineChatBubbleLeftRight className="text-xl text-white" />
-                    <span className="font-semibold text-sm">Watch Party Chat</span>
+                    <span className="font-semibold text-sm">{t("nakama.chat.title")}</span>
                     {minimized && unreadCount > 0 && (
                         <span className="bg-red-500 text-white text-xs font-bold w-5 flex justify-center items-center rounded-full animate-bounce shadow-lg">
                             {unreadCount > 9 ? "9+" : unreadCount}
@@ -204,6 +206,7 @@ function ChatContent(props: {
     inputRef: React.RefObject<HTMLInputElement | null>
     handleSendMessage: () => void
 }) {
+    const { t } = useTranslation()
     const {
         messages,
         currentUserPeerId,
@@ -231,7 +234,7 @@ function ChatContent(props: {
             >
                 {messages.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-[--muted] text-sm">
-                        No messages yet
+                        {t("nakama.chat.empty")}
                     </div>
                 ) : (
                     messages.map((msg) => {
@@ -251,7 +254,7 @@ function ChatContent(props: {
                                             "text-white",
                                         )}
                                     >
-                                        {isOwnMessage ? "Me" : msg.username}{isHostMessage(msg) && " (Host)"}:{" "}
+                                        {isOwnMessage ? t("nakama.chat.me") : msg.username}{isHostMessage(msg) && ` ${t("nakama.watchParty.hostSuffix")}`}:{" "}
                                     </span>
                                     <span className="text-xs text-[--muted]">
                                         {new Date(msg.timestamp).toLocaleTimeString([], {
@@ -274,7 +277,7 @@ function ChatContent(props: {
                         value={inputValue}
                         onValueChange={setInputValue}
                         onKeyDown={handleKeyPress}
-                        placeholder="Type a message..."
+                        placeholder={t("nakama.chat.placeholder")}
                         disabled={isSending}
                         className="flex-1 h-10"
                         size="sm"

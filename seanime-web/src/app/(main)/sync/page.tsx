@@ -28,12 +28,14 @@ import { anilist_getListDataFromEntry } from "@/lib/helpers/media"
 import { WSEvents } from "@/lib/server/ws-events"
 import { useAtomValue } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuCloud, LuCloudDownload, LuCloudOff, LuCloudUpload, LuFolderSync } from "react-icons/lu"
 import { VscSyncIgnored } from "react-icons/vsc"
 import { toast } from "sonner"
 
 
 export default function Page() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
 
     const [syncModalOpen, setSyncModalOpen] = React.useState(false)
@@ -111,7 +113,7 @@ export default function Page() {
             updated: false,
         }, {
             onSuccess: () => {
-                toast.success("Local changes ignored.")
+                toast.success(t("toasts.offlineSync.localChangesIgnored"))
                 handleSyncLocal()
             },
         })
@@ -121,11 +123,19 @@ export default function Page() {
 
     if (serverStatus?.user?.isSimulated) {
         return <LuffyError
-            title="Not authenticated"
+            title={t("offlineSync.errors.notAuthenticatedTitle")}
         >
-            This feature is only available for authenticated users.
+            {t("offlineSync.errors.notAuthenticatedDescription")}
         </LuffyError>
     }
+
+    const unsavedAnimeCount = unsavedAnime.length
+    const unsavedMangaCount = unsavedManga.length
+    const unsavedMediaMessage = unsavedAnimeCount && unsavedMangaCount
+        ? t("offlineSync.alerts.unsavedAnimeAndManga", { animeCount: unsavedAnimeCount, mangaCount: unsavedMangaCount })
+        : unsavedAnimeCount
+            ? t("offlineSync.alerts.unsavedAnime", { count: unsavedAnimeCount })
+            : t("offlineSync.alerts.unsavedManga", { count: unsavedMangaCount })
 
     return (
         <PageWrapper
@@ -144,14 +154,14 @@ export default function Page() {
                     })
                 }}
             >
-                {serverStatus?.isOffline ? "Disable offline mode" : "Enable offline mode"}
+                {serverStatus?.isOffline ? t("offlineSync.actions.disableOfflineMode") : t("offlineSync.actions.enableOfflineMode")}
             </Button>
 
             <div className="flex flex-col lg:flex-row gap-2">
                 <div>
-                    <h2 className="">Offline media</h2>
+                    <h2 className="">{t("offlineSync.title")}</h2>
                     <p className="text-[--muted]">
-                        View the media you've saved locally for offline use.
+                        {t("offlineSync.description")}
                     </p>
                 </div>
 
@@ -159,7 +169,7 @@ export default function Page() {
 
                 <div className="contents">
                     <Modal
-                        title="Sync"
+                        title={t("offlineSync.sync.title")}
                         open={syncModalOpen}
                         onOpenChange={v => {
                             if (isSyncingLocal) return
@@ -171,7 +181,7 @@ export default function Page() {
                             leftIcon={<LuFolderSync className="text-2xl" />}
                             loading={isSyncingLocal}
                         >
-                            Sync now
+                            {t("offlineSync.actions.syncNow")}
                         </Button>}
                     >
                         <div className="space-y-4">
@@ -185,11 +195,14 @@ export default function Page() {
                                 disabled={isSyncingAnilist}
                                 onClick={handleSyncLocal}
                             >
-                                Update local data
+                                {t("offlineSync.actions.updateLocalData")}
                             </Button>
                             <p className="text-sm">
-                                Update your local snapshots with the data from AniList.
-                                This will overwrite your offline changes. You can automate this in <kbd>Settings {`>`} App {`>`} Offline mode</kbd>.
+                                {t("offlineSync.sync.updateLocalDataDescription")}
+                                {" "}
+                                {t("offlineSync.sync.updateLocalDataAutomation")}
+                                {" "}
+                                <kbd>{t("offlineSync.sync.offlineModeSettingsPath")}</kbd>.
                             </p>
                             <Separator />
                             <Button
@@ -201,16 +214,15 @@ export default function Page() {
                                 loading={isSyncingAnilist}
                                 onClick={handleSyncAnilist}
                             >
-                                Upload local changes to AniList
+                                {t("offlineSync.actions.uploadLocalChangesToAniList")}
                             </Button>
                             <p className="text-sm">
-                                Update your AniList lists with the data from your local snapshots.
-                                This should be done after you've made changes offline.
+                                {t("offlineSync.sync.uploadLocalChangesDescription")}
                             </p>
 
                             <Alert
                                 intent="warning"
-                                description="Changes are irreversible."
+                                description={t("offlineSync.sync.irreversibleWarning")}
                             />
                         </div>
                     </Modal>
@@ -228,15 +240,7 @@ export default function Page() {
                     description={
                         <div className="space-y-2">
                             <p>
-                                <span>You have not saved {!!unsavedAnime?.length
-                                    ? `${unsavedAnime?.length} anime`
-                                    : ""}{(!!unsavedAnime?.length && !!unsavedManga?.length) ? " and " : ""}{!!unsavedManga?.length
-                                    ? `${unsavedManga?.length} manga`
-                                    : ""} that you're currently {!!unsavedAnime?.length
-                                    ? "watching"
-                                    : ""}{(!!unsavedAnime.length && !!unsavedManga.length) ? " and " : ""}{!!unsavedManga?.length
-                                    ? "reading"
-                                    : ""}.</span>
+                                <span>{unsavedMediaMessage}</span>
                             </p>
                         </div>
                     }
@@ -244,7 +248,7 @@ export default function Page() {
             )}
 
             <p className="text-sm">
-                <span>Local storage size: </span>
+                <span>{t("offlineSync.fields.localStorageSize")}: </span>
                 <span>{localStorageSize}</span>
             </p>
 
@@ -253,9 +257,9 @@ export default function Page() {
                     intent="warning"
                     description={<div className="space-y-2">
                         <p>
-                            <span>You have local changes that have not been synced to AniList.</span>
+                            <span>{t("offlineSync.alerts.localChangesNotSynced")}</span>
                             {serverStatus?.settings?.library?.autoSyncOfflineLocalData &&
-                                <span> Automatic refreshing of offline data will be paused.</span>}
+                                <span> {t("offlineSync.alerts.autoRefreshPaused")}</span>}
                         </p>
                         <div className="flex items-center gap-2 flex-wrap">
                             <Button
@@ -270,7 +274,7 @@ export default function Page() {
                                 loading={isSyncingAnilist}
                                 disabled={isChangingLocalChangeStatus}
                             >
-                                Upload local changes
+                                {t("offlineSync.actions.uploadLocalChanges")}
                             </Button>
                             <Button
                                 intent="alert"
@@ -279,7 +283,7 @@ export default function Page() {
                                 loading={isChangingLocalChangeStatus}
                                 disabled={isSyncingAnilist}
                             >
-                                Delete local changes
+                                {t("offlineSync.actions.deleteLocalChanges")}
                             </Button>
                         </div>
                     </div>}
@@ -295,11 +299,11 @@ export default function Page() {
             {/*    </div>}*/}
 
             {(!trackedAnimeItems?.length && !trackedMangaItems?.length) && <LuffyError
-                title="No tracked media"
+                title={t("offlineSync.empty.noTrackedMedia")}
             />}
 
             {!!trackedAnimeItems?.length && <div className="space-y-4">
-                <h3>Saved anime</h3>
+                <h3>{t("offlineSync.sections.savedAnime")}</h3>
                 <MediaCardLazyGrid itemCount={trackedAnimeItems?.length}>
                     {trackedAnimeItems?.map((item) => (
                         <MediaEntryCard
@@ -315,7 +319,7 @@ export default function Page() {
             </div>}
 
             {!!trackedMangaItems?.length && <div className="space-y-4">
-                <h3>Saved manga</h3>
+                <h3>{t("offlineSync.sections.savedManga")}</h3>
                 <MediaCardLazyGrid itemCount={trackedMangaItems?.length}>
                     {trackedMangaItems?.map((item) => (
                         <MediaEntryCard
@@ -334,6 +338,8 @@ export default function Page() {
 }
 
 function SyncingBadge() {
+    const { t } = useTranslation()
+
     return (
         <Badge
             intent="gray-solid"
@@ -341,7 +347,7 @@ function SyncingBadge() {
         >
             <Spinner className="size-4 px-0" />
             <span>
-                Syncing
+                {t("offlineSync.status.inProgress")}
             </span>
         </Badge>
     )

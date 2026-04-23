@@ -8,9 +8,11 @@ import { LoadingOverlay } from "@/components/ui/loading-spinner"
 import { Modal } from "@/components/ui/modal"
 import { useAtom, useAtomValue } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 export function ElectronRestartServerPrompt() {
+    const { t } = useTranslation()
 
     const [hasRendered, setHasRendered] = React.useState(false)
 
@@ -56,10 +58,10 @@ export function ElectronRestartServerPrompt() {
     }, [])
 
     const handleRestart = async () => {
-        if (import.meta.env.MODE === "development") return toast.warning("Dev mode: Not restarting server")
+        if (import.meta.env.MODE === "development") return toast.warning(t("toasts.denshi.devModeNotRestartingServer"))
 
         setHasClickedRestarted(true)
-        toast.info("Restarting server...")
+        toast.info(t("toasts.denshi.restartingServer"))
         if (window.electron) {
             window.electron.emit("restart-server")
             React.startTransition(() => {
@@ -98,7 +100,7 @@ export function ElectronRestartServerPrompt() {
             {(!isConnected && connectionErrorCount > 2 && connectionErrorCount < threshold && !isUpdating && !isUpdatedInstalled) && (
                 <LoadingOverlay className="fixed left-0 top-0 z-[9999]">
                     <p>
-                        The server connection has been lost. Please wait while we attempt to reconnect.
+                        {t("denshi.server.connectionLostReconnecting")}
                     </p>
                 </LoadingOverlay>
             )}
@@ -112,7 +114,7 @@ export function ElectronRestartServerPrompt() {
                 <LuffyError>
                     <div className="space-y-4 flex flex-col items-center">
                         <p className="text-lg max-w-sm">
-                            The background server process has stopped responding. Please restart it to continue.
+                            {t("denshi.server.stoppedResponding")}
                         </p>
 
                         <Button
@@ -122,10 +124,10 @@ export function ElectronRestartServerPrompt() {
                             size="lg"
                             className="rounded-full"
                         >
-                            Restart server
+                            {t("denshi.server.restartServer")}
                         </Button>
                         <p className="text-[--muted] text-sm max-w-xl">
-                            If this message persists after multiple tries, please relaunch the application.
+                            {t("denshi.server.relaunchIfPersists")}
                         </p>
                     </div>
                 </LuffyError>

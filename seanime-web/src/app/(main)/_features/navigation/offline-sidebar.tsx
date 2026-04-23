@@ -9,12 +9,14 @@ import { VerticalMenu } from "@/components/ui/vertical-menu"
 import { usePathname } from "@/lib/navigation"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { IoCloudyOutline, IoLibraryOutline } from "react-icons/io5"
 import { LuBookOpen, LuSettings } from "react-icons/lu"
 import { PluginSidebarTray } from "../plugin/tray/plugin-sidebar-tray"
 
 
 export function OfflineSidebar() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const ctx = useAppSidebarContext()
     const ts = useThemeSettings()
@@ -38,9 +40,9 @@ export function OfflineSidebar() {
     }
 
     const confirmDialog = useConfirmationDialog({
-        title: "Disable offline mode",
-        description: "Are you sure you want to disable offline mode?",
-        actionText: "Yes",
+        title: t("offlineSync.dialogs.disableOfflineMode.title"),
+        description: t("offlineSync.dialogs.disableOfflineMode.description"),
+        actionText: t("common.buttons.confirm"),
         actionIntent: "primary",
         onConfirm: () => {
             setOfflineMode({ enabled: false })
@@ -82,13 +84,13 @@ export function OfflineSidebar() {
                         items={[
                             {
                                 iconType: IoLibraryOutline,
-                                name: "Anime Library",
+                                name: t("offlineSync.navigation.animeLibrary"),
                                 href: "/offline",
                                 isCurrent: pathname === "/offline",
                             },
                             ...[serverStatus?.settings?.library?.enableManga && {
                                 iconType: LuBookOpen,
-                                name: "Manga",
+                                name: t("mediaFilters.options.types.manga"),
                                 href: "/offline/manga",
                                 isCurrent: pathname.startsWith("/offline/manga"),
                             }].filter(Boolean) as any,
@@ -113,14 +115,14 @@ export function OfflineSidebar() {
                             items={[
                                 {
                                     iconType: IoCloudyOutline,
-                                    name: "Disable offline mode",
+                                    name: t("offlineSync.actions.disableOfflineMode"),
                                     onClick: () => {
                                         confirmDialog.open()
                                     },
                                 },
                                 {
                                     iconType: LuSettings,
-                                    name: "Settings",
+                                    name: t("navigation.settings"),
                                     href: "/settings",
                                     isCurrent: pathname === ("/settings"),
                                 },
@@ -138,7 +140,7 @@ export function OfflineSidebar() {
                                 size="sm"
                                 className="cursor-pointer"
                             />
-                            {expandedSidebar && <p className="truncate">Offline</p>}
+                            {expandedSidebar && <p className="truncate">{t("offlineSync.navigation.offline")}</p>}
                         </div>
                     </div>
                 </div>

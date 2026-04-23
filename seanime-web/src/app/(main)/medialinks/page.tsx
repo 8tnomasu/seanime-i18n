@@ -18,12 +18,14 @@ import { logger } from "@/lib/helpers/debug"
 import { useRouter, useSearchParams } from "@/lib/navigation"
 import { useAtomValue, useSetAtom } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { AiOutlineArrowLeft } from "react-icons/ai"
 import { toast } from "sonner"
 import { PluginEpisodeGridItemMenuItems } from "../_features/plugin/actions/plugin-actions"
 import { useServerHMACAuth } from "../_hooks/use-server-status"
 
 export default function Page() {
+    const { t } = useTranslation()
 
     const clientId = useAtomValue(clientIdAtom)
     const router = useRouter()
@@ -55,7 +57,7 @@ export default function Page() {
 
                 if (!episode) {
                     logger("MEDIALINKS").error("Episode not found.")
-                    toast.error("Episode not found.")
+                    toast.error(t("toasts.integrations.episodeNotFound"))
                     return
                 }
 
@@ -65,7 +67,7 @@ export default function Page() {
 
                 if (!externalPlayerLink) {
                     logger("MEDIALINKS").error("External player link is not set.")
-                    toast.warning("External player link is not set.")
+                    toast.warning(t("toasts.integrations.externalPlayerLinkNotSet"))
                     return
                 }
 

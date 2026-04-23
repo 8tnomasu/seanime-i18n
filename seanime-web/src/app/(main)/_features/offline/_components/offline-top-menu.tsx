@@ -2,12 +2,14 @@ import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
 import { NavigationMenu, NavigationMenuProps } from "@/components/ui/navigation-menu"
 import { usePathname } from "@/lib/navigation"
 import React, { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 
 interface OfflineTopMenuProps {
     children?: React.ReactNode
 }
 
 export const OfflineTopMenu: React.FC<OfflineTopMenuProps> = (props) => {
+    const { t } = useTranslation()
 
     const { children, ...rest } = props
 
@@ -22,16 +24,16 @@ export const OfflineTopMenu: React.FC<OfflineTopMenuProps> = (props) => {
                 href: "/offline",
                 // icon: IoLibrary,
                 isCurrent: pathname === "/offline",
-                name: "Anime Library",
+                name: t("offlineSync.navigation.animeLibrary"),
             },
             ...[serverStatus?.settings?.library?.enableManga && {
                 href: "/offline/manga",
                 icon: null,
                 isCurrent: pathname.includes("/offline/manga"),
-                name: "Manga",
+                name: t("mediaFilters.options.types.manga"),
             }].filter(Boolean) as NavigationMenuProps["items"],
         ].filter(Boolean)
-    }, [pathname, serverStatus?.settings?.library?.enableManga])
+    }, [pathname, serverStatus?.settings?.library?.enableManga, t])
 
     return (
         <NavigationMenu

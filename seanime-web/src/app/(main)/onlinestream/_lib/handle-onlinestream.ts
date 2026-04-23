@@ -1,6 +1,7 @@
 import { VideoCore_OnlinestreamParams } from "@/api/generated/types"
 import { useNakamaStatus } from "@/app/(main)/_features/nakama/nakama-manager"
 import { __anime_entryPageViewAtom } from "@/app/(main)/entry/_containers/anime-entry-page"
+import i18n from "@/i18n"
 import { logger, useLatestFunction } from "@/lib/helpers/debug"
 import { usePathname, useRouter, useSearchParams } from "@/lib/navigation"
 import { atom } from "jotai"
@@ -39,7 +40,7 @@ export function useNakamaOnlineStreamWatchParty() {
             return
         }
         logger("ONLINESTREAM").info("Starting online stream watch party", params)
-        toast.info("Starting online streaming watch party", { duration: 2000 })
+        toast.info(i18n.t("toasts.nakama.startingOnlineStreamWatchParty"), { duration: 2000 })
         redirectToStream(params)
         React.startTransition(() => {
             setStreamToLoad(params)

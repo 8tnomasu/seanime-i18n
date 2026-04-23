@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/components/ui/core/styling"
 import { Modal } from "@/components/ui/modal"
+import { getCollectionStatusLabel } from "@/i18n/labels"
 import { useAtomValue } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6"
 import { MdOutlineDownloadForOffline } from "react-icons/md"
 
@@ -19,6 +21,7 @@ type SyncAddMediaModalProps = {
 }
 
 export function SyncAddMediaModal(props: SyncAddMediaModalProps) {
+    const { t } = useTranslation()
 
     const { savedMediaIds } = props
 
@@ -38,7 +41,7 @@ export function SyncAddMediaModal(props: SyncAddMediaModalProps) {
 
     return (
         <Modal
-            title="Saved media"
+            title={t("offlineSync.mediaSelector.title")}
             contentClass="max-w-4xl"
             trigger={<Button
                 intent="gray-subtle"
@@ -46,12 +49,12 @@ export function SyncAddMediaModal(props: SyncAddMediaModalProps) {
                 leftIcon={<MdOutlineDownloadForOffline className="text-2xl" />}
                 loading={isAdding}
             >
-                Select media to save
+                {t("offlineSync.actions.selectMediaToSave")}
             </Button>}
         >
 
             <p className="text-[--muted]">
-                Select the media you want to save locally. Click on already saved media to remove it from local storage.
+                {t("offlineSync.mediaSelector.description")}
             </p>
 
             <MediaSelector
@@ -73,6 +76,7 @@ type MediaSelectorProps = {
 }
 
 function MediaSelector(props: MediaSelectorProps) {
+    const { t } = useTranslation()
 
     const {
         savedMediaIds,
@@ -150,12 +154,12 @@ function MediaSelector(props: MediaSelectorProps) {
                     rounded
                     leftIcon={<MdOutlineDownloadForOffline className="text-2xl" />}
                 >
-                    Save locally
+                    {t("offlineSync.actions.saveLocally")}
                 </Button>
             </div>
 
             {animeLibraryCollection && <>
-                <h2 className="text-center">Anime</h2>
+                <h2 className="text-center">{t("mediaFilters.options.types.anime")}</h2>
                 <MediaList
                     collection={animeLibraryCollection}
                     selectedMedia={selectedMedia}
@@ -176,7 +180,7 @@ function MediaSelector(props: MediaSelectorProps) {
                 />
             </>}
             {mangaLibraryCollection && <>
-                <h2 className="text-center">Manga</h2>
+                <h2 className="text-center">{t("mediaFilters.options.types.manga")}</h2>
                 <MediaList
                     collection={mangaLibraryCollection}
                     selectedMedia={selectedMedia}
@@ -207,6 +211,7 @@ function MediaList(props: {
     savedMediaIds: number[],
     onBatchSelect: (listType: string, entries: (Anime_LibraryCollectionEntry | Manga_CollectionEntry)[], select: boolean) => void
 }) {
+    const { t } = useTranslation()
     const { collection, entry, selectedMedia, savedMediaIds, onBatchSelect } = props
 
     const lists = React.useMemo(() => {
@@ -239,7 +244,7 @@ function MediaList(props: {
             {!!lists.CURRENT.length && (
                 <MediaListSection
                     listType="CURRENT"
-                    title="Current"
+                    title={getCollectionStatusLabel(t, "CURRENT")}
                     entries={lists.CURRENT}
                     selectedMedia={selectedMedia}
                     savedMediaIds={savedMediaIds}
@@ -250,7 +255,7 @@ function MediaList(props: {
             {!!lists.PAUSED.length && (
                 <MediaListSection
                     listType="PAUSED"
-                    title="Paused"
+                    title={getCollectionStatusLabel(t, "PAUSED")}
                     entries={lists.PAUSED}
                     selectedMedia={selectedMedia}
                     savedMediaIds={savedMediaIds}
@@ -261,7 +266,7 @@ function MediaList(props: {
             {!!lists.PLANNING.length && (
                 <MediaListSection
                     listType="PLANNING"
-                    title="Planning"
+                    title={getCollectionStatusLabel(t, "PLANNING")}
                     entries={lists.PLANNING}
                     selectedMedia={selectedMedia}
                     savedMediaIds={savedMediaIds}
@@ -272,7 +277,7 @@ function MediaList(props: {
             {!!lists.COMPLETED.length && (
                 <MediaListSection
                     listType="COMPLETED"
-                    title="Completed"
+                    title={getCollectionStatusLabel(t, "COMPLETED")}
                     entries={lists.COMPLETED}
                     selectedMedia={selectedMedia}
                     savedMediaIds={savedMediaIds}
@@ -283,7 +288,7 @@ function MediaList(props: {
             {!!lists.DROPPED.length && (
                 <MediaListSection
                     listType="DROPPED"
-                    title="Dropped"
+                    title={getCollectionStatusLabel(t, "DROPPED")}
                     entries={lists.DROPPED}
                     selectedMedia={selectedMedia}
                     savedMediaIds={savedMediaIds}
@@ -355,11 +360,12 @@ function MediaItem(props: {
     isSaved: boolean
     isPending: boolean
 }) {
+    const { t } = useTranslation()
     const { entry, onClick, isSelected, isSaved, onUntrack, isPending } = props
 
     const confirmUntrack = useConfirmationDialog({
-        title: "Remove offline data",
-        description: "This action will remove the offline data for this media entry. Are you sure you want to proceed?",
+        title: t("offlineSync.dialogs.removeOfflineData.title"),
+        description: t("offlineSync.dialogs.removeOfflineData.description"),
         onConfirm: () => {
             onUntrack()
         },

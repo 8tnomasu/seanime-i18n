@@ -863,6 +863,55 @@
             "episodeRequired": "你必須指定至少一個集數",
             "verifyFields": "發生錯誤，請確認欄位內容。"
         },
+        "offlineSync": {
+            "localChangesIgnored": "已忽略本機變更。"
+        },
+        "mediastream": {
+            "codecNotSupportedForDirectPlay": "直接播放不支援此 codec",
+            "filePathNotFound": "找不到此集數的檔案路徑",
+            "playbackErrorOccurred": "發生播放錯誤"
+        },
+        "integrations": {
+            "copiedToClipboard": "已複製到剪貼簿",
+            "episodeNotFound": "找不到集數。",
+            "externalPlayerLinkNotSet": "尚未設定外部播放器連結。",
+            "mappingAdded": "配對已新增",
+            "mappingRemoved": "配對已移除",
+            "openingInExternalPlayer": "正在用外部播放器開啟媒體檔案。",
+            "playbackErrorTryingAnotherServer": "播放錯誤，正在嘗試其他伺服器...",
+            "streamCacheEmptied": "串流快取已清空"
+        },
+        "nakama": {
+            "disconnectedFromRoom": "已中斷與房間的連線",
+            "failedToCleanup": "清理失敗：{{message}}",
+            "failedToCreateWatchParty": "建立 watch party 失敗：{{message}}",
+            "failedToDisconnectFromRoom": "中斷房間連線失敗：{{message}}",
+            "failedToReconnect": "重新連線失敗：{{message}}",
+            "joiningWatchParty": "正在加入 watch party",
+            "leavingWatchParty": "正在離開 watch party",
+            "providerNotInstalled": "Watch Party：尚未安裝 host 使用的提供者。",
+            "reconnectionInitiated": "已開始重新連線",
+            "roomCreated": "房間已成功建立",
+            "staleConnectionsCleanedUp": "已清理失效連線",
+            "startingOnlineStreamWatchParty": "正在啟動線上串流 watch party",
+            "watchPartyCreated": "Watch party 已建立"
+        },
+        "denshi": {
+            "devModeNotRestartingServer": "開發模式：不會重新啟動伺服器",
+            "downloadingAndInstallingUpdate": "正在下載並安裝更新...",
+            "downloadingUpdate": "正在下載更新...",
+            "failedToInstallUpdate": "安裝更新失敗：{{message}}",
+            "installingUpdate": "正在安裝更新...",
+            "macUpdateAssetNotFound": "找不到 macOS 更新資產",
+            "restartingServer": "正在重新啟動伺服器...",
+            "shuttingDownServer": "正在關閉伺服器...",
+            "updateDownloadedReady": "更新已下載並準備安裝",
+            "updateError": "更新錯誤：{{message}}",
+            "updateFoundDownloading": "找到更新，正在下載...",
+            "updateInstalledClosingApp": "更新已安裝！正在關閉應用程式...",
+            "updateInstalledRestartingApp": "更新已安裝。正在重新啟動應用程式...",
+            "updateVersionNotFound": "找不到更新版本"
+        },
         "mediaDetail": {
             "anilistUpToDate": "AniList 已是最新狀態",
             "entryDeleted": "項目已刪除",
@@ -1675,6 +1724,236 @@
         },
         "watchParty": {
             "newChatMessage": "新的聊天訊息（{{count}}）"
+        }
+    },
+    "integrations": {
+        "actions": {
+            "disconnect": "中斷連線"
+        },
+        "mediastream": {
+            "actions": {
+                "moreData": "更多資料",
+                "switchToDirectPlay": "切換為直接播放",
+                "switchToTranscoding": "切換為轉碼"
+            },
+            "errors": {
+                "mediaContainerLoadFailed": "無法載入媒體容器。",
+                "playbackTriggered": "觸發播放錯誤。請再試一次，或切換串流類型。"
+            },
+            "fields": {
+                "audioCodec": "音訊 codec",
+                "streamType": "串流類型",
+                "videoCodec": "影片 codec"
+            },
+            "playback": {
+                "compatibleCodecs": "檔案的影片與音訊 codec 與此用戶端相容，建議使用直接播放。",
+                "incompatibleCodecs": "檔案的影片與音訊 codec 與此用戶端不相容，需要轉碼。",
+                "info": "播放資訊",
+                "mediaContainerData": "媒體容器資料",
+                "preferTranscodingHelp": "如果想切換為轉碼，請在媒體串流設定中啟用「偏好轉碼」",
+                "title": "播放"
+            },
+            "states": {
+                "loadingStream": "正在載入串流..."
+            },
+            "track": "軌道 {{index}}"
+        },
+        "onlinestream": {
+            "actions": {
+                "findOtherProviders": "尋找其他提供者",
+                "manualMatch": "手動配對",
+                "switchToDub": "切換為配音",
+                "switchToSubs": "切換為字幕"
+            },
+            "cache": {
+                "description": "如果串流發生問題，可以清空快取。",
+                "empty": "清空串流快取",
+                "title": "快取"
+            },
+            "errors": {
+                "episodeListFetchFailed": "無法從提供者取得集數列表。",
+                "hlsError": "HLS 錯誤：{{message}}",
+                "noProviderSelected": "尚未選擇提供者",
+                "providerErrorTitle": "提供者錯誤",
+                "streamTerminated": "串流已終止"
+            },
+            "fields": {
+                "selectProvider": "選擇提供者"
+            },
+            "stream": {
+                "title": "串流"
+            }
+        },
+        "streaming": {
+            "actions": {
+                "switchToGridView": "切換為格狀檢視",
+                "switchToListView": "切換為列表檢視"
+            },
+            "completeMovie": "完整電影",
+            "end": "結尾",
+            "episodeNumber": "第 {{number}} 集"
+        }
+    },
+    "offlineSync": {
+        "actions": {
+            "deleteLocalChanges": "刪除本機變更",
+            "disableOfflineMode": "停用離線模式",
+            "enableOfflineMode": "啟用離線模式",
+            "saveLocally": "儲存到本機",
+            "selectMediaToSave": "選擇要儲存的媒體",
+            "syncNow": "立即同步",
+            "updateLocalData": "更新本機資料",
+            "uploadLocalChanges": "上傳本機變更",
+            "uploadLocalChangesToAniList": "將本機變更上傳到 AniList"
+        },
+        "alerts": {
+            "autoRefreshPaused": "離線資料的自動重新整理將會暫停。",
+            "localChangesNotSynced": "你有尚未同步到 AniList 的本機變更。",
+            "unsavedAnime": "你目前觀看中的 {{count}} 部動畫尚未儲存。",
+            "unsavedAnimeAndManga": "你目前觀看中的 {{animeCount}} 部動畫與閱讀中的 {{mangaCount}} 部漫畫尚未儲存。",
+            "unsavedManga": "你目前閱讀中的 {{count}} 部漫畫尚未儲存。"
+        },
+        "description": "查看已儲存在本機、可離線使用的媒體。",
+        "dialogs": {
+            "disableOfflineMode": {
+                "description": "確定要停用離線模式嗎？",
+                "title": "停用離線模式"
+            },
+            "removeOfflineData": {
+                "description": "此操作會移除此媒體項目的離線資料。確定要繼續嗎？",
+                "title": "移除離線資料"
+            }
+        },
+        "empty": {
+            "noTrackedMedia": "沒有追蹤的媒體"
+        },
+        "errors": {
+            "notAuthenticatedDescription": "此功能僅供已驗證的使用者使用。",
+            "notAuthenticatedTitle": "尚未驗證"
+        },
+        "fields": {
+            "localStorageSize": "本機儲存空間大小"
+        },
+        "mediaSelector": {
+            "description": "選擇要儲存在本機的媒體。點選已儲存的媒體可從本機儲存空間移除。",
+            "title": "已儲存的媒體"
+        },
+        "navigation": {
+            "animeLibrary": "動畫媒體庫",
+            "offline": "離線"
+        },
+        "offlineManga": {
+            "chapters": "章節",
+            "columns": {
+                "name": "名稱",
+                "number": "編號"
+            },
+            "showUnread": "顯示未讀"
+        },
+        "sections": {
+            "savedAnime": "已儲存的動畫",
+            "savedManga": "已儲存的漫畫"
+        },
+        "status": {
+            "inProgress": "同步中"
+        },
+        "sync": {
+            "irreversibleWarning": "變更無法復原。",
+            "offlineModeSettingsPath": "設定 > App > 離線模式",
+            "title": "同步",
+            "updateLocalDataAutomation": "你可以在此處自動化這項操作：",
+            "updateLocalDataDescription": "使用 AniList 的資料更新本機快照。這會覆蓋你的離線變更。",
+            "uploadLocalChangesDescription": "使用本機快照資料更新你的 AniList 清單。這應該在離線修改後執行。"
+        },
+        "title": "離線媒體"
+    },
+    "nakama": {
+        "actions": {
+            "cleaningUp": "清理中...",
+            "creating": "建立中...",
+            "disconnecting": "正在中斷連線...",
+            "joining": "加入中...",
+            "leave": "離開",
+            "leaving": "離開中...",
+            "reconnect": "重新連線",
+            "reconnecting": "重新連線中...",
+            "removeStaleConnections": "移除失效連線"
+        },
+        "chat": {
+            "empty": "還沒有訊息",
+            "me": "我",
+            "placeholder": "輸入訊息...",
+            "title": "Watch Party 聊天"
+        },
+        "cloudRoom": {
+            "autoJoinHelp": "你會自動加入此房間。",
+            "createDescription": "繼續即表示你同意透過 Seanime 的伺服器廣播播放狀態，以便在房間啟用期間與其他人同步。每天最多 10 個房間，每個房間最多 4 位 peer（可能會變更）。",
+            "createTitle": "建立 Cloud Room",
+            "description": "Cloud Room 會使用 Seanime 的 API，讓你不必將伺服器暴露到網際網路也能主持 watch party。",
+            "expires": "到期時間",
+            "hostUrl": "Host URL",
+            "hostUrlAndPasscode": "Nakama Host URL 與通行碼",
+            "noLocalOrDebridPlayback": "Cloud Room 不支援本機檔案與 Debrid 播放。",
+            "noPasswordSet": "尚未設定密碼",
+            "passcode": "通行碼",
+            "title": "Cloud Room"
+        },
+        "common": {
+            "unknown": "未知"
+        },
+        "connectionModes": {
+            "direct": "直接連線"
+        },
+        "directConnections": "直接連線（{{count}}）",
+        "empty": {
+            "configureInSettings": "請在設定中設定 Nakama，以連線到 host 或開始主持",
+            "noConnectedPeers": "沒有已連線的 peer",
+            "notActive": "Nakama 尚未啟用"
+        },
+        "hostConnection": {
+            "connectionMode": "連線模式",
+            "host": "Host",
+            "title": "Host 連線"
+        },
+        "status": {
+            "currentlyHosting": "目前正在主持"
+        },
+        "watchParty": {
+            "activeJoinDescription": "目前有進行中的 watch party！加入即可一起同步觀看內容。",
+            "buffer": "緩衝",
+            "bufferHealth": "同步緩衝健康度",
+            "buffering": "緩衝中",
+            "connectToHost": "連線到 host 以加入 watch party",
+            "create": "建立 Watch Party",
+            "enableRelayMode": "啟用 relay 模式",
+            "hostSuffix": "（Host）",
+            "join": "加入 Watch Party",
+            "meSuffix": "（我）",
+            "noActive": "沒有進行中的 watch party",
+            "origin": "Origin",
+            "participants": "參與者（{{count}}）",
+            "promoteToOrigin": "提升為 origin",
+            "relay": "Relay",
+            "title": "Watch Party"
+        }
+    },
+    "denshi": {
+        "server": {
+            "connectionLostReconnecting": "伺服器連線已中斷。請稍候，我們會嘗試重新連線。",
+            "relaunchIfPersists": "如果多次嘗試後仍出現此訊息，請重新啟動應用程式。",
+            "restartServer": "重新啟動伺服器",
+            "stoppedResponding": "背景伺服器程序已停止回應。請重新啟動以繼續。"
+        },
+        "update": {
+            "available": "有可用更新",
+            "downloadAndInstall": "下載並安裝",
+            "downloadingProgress": "下載中... {{progress}}%",
+            "installNow": "立即安裝",
+            "installedRestartApp": "更新已安裝。請重新啟動應用程式。",
+            "installing": "安裝中...",
+            "newUpdateAvailable": "有新的更新可用！",
+            "notAvailableForDesktop": "此更新尚未提供給桌面用戶端。請稍等幾分鐘，或查看 GitHub 頁面取得更多資訊。",
+            "seeOnGitHub": "在 GitHub 查看"
         }
     },
     "downloads": {
