@@ -1,74 +1,102 @@
-# Contribution Guide
+# Contributing to Seanime i18n
 
-All contributions are welcome _if_ they are in the scope of the project. If you're not sure about something, feel free to ask.
+Thank you for contributing to this repository.
 
-## Guidelines
+## Project Position
 
-- Make sure you are familiar with Go and React.
-- Your contributions must be small and focused. If you want to add a new feature that requires substantial changes or additions to the codebase, please contact the dev first.
-- Make sure your changes are in line with the project's goals (Create a feature request if you're unsure).
-- Make sure your changes are well tested and do not introduce any new issues or regressions.
-- You should try and make your changes against the **most active branch**, which is usually the `main` branch but
-  may be different when a new version is being developed.
+- This repository is an unofficial i18n fork of Seanime.
+- It is maintained independently and is not affiliated with, endorsed by, or maintained by the original Seanime project.
+- This fork is maintained for Seanime i18n work only.
+- There is currently no plan to submit these changes upstream to the original Seanime repository.
 
-## How to contribute
+Original project: [5rahim/seanime](https://github.com/5rahim/seanime)
 
-1. Create an issue before starting work on a feature or a bug fix.
-2. Fork the repository, clone it, and create a new branch.
+## In Scope
 
-	```shell
-	# Clone your fork of the repo
-	git clone https://github.com/<your-username>/seanime.git
-	# Navigate to the directory
-	cd seanime
-	# Assign to a remote called "upstream"
-	git remote add upstream https://github.com/5rahim/seanime.git
-	```
+Contributions are welcome when they stay within the fork's i18n-focused scope:
 
-3. Get the latest changes from the original repository.
+- translation improvements
+- missing or incorrect i18n keys
+- locale consistency fixes
+- documentation updates related to i18n or translation workflow
+- small and reviewable i18n structure improvements
 
-	```shell
-	git fetch --all
-	git rebase upstream/main
-	```
+Examples of acceptable work:
 
-4. Create a new branch for your feature or bug fix off of the `main` branch.
+- fixing missing `t(...)` usage in user-facing UI
+- improving `en-US.json` / `zh-TW.json` coverage
+- updating `labels.ts` for shared display labels
+- tightening translation guidelines or contributor documentation
 
-	```shell
-	git checkout -b <feature-branch> main
-	```
+## Out of Scope
 
-5. Make your changes, test and commit them.
+This fork does not accept non-i18n feature work.
 
-6. Locally rebase your changes on top of the latest changes from the original repository.
+Do not submit changes for:
 
-	```shell
-	git pull --rebase upstream main
-	```
+- core application features unrelated to i18n
+- player / playback engine logic
+- torrent / debrid / download logic
+- backend / server / API behavior
+- route changes unrelated to translation wiring
+- unrelated refactors
+- generated files
+- build artifacts
 
-7. Push your changes to your fork.
+If a change materially alters application behavior outside user-facing i18n display, it is likely out of scope.
 
-	```shell
-	git push -u origin <feature-branch>
-	```
+## Translation Workflow
 
-8. Create a pull request to the `main` branch of the original repository.
+When adding or updating user-facing strings:
 
-9. Wait for the maintainers to review your pull request.
+1. Add the key to `seanime-web/src/i18n/locales/en-US.json` first.
+2. Add the same key to `seanime-web/src/i18n/locales/zh-TW.json`.
+3. Keep both locale files in sync.
+4. Preserve placeholders, interpolation keys, and variable formats.
 
-10. Make changes if requested.
+Required rules:
 
-11. Once your pull request is approved, it will be merged.
+- Do not hard-code translated strings inside components.
+- Do not add a key to `zh-TW` without also adding it to `en-US`.
+- Do not translate file names, paths, hashes, tokens, provider names, or external API content.
 
-12. Keep your fork in sync with the original repository.
+## Usage Rules
 
-	```shell
-	git fetch --all
-	git checkout main
-	git rebase upstream/main
-	git push -u origin main
-	```
+- React components should use `useTranslation()`.
+- Hooks, utilities, toasts, and other non-React modules should use `i18n.t(...)`.
+- Shared display labels should use `seanime-web/src/i18n/labels.ts` when appropriate instead of duplicating mapping logic.
 
-## Areas
+## Branch and Upstream Policy
 
-[Issues](https://github.com/5rahim/seanime/issues?q=is%3Aissue+is%3Aopen+label%3A%22open+to+contribution%22)
+- Create branches from this fork's `main` branch.
+- Open pull requests against this fork, not the original Seanime repository.
+- Contributors should not rebase onto upstream.
+- Upstream sync is handled manually by the maintainer.
+
+## Validation
+
+For UI or locale changes, contributors should run the relevant checks when possible:
+
+- `.\node_modules\.bin\tsc.cmd --noEmit`
+- `.\node_modules\.bin\tsgo.cmd`
+- `.\node_modules\.bin\rsbuild.cmd build`
+
+Before submitting, make sure:
+
+- locale keys are synchronized between `en-US` and `zh-TW`
+- no hard-coded translated strings were introduced
+- no unrelated files are included
+- no generated files or build artifacts are included
+
+## Pull Request Expectations
+
+Keep pull requests small, focused, and easy to review.
+
+Good pull requests for this fork usually:
+
+- touch a limited and clearly defined i18n area
+- explain what locale keys were added or updated
+- mention validation results
+- avoid mixing translation work with unrelated cleanup
+
+Pull requests that violate scope may be declined.
