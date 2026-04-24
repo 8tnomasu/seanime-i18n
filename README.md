@@ -42,8 +42,31 @@ Unofficial internationalization fork of Seanime, with Traditional Chinese `zh-TW
 - Clone this fork.
 - Follow the original Seanime development and build instructions in [DEVELOPMENT_AND_BUILD.md](./DEVELOPMENT_AND_BUILD.md).
 - Launch the app and select the preferred language from the UI settings.
+- For Docker deployment, see [docs/docker.md](./docs/docker.md).
 
 If you need broader upstream project context, refer to the original Seanime repository: [5rahim/seanime](https://github.com/5rahim/seanime).
+
+## Docker Deployment
+
+This fork includes a rootless-friendly Docker image layout that keeps the existing Seanime homelab paths compatible:
+
+- config: `/home/seanime/.config/Seanime`
+- library mount: `/anime`
+- downloads mount: `/downloads`
+- binary path: `/app/seanime`
+- port: `43211`
+
+Quick commands:
+
+```bash
+docker compose -f docker-compose.example.yml build
+docker compose -f docker-compose.example.yml up -d
+docker logs -f seanime
+docker compose -f docker-compose.example.yml down
+```
+
+The example Compose file stores config in `./config`, and the container-side media paths should be configured as `/anime` and `/downloads`.
+For a fuller deployment guide, including GHCR usage, see [docs/docker.md](./docs/docker.md).
 
 ## Development
 

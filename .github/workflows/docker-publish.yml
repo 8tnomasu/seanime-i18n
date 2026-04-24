@@ -1,0 +1,107 @@
+name: Publish Docker Image
+
+on:
+  push:
+    tags:
+      - "v*-i18n.*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to build from, for example v3.6.1-i18n.1"
+        required: true
+        default: "v3.6.1-i18n.1"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Derive release metadata
+        id: vars
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            release_tag="${GITHUB_REF_NAME}"
+          else
+            release_tag="${{ inputs.release_tag }}"
+          fi
+
+          seanime_version="${release_tag#v}"
+          seanime_version="${seanime_version%%-i18n.*}"
+
+          echo "release_tag=${release_tag}" >> "${GITHUB_OUTPUT}"
+          echo "seanime_version=${seanime_version}" >> "${GITHUB_OUTPUT}"
+
+      - name: Wait for Linux release assets
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ steps.vars.outputs.release_tag }}
+          SEANIME_VERSION: ${{ steps.vars.outputs.seanime_version }}
+        run: |
+          assets=(
+            "seanime-${SEANIME_VERSION}_Linux_x86_64.tar.gz"
+            "seanime-${SEANIME_VERSION}_Linux_arm64.tar.gz"
+          )
+
+          for asset in "${assets[@]}"; do
+            url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/${asset}"
+            echo "Waiting for ${url}"
+
+            for attempt in $(seq 1 40); do
+              if curl -fsIL "${url}" > /dev/null; then
+                echo "Found ${asset}"
+                break
+              fi
+
+              if [[ "${attempt}" -eq 40 ]]; then
+                echo "Timed out waiting for ${asset}" >&2
+                exit 1
+              fi
+
+              sleep 15
+            done
+          done
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/8tnomasu/seanime-i18n
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ steps.vars.outputs.release_tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: |
+            RELEASE_TAG=${{ steps.vars.outputs.release_tag }}
+            SEANIME_VERSION=${{ steps.vars.outputs.seanime_version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

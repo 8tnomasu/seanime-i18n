@@ -7,10 +7,8 @@ testdata/
 */.DS_Store
 .todo/
 
-Dockerfile
 Dockerfile.dev
 dev.dockerfile
-.dockerignore
 
 go.work
 
