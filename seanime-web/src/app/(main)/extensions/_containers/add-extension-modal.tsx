@@ -9,6 +9,7 @@ import { TextInput } from "@/components/ui/text-input"
 import React from "react"
 import { FiDownload } from "react-icons/fi"
 import { LuSearch } from "react-icons/lu"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 type AddExtensionModalProps = {
@@ -17,6 +18,7 @@ type AddExtensionModalProps = {
 }
 
 export function AddExtensionModal(props: AddExtensionModalProps) {
+    const { t } = useTranslation()
 
     const {
         extensions,
@@ -52,7 +54,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
 
     function handleFetchExtensionData() {
         if (!manifestURL) {
-            toast.warning("Please provide a valid URL.")
+            toast.warning(t("extensions.add.validUrlRequired"))
             return
         }
 
@@ -63,7 +65,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
 
     function handleInstallFromRepository(install: boolean) {
         if (!repositoryURL) {
-            toast.warning("Please provide a valid URL.")
+            toast.warning(t("extensions.add.validUrlRequired"))
             return
         }
 
@@ -73,7 +75,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
         }, {
             onSuccess: () => {
                 if (install) {
-                    toast.success("Extensions installed successfully.")
+                    toast.success(t("toasts.extensions.installedFromRepository"))
                     setOpen(false)
                     setRepositoryURL("")
                     resetRepo()
@@ -90,12 +92,12 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
                 trigger={children}
                 contentClass="max-w-3xl"
                 titleClass="text-center pb-4"
-                title="Add extensions"
+                title={t("extensions.add.title")}
             >
                 <div className="flex gap-4 flex-col lg:flex-row">
                     <div className="lg:w-1/3">
-                        <h3 className="text-2xl font-bold">Install from URL</h3>
-                        <p className="text-[--muted]">Install an extension by entering the manifest URL.</p>
+                        <h3 className="text-2xl font-bold">{t("extensions.add.installFromUrlTitle")}</h3>
+                        <p className="text-[--muted]">{t("extensions.add.installFromUrlDescription")}</p>
                     </div>
                     <div className="lg:w-2/3 gap-3 flex flex-col">
                         <TextInput
@@ -109,7 +111,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
                             intent="white"
                             onClick={handleFetchExtensionData}
                             loading={isPending}
-                        >Find</Button>
+                        >{t("extensions.actions.find")}</Button>
                     </div>
                 </div>
 
@@ -121,7 +123,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
 
                         {extensions?.find(n => n.id === extensionData.id) ? (
                             <p className="text-center">
-                                This extension is already installed.
+                                {t("extensions.add.alreadyInstalled")}
                             </p>
                         ) : (
                             <Button
@@ -132,7 +134,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
                                         manifestUri: extensionData?.manifestURI,
                                     })
                                 }}
-                            >Install</Button>
+                            >{t("extensions.actions.install")}</Button>
                         )}
                     </>
                 )}
@@ -142,13 +144,13 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
                         <Separator />
 
                         <p className="text-center text-[--muted]">
-                            You can also install many extensions at once by importing them from a repository.
+                            {t("extensions.add.repositoryHint")}
                         </p>
 
                         <div className="flex gap-4 flex-col lg:flex-row-reverse">
                             <div className="lg:w-1/3">
-                                <h3 className="text-xl font-bold">Import from repository</h3>
-                                <p className="text-[--muted]">Import and automatically install extensions by entering a repository URL.</p>
+                                <h3 className="text-xl font-bold">{t("extensions.add.importFromRepositoryTitle")}</h3>
+                                <p className="text-[--muted]">{t("extensions.add.importFromRepositoryDescription")}</p>
                             </div>
                             <div className="lg:w-2/3 gap-3 flex flex-col">
                                 <TextInput
@@ -162,7 +164,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
                                     intent="gray-outline"
                                     onClick={() => handleInstallFromRepository(false)}
                                     loading={isInstallingFromRepo}
-                                >Import all</Button>
+                                >{t("extensions.actions.importAll")}</Button>
                             </div>
                         </div>
 
@@ -178,7 +180,7 @@ export function AddExtensionModal(props: AddExtensionModalProps) {
                                     intent="white"
                                     onClick={() => handleInstallFromRepository(true)}
                                     loading={isInstallingFromRepo}
-                                >Install all</Button>
+                                >{t("extensions.actions.installAll")}</Button>
                             </>
                         )}
                     </>

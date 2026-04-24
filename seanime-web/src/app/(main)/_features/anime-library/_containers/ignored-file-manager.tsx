@@ -10,6 +10,7 @@ import { upath } from "@/lib/helpers/upath"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { TbFileSad } from "react-icons/tb"
 import { toast } from "sonner"
 
@@ -20,6 +21,7 @@ type IgnoredFileManagerProps = {
 }
 
 export function IgnoredFileManager(props: IgnoredFileManagerProps) {
+    const { t } = useTranslation()
 
     const { files } = props
 
@@ -42,7 +44,7 @@ export function IgnoredFileManager(props: IgnoredFileManagerProps) {
                 action: "unignore",
             }, {
                 onSuccess: () => {
-                    toast.success("Files un-ignored")
+                    toast.success(t("toasts.library.filesUnignored"))
                 },
             })
         }
@@ -55,7 +57,7 @@ export function IgnoredFileManager(props: IgnoredFileManagerProps) {
             onOpenChange={() => setIsOpen(false)}
             // contentClass="max-w-5xl"
             size="xl"
-            title="Ignored files"
+            title={t("libraryExplorer.ignoredFiles.title")}
         >
             <AppLayoutStack className="mt-4">
 
@@ -69,12 +71,12 @@ export function IgnoredFileManager(props: IgnoredFileManagerProps) {
                         loading={isUpdating}
                         onClick={handleUnIgnoreSelected}
                     >
-                        Un-ignore selection
+                        {t("libraryExplorer.ignoredFiles.unIgnoreSelection")}
                     </Button>
                 </div>}
 
                 {files.length === 0 && <LuffyError title={null}>
-                    No ignored files
+                    {t("libraryExplorer.ignoredFiles.empty")}
                 </LuffyError>}
 
                 {files.length > 0 &&
@@ -82,7 +84,7 @@ export function IgnoredFileManager(props: IgnoredFileManagerProps) {
 
                         <div className="p-2">
                             <Checkbox
-                                label={`Select all files`}
+                                label={t("libraryExplorer.labels.selectAllFiles")}
                                 value={(selectedPaths.length === files?.length) ? true : (selectedPaths.length === 0
                                     ? false
                                     : "indeterminate")}

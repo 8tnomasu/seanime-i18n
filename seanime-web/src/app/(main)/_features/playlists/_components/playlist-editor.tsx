@@ -20,6 +20,7 @@ import { CSS } from "@dnd-kit/utilities"
 import React from "react"
 import { BiPlus, BiTrash } from "react-icons/bi"
 import { IoLibrarySharp } from "react-icons/io5"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 export function playlist_isSameEpisode(a: Nullish<Anime_PlaylistEpisode>, b: Nullish<Anime_PlaylistEpisode>) {
@@ -43,6 +44,7 @@ type PlaylistEditorProps = {
 const MAX_PLAYLIST_EPISODES = 20
 
 export function PlaylistEditor(props: PlaylistEditorProps) {
+    const { t } = useTranslation()
 
     const {
         episodes: controlledEpisodes,
@@ -111,14 +113,14 @@ export function PlaylistEditor(props: PlaylistEditorProps) {
 
             <div className="space-y-2">
                 <Modal
-                    title="Select an anime"
+                    title={t("playlists.editor.selectAnime")}
                     contentClass="max-w-4xl"
                     trigger={<Button
                         leftIcon={<BiPlus className="text-2xl" />}
                         intent="white-glass"
                         className="rounded-full"
                         disabled={episodes.length >= 10}
-                    >Add episodes</Button>}
+                    >{t("playlists.actions.addEpisodes")}</Button>}
                 >
 
                     <div className="grid grid-cols-[150px,1fr] gap-2">
@@ -126,16 +128,16 @@ export function PlaylistEditor(props: PlaylistEditorProps) {
                             value={selectedCategory}
                             onValueChange={v => setSelectedCategory(v)}
                             options={[
-                                { label: "Current", value: "CURRENT" },
-                                { label: "Paused", value: "PAUSED" },
-                                { label: "Planning", value: "PLANNING" },
-                                { label: "All", value: "-" },
+                                { label: t("playlists.filters.current"), value: "CURRENT" },
+                                { label: t("playlists.filters.paused"), value: "PAUSED" },
+                                { label: t("playlists.filters.planning"), value: "PLANNING" },
+                                { label: t("common.words.all"), value: "-" },
                             ]}
                             disabled={searchInput.length !== 0}
                         />
 
                         <TextInput
-                            placeholder="Search"
+                            placeholder={t("common.buttons.search")}
                             value={searchInput}
                             onChange={e => setSearchInput(e.target.value)}
                         />
@@ -264,6 +266,7 @@ function SortableItem({ id, episode, setEpisodes }: {
     episode: Anime_PlaylistEpisode
     setEpisodes: React.Dispatch<React.SetStateAction<Anime_PlaylistEpisode[]>>
 }) {
+    const { t } = useTranslation()
     const {
         attributes,
         listeners,
@@ -285,22 +288,22 @@ function SortableItem({ id, episode, setEpisodes }: {
     const streamOptions = React.useMemo(() => {
         let options: { label: string, value: string }[] = []
         if (hasTorrentStreaming) {
-            options.push({ label: "Torrent streaming", value: "torrent" })
+            options.push({ label: t("playlists.watchTypes.torrentStreaming"), value: "torrent" })
         }
         if (hasDebridService) {
-            options.push({ label: "Debrid streaming", value: "debrid" })
+            options.push({ label: t("playlists.watchTypes.debridStreaming"), value: "debrid" })
         }
         if (hasOnlineStreaming) {
-            options.push({ label: "Online streaming", value: "online" })
+            options.push({ label: t("playlists.watchTypes.onlineStreaming"), value: "online" })
         }
         return options
-    }, [hasDebridService, hasOnlineStreaming, hasTorrentStreaming])
+    }, [hasDebridService, hasOnlineStreaming, hasTorrentStreaming, t])
 
     // Set default watch type
-    const t = React.useRef<NodeJS.Timeout | null>(null)
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
     React.useEffect(() => {
         if (episode && !episode.watchType && (hasTorrentStreaming || hasDebridService)) {
-            t.current = setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
                 setEpisodes(prev => {
                     const foundEp = prev.find(n => playlist_isSameEpisode(n, episode))
                     if (!foundEp) return prev
@@ -319,7 +322,7 @@ function SortableItem({ id, episode, setEpisodes }: {
             }, 300)
         }
         return () => {
-            if (t.current) clearTimeout(t.current)
+            if (timeoutRef.current) clearTimeout(timeoutRef.current)
         }
     }, [episode, hasDebridService, hasOnlineStreaming, hasTorrentStreaming])
 
@@ -359,8 +362,8 @@ function SortableItem({ id, episode, setEpisodes }: {
                 <div className="max-w-full space-y-1">
                     <p className="text-sm text-[--muted] font-medium">{episode.episode?.baseAnime?.title?.userPreferred}</p>
                     <p className="">{episode.episode?.baseAnime?.format !== "MOVIE"
-                        ? `Episode ${episode.episode!.episodeNumber}`
-                        : "Movie"}{episode.isCompleted ? ` (Watched)` : ""}</p>
+                        ? t("playlists.common.episodeNumber", { number: episode.episode!.episodeNumber })
+                        : t("playlists.common.movie")}{episode.isCompleted ? ` (${t("playlists.common.watched")})` : ""}</p>
 
                     {(!episode.episode?.localFile && !episode.isNakama) && <div className="flex gap-1 flex-wrap">
                         {streamOptions.map(option => {
@@ -412,6 +415,7 @@ type EntryEpisodeListProps = {
 }
 
 function EntryEpisodeList(props: EntryEpisodeListProps) {
+    const { t } = useTranslation()
 
     const {
         entry,
@@ -423,30 +427,30 @@ function EntryEpisodeList(props: EntryEpisodeListProps) {
     const { data, isLoading } = useGetPlaylistEpisodes(entry.mediaId)
     const { episodeToAdd, selectedMedia, setSelectedMedia, setEpisodeToAdd } = usePlaylistEditorManager()
 
-    const t = React.useRef<NodeJS.Timeout | null>(null)
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
     React.useEffect(() => {
         if (data && episodeToAdd && selectedMedia && selectedMedia === entry.mediaId) {
-            t.current = setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
                 // Check if already added
                 if (selectedEpisodes.find(n => n.episode?.baseAnime?.id === selectedMedia && n.episode.aniDBEpisode === episodeToAdd)) {
-                    toast.info("Episode already added")
+                    toast.info(t("toasts.playlists.episodeAlreadyAdded"))
                     return
                 }
                 const foundEp = data?.find(n => n.episode?.aniDBEpisode === episodeToAdd)
                 if (foundEp) {
                     handleSelect(foundEp)
-                    toast.info("Episode added to playlist")
+                    toast.info(t("toasts.playlists.episodeAdded"))
                     setEpisodeToAdd(null)
                 }
             }, 400)
         }
 
         return () => {
-            if (t.current) {
-                clearTimeout(t.current)
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
             }
         }
-    }, [data, episodeToAdd, selectedMedia, selectedEpisodes])
+    }, [data, episodeToAdd, selectedMedia, selectedEpisodes, t])
 
     const handleSelect = (ep: Anime_PlaylistEpisode) => {
         React.startTransition(() => {
@@ -455,7 +459,7 @@ function EntryEpisodeList(props: EntryEpisodeListProps) {
                     return prev.filter(n => !playlist_isSameEpisode(n, ep))
                 }
                 if (prev.length >= MAX_PLAYLIST_EPISODES) {
-                    toast.error("You can't add more than 20 episodes to a playlist")
+                    toast.error(t("toasts.playlists.maxEpisodes", { count: MAX_PLAYLIST_EPISODES }))
                     return prev
                 }
                 return [...prev, ep]
@@ -486,12 +490,12 @@ function EntryEpisodeList(props: EntryEpisodeListProps) {
                                 const availableSlots = Math.max(0, MAX_PLAYLIST_EPISODES - prev.length)
 
                                 if (availableSlots === 0) {
-                                    toast.error("You can't add more than 20 episodes to a playlist")
+                                    toast.error(t("toasts.playlists.maxEpisodes", { count: MAX_PLAYLIST_EPISODES }))
                                     return prev
                                 }
 
                                 if (episodesToAdd.length > availableSlots) {
-                                    toast.error("You can't add more than 20 episodes to a playlist")
+                                    toast.error(t("toasts.playlists.maxEpisodes", { count: MAX_PLAYLIST_EPISODES }))
                                 }
 
                                 return [...prev, ...episodesToAdd.slice(0, availableSlots)]
@@ -499,11 +503,11 @@ function EntryEpisodeList(props: EntryEpisodeListProps) {
                         })
                     }}
                 >
-                    {allSelected ? "Deselect all" : "Select all"}
+                    {allSelected ? t("playlists.actions.deselectAll") : t("playlists.actions.selectAll")}
                 </Button>
             </div>
             {isLoading && <LoadingSpinner />}
-            {data?.length === 0 && <p className="text-center text-sm text-[--muted]">No episodes found</p>}
+            {data?.length === 0 && <p className="text-center text-sm text-[--muted]">{t("playlists.states.noEpisodesFound")}</p>}
             {episodes?.map(ep => {
                 return (
                     <div
@@ -532,7 +536,7 @@ function EntryEpisodeList(props: EntryEpisodeListProps) {
                             />}
                         </div>
                         <div className="max-w-full">
-                            <p className="">{entry.media?.format !== "MOVIE" ? `Episode ${ep.episode!.episodeNumber}` : "Movie"}</p>
+                            <p className="">{entry.media?.format !== "MOVIE" ? t("playlists.common.episodeNumber", { number: ep.episode!.episodeNumber }) : t("playlists.common.movie")}</p>
                             {ep.episode!.localFile &&
                                 <p className="text-xs text-[--muted] tracking-wide italic max-w-full line-clamp-2">{ep.episode!.localFile?.name}</p>}
 

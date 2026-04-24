@@ -7,11 +7,13 @@ import { Modal } from "@/components/ui/modal"
 import { atom, useAtom } from "jotai"
 import React from "react"
 import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 export const __bulkAction_modalAtomIsOpen = atom<boolean>(false)
 
 export function BulkActionModal() {
+    const { t } = useTranslation()
 
     const [isOpen, setIsOpen] = useAtom(__bulkAction_modalAtomIsOpen)
 
@@ -23,7 +25,7 @@ export function BulkActionModal() {
         }, {
             onSuccess: () => {
                 setIsOpen(false)
-                toast.success("Files locked")
+                toast.success(t("toasts.library.filesLocked"))
             },
         })
     }
@@ -34,7 +36,7 @@ export function BulkActionModal() {
         }, {
             onSuccess: () => {
                 setIsOpen(false)
-                toast.success("Files unlocked")
+                toast.success(t("toasts.library.filesUnlocked"))
             },
         })
     }
@@ -50,8 +52,8 @@ export function BulkActionModal() {
     }
 
     const confirmRemoveEmptyDirs = useConfirmationDialog({
-        title: "Remove empty directories",
-        description: "This action will remove all empty directories in the library. Are you sure you want to continue?",
+        title: t("libraryExplorer.dialogs.removeEmptyDirectories.title"),
+        description: t("libraryExplorer.dialogs.removeEmptyDirectories.description"),
         onConfirm: () => {
             handleRemoveEmptyDirectories()
         },
@@ -63,18 +65,18 @@ export function BulkActionModal() {
             priority: 1,
             items: [
                 {
-                    id: "lock-files", value: "lock", heading: "Library",
+                    id: "lock-files", value: "lock", heading: t("libraryExplorer.common.library"),
                     render: () => (
-                        <p>Lock all files</p>
+                        <p>{t("libraryExplorer.actions.lockAllFiles")}</p>
                     ),
                     onSelect: ({ ctx }) => {
                         handleLockFiles()
                     },
                 },
                 {
-                    id: "unlock-files", value: "unlock", heading: "Library",
+                    id: "unlock-files", value: "unlock", heading: t("libraryExplorer.common.library"),
                     render: () => (
-                        <p>Unlock all files</p>
+                        <p>{t("libraryExplorer.actions.unlockAllFiles")}</p>
                     ),
                     onSelect: ({ ctx }) => {
                         handleUnlockFiles()
@@ -94,7 +96,7 @@ export function BulkActionModal() {
 
     return (
         <Modal
-            open={isOpen} onOpenChange={() => setIsOpen(false)} title="Bulk actions"
+            open={isOpen} onOpenChange={() => setIsOpen(false)} title={t("libraryExplorer.bulkActions.title")}
             contentClass="space-y-4"
         >
             <AppLayoutStack spacing="sm">
@@ -107,7 +109,7 @@ export function BulkActionModal() {
                         disabled={isPending || isRemoving}
                         onClick={handleLockFiles}
                     >
-                        Lock all files
+                        {t("libraryExplorer.actions.lockAllFiles")}
                     </Button>
                     <Button
                         leftIcon={<BiLockOpenAlt className="text-2xl" />}
@@ -116,7 +118,7 @@ export function BulkActionModal() {
                         disabled={isPending || isRemoving}
                         onClick={handleUnlockFiles}
                     >
-                        Unlock all files
+                        {t("libraryExplorer.actions.unlockAllFiles")}
                     </Button>
                 </div>
                 <Button
@@ -126,7 +128,7 @@ export function BulkActionModal() {
                     loading={isRemoving}
                     onClick={() => confirmRemoveEmptyDirs.open()}
                 >
-                    Remove empty directories
+                    {t("libraryExplorer.actions.removeEmptyDirectories")}
                 </Button>
             </AppLayoutStack>
             <ConfirmationDialog {...confirmRemoveEmptyDirs} />

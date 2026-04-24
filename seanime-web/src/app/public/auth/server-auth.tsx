@@ -4,16 +4,18 @@ import { Modal } from "@/components/ui/modal"
 import { useAtom } from "jotai"
 import { sha256 } from "js-sha256"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export function ServerAuth() {
+    const { t } = useTranslation()
 
     const [, setAuthToken] = useAtom(serverAuthTokenAtom)
     const [loading, setLoading] = useState(false)
 
     return (<>
         <Modal
-            title="Password required"
-            description="This Seanime server requires authentication."
+            title={t("auth.server.title")}
+            description={t("auth.server.description")}
             open={true}
             onOpenChange={(v) => {}}
             overlayClass="bg-opacity-100 bg-gray-900"
@@ -22,7 +24,7 @@ export function ServerAuth() {
         >
             <Form
                 schema={defineSchema(({ z }) => z.object({
-                    password: z.string().min(1, "Password is required"),
+                    password: z.string().min(1, t("auth.server.passwordRequired")),
                 }))}
                 onSubmit={async data => {
                     setLoading(true)
@@ -37,10 +39,10 @@ export function ServerAuth() {
                 <Field.Text
                     type="password"
                     name="password"
-                    label="Enter the password"
+                    label={t("auth.server.enterPassword")}
                     fieldClass=""
                 />
-                <Field.Submit showLoadingOverlayOnSuccess loading={loading}>Continue</Field.Submit>
+                <Field.Submit showLoadingOverlayOnSuccess loading={loading}>{t("common.buttons.continue")}</Field.Submit>
             </Form>
         </Modal>
     </>)

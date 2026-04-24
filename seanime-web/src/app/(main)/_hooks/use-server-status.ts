@@ -1,5 +1,6 @@
 import { INTERNAL_FeatureKey } from "@/api/generated/types"
 import { serverAuthTokenAtom, serverStatusAtom } from "@/app/(main)/_atoms/server-status.atoms"
+import i18n from "@/i18n"
 import { createNakamaHMACAuth, createServerPasswordHMACAuth } from "@/lib/server/hmac-auth"
 import { TORRENT_PROVIDER } from "@/lib/server/settings"
 import { useAtomValue } from "jotai"
@@ -168,7 +169,7 @@ export function useServerDisabledFeatures() {
             return status?.disabledFeatures?.includes(feature)
         },
         showFeatureWarning: () => {
-            return toast.warning("This feature is disabled")
+            return toast.warning(i18n.t("toasts.featureDisabled"))
         },
     }
 }

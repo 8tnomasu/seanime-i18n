@@ -28,6 +28,7 @@ import React from "react"
 import { BiSolidSkipNextCircle } from "react-icons/bi"
 import { MdCancel } from "react-icons/md"
 import { PiPopcornFill } from "react-icons/pi"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 const __pt_showModalAtom = atom(false)
@@ -41,6 +42,7 @@ type Props = {
 const log = logger("PLAYBACK MANAGER")
 
 export function PlaybackManagerProgressTrackingButton({ asSidebarButton }: Props) {
+    const { t } = useTranslation()
     const [showModal, setShowModal] = useAtom(__pt_showModalAtom)
 
     const isTracking = useAtomValue(__pt_isTrackingAtom)
@@ -71,7 +73,7 @@ export function PlaybackManagerProgressTrackingButton({ asSidebarButton }: Props
                             leftIcon={<PiPopcornFill />}
                             onClick={() => setShowModal(true)}
                         >
-                            Currently watching
+                            {t("playlists.progress.currentlyWatching")}
                         </Button>)}
                 </>
             )}
@@ -80,6 +82,7 @@ export function PlaybackManagerProgressTrackingButton({ asSidebarButton }: Props
 }
 
 export function PlaybackManagerProgressTracking() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const qc = useQueryClient()
 
@@ -165,7 +168,7 @@ export function PlaybackManagerProgressTracking() {
             }
 
             if (data === "Player closed") {
-                toast.info("Player closed")
+                toast.info(t("toasts.playlists.playerClosed"))
 
                 if ((state?.completionPercentage || 0) <= 0.8) {
                     setIsCompleted(false)
@@ -212,7 +215,7 @@ export function PlaybackManagerProgressTracking() {
                 queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key] })
 
                 setState(data)
-                toast.success("Progress updated")
+                toast.success(t("toasts.playlists.progressUpdated"))
             }
         },
     })
@@ -226,9 +229,9 @@ export function PlaybackManagerProgressTracking() {
 
 
     const confirmPlayNext = useConfirmationDialog({
-        title: "Play next episode",
-        description: "Are you sure you want to play the next episode?",
-        actionText: "Confirm",
+        title: t("playlists.progress.playNextEpisodeTitle"),
+        description: t("playlists.progress.playNextEpisodeDescription"),
+        actionText: t("common.buttons.confirm"),
         actionIntent: "success",
         onConfirm: () => {
             if (!submittedPlaylistNext) playlistNext()
@@ -262,9 +265,9 @@ export function PlaybackManagerProgressTracking() {
     }, [state?.completionPercentage && state?.completionPercentage > 0.7, state?.canPlayNext, !!playlistState?.next, cancelAutoplay])
 
     const confirmNextEpisode = useConfirmationDialog({
-        title: "Play next episode",
-        description: "Are you sure you want to play the next episode?",
-        actionText: "Confirm",
+        title: t("playlists.progress.playNextEpisodeTitle"),
+        description: t("playlists.progress.playNextEpisodeDescription"),
+        actionText: t("common.buttons.confirm"),
         actionIntent: "success",
         onConfirm: () => {
             if (!submittedNextEpisode) playNextEpisodeAction()
@@ -272,10 +275,10 @@ export function PlaybackManagerProgressTracking() {
     })
 
     const confirmStopPlaylist = useConfirmationDialog({
-        title: "Play next",
-        actionText: "Confirm",
+        title: t("playlists.progress.stopPlaylistTitle"),
+        actionText: t("common.buttons.confirm"),
         actionIntent: "alert",
-        description: "Are you sure you want to stop the playlist? It will be deleted.",
+        description: t("playlists.progress.stopPlaylistDescription"),
         onConfirm: () => {
             if (!submittedStopPlaylist) stopPlaylist()
         },
@@ -325,18 +328,18 @@ export function PlaybackManagerProgressTracking() {
                     {/*<p className="text-[--muted]">Currently watching</p>*/}
                     <div data-progress-tracking-title>
                         <h3 className="text-lg font-medium line-clamp-1">{state?.mediaTitle}</h3>
-                        <p className="text-2xl font-bold">Episode {state?.episodeNumber}
+                        <p className="text-2xl font-bold">{t("playlists.common.episodeNumber", { number: state?.episodeNumber })}
                             <span className="text-[--muted]">{" / "}{state?.mediaTotalEpisodes || "-"}</span>
                         </p>
                     </div>
                     {(serverStatus?.settings?.library?.autoUpdateProgress && !state?.progressUpdated) && (
                         <p data-progress-tracking-auto-update-progress className="text-[--muted] text-center text-sm">
-                            Your progress will be automatically updated
+                            {t("playlists.progress.autoUpdate")}
                         </p>
                     )}
                     {(state?.progressUpdated) && (
                         <p data-progress-tracking-progress-updated className="text-green-300 text-center">
-                            Progress updated
+                            {t("playlists.progress.updated")}
                         </p>
                     )}
                 </div>}
@@ -353,7 +356,7 @@ export function PlaybackManagerProgressTracking() {
                         className="w-full animate-pulse"
                         loading={isPending}
                     >
-                        Update progress now
+                        {t("playlists.progress.updateNow")}
                     </Button>
                 </div>}
 
@@ -374,24 +377,23 @@ export function PlaybackManagerProgressTracking() {
                         loading={submittingNextEpisode}
                         leftIcon={<BiSolidSkipNextCircle className="text-2xl" />}
                     >
-                        Play next episode
+                        {t("playlists.progress.playNextEpisode")}
                     </Button>
                 </div>}
                 {!!playlistState?.next && (
                     <div data-progress-tracking-playlist className="border rounded-[--radius-md] p-4 text-center relative overflow-hidden">
                         <div className="space-y-3">
                             <div>
-                                <h4 className="text-lg font-medium text-center text-[--muted] mb-2 uppercase tracking-wide">Playlist</h4>
+                                <h4 className="text-lg font-medium text-center text-[--muted] mb-2 uppercase tracking-wide">{t("playlists.common.playlist")}</h4>
                                 {!!playlistState.remaining &&
                                     <p
                                         data-progress-tracking-playlist-remaining
                                         className="text-[--muted]"
-                                    >{playlistState.remaining} episode{playlistState.remaining > 1 ? "s" : ""} after this
-                                                               one</p>}
+                                    >{t("playlists.progress.remainingAfterThis", { count: playlistState.remaining })}</p>}
                                 <p
                                     data-progress-tracking-playlist-next
                                     className="text-center truncate line-clamp-1"
-                                >Next: <span className="font-semibold">{playlistState?.next?.name}</span>
+                                >{t("playlists.progress.nextLabel")} <span className="font-semibold">{playlistState?.next?.name}</span>
                                 </p>
                             </div>
                             <div
@@ -421,7 +423,7 @@ export function PlaybackManagerProgressTracking() {
                                     className="inset-0 relative z-[2] bg-black border bg-opacity-70 hover:bg-opacity-80 transition flex flex-col gap-2 items-center justify-center p-4"
                                 >
                                     <p data-progress-tracking-playlist-next-episode-button-text className="flex gap-2 items-center">
-                                        <BiSolidSkipNextCircle className="block text-2xl" /> Play next</p>
+                                        <BiSolidSkipNextCircle className="block text-2xl" /> {t("playlists.progress.playNext")}</p>
                                 </div>
                             </div>
                             <div data-progress-tracking-playlist-next-episode-button-stop-button-container className="absolute -top-0.5 right-2">

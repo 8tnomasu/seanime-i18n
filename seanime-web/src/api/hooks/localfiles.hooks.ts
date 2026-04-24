@@ -105,7 +105,7 @@ export function useRemoveEmptyDirectories() {
         method: API_ENDPOINTS.LOCALFILES.RemoveEmptyDirectories.methods[0],
         mutationKey: [API_ENDPOINTS.LOCALFILES.RemoveEmptyDirectories.key],
         onSuccess: async () => {
-            toast.success("Empty directories removed")
+            toast.success(i18n.t("toasts.library.emptyDirectoriesRemoved"))
         },
     })
 }
@@ -121,7 +121,7 @@ export function useImportLocalFiles() {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetAnimeEntry.key] })
             qc.invalidateQueries({ queryKey: [API_ENDPOINTS.LIBRARY_EXPLORER.GetLibraryExplorerFileTree.key] })
-            toast.success("Local files imported")
+            toast.success(i18n.t("toasts.library.localFilesImported"))
         },
     })
 }

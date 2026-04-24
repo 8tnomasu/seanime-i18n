@@ -12,6 +12,7 @@ import { WSEvents } from "@/lib/server/ws-events"
 import { useQueryClient } from "@tanstack/react-query"
 import { useSetAtom } from "jotai/react"
 import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { BiSolidBinoculars } from "react-icons/bi"
 import { FiSearch } from "react-icons/fi"
 import { toast } from "sonner"
@@ -21,6 +22,7 @@ type LibraryWatcherProps = {
 }
 
 export function LibraryWatcher(props: LibraryWatcherProps) {
+    const { t } = useTranslation()
 
     const {
         children,
@@ -89,7 +91,7 @@ export function LibraryWatcher(props: LibraryWatcherProps) {
         type: WSEvents.AUTO_SCAN_COMPLETED,
         onMessage: _ => {
             autoScanning.off()
-            toast.success("Library scanned")
+            toast.success(t("toasts.library.scanned"))
             qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
             qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_ENTRIES.GetMissingEpisodes.key] })
             qc.invalidateQueries({ queryKey: [API_ENDPOINTS.AUTO_DOWNLOADER.GetAutoDownloaderItems.key] })
@@ -109,7 +111,7 @@ export function LibraryWatcher(props: LibraryWatcherProps) {
                     <Card className="w-fit max-w-[400px]">
                         <CardHeader>
                             <CardDescription className="flex items-center gap-2 text-base">
-                                <Spinner className="size-6" /> {progress}% Refreshing your library...
+                                <Spinner className="size-6" /> {t("libraryExplorer.watcher.refreshingLibrary", { progress })}
                             </CardDescription>
                         </CardHeader>
                     </Card>
@@ -124,10 +126,10 @@ export function LibraryWatcher(props: LibraryWatcherProps) {
                         <CardHeader>
                             <CardTitle className="text-lg flex items-center gap-2">
                                 <BiSolidBinoculars className="text-brand-400" />
-                                Library watcher
+                                {t("libraryExplorer.watcher.title")}
                             </CardTitle>
                             <CardDescription className="flex items-center gap-2 text-base">
-                                A change has been detected in your library, refresh your entries.
+                                {t("libraryExplorer.watcher.description")}
                             </CardDescription>
                         </CardHeader>
                         <CardFooter>
@@ -138,7 +140,7 @@ export function LibraryWatcher(props: LibraryWatcherProps) {
                                 onClick={() => setScannerModalOpen(true)}
                                 className="rounded-full"
                             >
-                                Scan your library
+                                {t("libraryExplorer.watcher.scanLibrary")}
                             </Button>
                         </CardFooter>
                         <CloseButton className="absolute top-2 right-2" onClick={handleCancel} />

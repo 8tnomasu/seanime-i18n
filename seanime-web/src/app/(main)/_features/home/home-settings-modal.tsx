@@ -24,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiCog, BiPlus, BiStats, BiTrash } from "react-icons/bi"
 import { IoHomeOutline, IoLibraryOutline } from "react-icons/io5"
 import {
@@ -64,6 +65,7 @@ const HOME_ITEM_ICONS = {
 } as const
 
 export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibrary?: boolean, isNakamaLibrary: boolean }) {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const ts = useThemeSettings()
     const [isModalOpen, setIsModalOpen] = useAtom(__home_settingsModalOpen)
@@ -149,7 +151,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
         setCurrentItems(newItems)
         updateHomeItems({ items: newItems }, {
             onSuccess: () => {
-                toast.success("Home item added")
+                toast.success(t("toasts.home.itemAdded"))
             },
         })
     }
@@ -159,7 +161,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
         setCurrentItems(newItems)
         updateHomeItems({ items: newItems }, {
             onSuccess: () => {
-                toast.success("Home item removed")
+                toast.success(t("toasts.home.itemRemoved"))
             },
         })
     }
@@ -173,7 +175,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
         setCurrentItems(newItems)
         updateHomeItems({ items: newItems }, {
             onSuccess: () => {
-                toast.success("Home layout updated")
+                toast.success(t("toasts.home.layoutUpdated"))
                 setOptionsModalOpen(null)
             },
         })

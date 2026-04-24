@@ -56,7 +56,8 @@
             "pageNotFoundDescription": "The page you are looking for does not exist.",
             "pageNotFoundTitle": "Page Not Found",
             "unexpectedError": "An unexpected error occurred.",
-            "noOptionsFound": "No options found"
+            "noOptionsFound": "No options found",
+            "authenticating": "Authenticating..."
         },
         "words": {
             "all": "All",
@@ -64,6 +65,20 @@
             "highest": "Highest",
             "none": "None",
             "or": "or"
+        },
+        "dialogs": {
+            "delete": {
+                "title": "Delete item",
+                "description": "This action cannot be undone."
+            }
+        },
+        "errors": {
+            "anilistError": "AniList returned an error.",
+            "anilistErrorWithMessage": "AniList error: {{message}}",
+            "anilistRateLimited": "AniList rate limit reached. Please try again later.",
+            "noResponseFromServer": "No response from server.",
+            "serverError": "Server error: {{message}}",
+            "unknownError": "Unknown error"
         }
     },
     "navigation": {
@@ -782,7 +797,19 @@
         "loginWithAniList": "Log in with AniList",
         "signOutDescription": "Are you sure you want to sign out?",
         "signOutTitle": "Sign out",
-        "usingAniListRecommended": "Using an AniList account is recommended."
+        "usingAniListRecommended": "Using an AniList account is recommended.",
+        "callback": {
+            "invalidToken": "Invalid or missing AniList token."
+        },
+        "mal": {
+            "invalidUrlOrChallenge": "Invalid callback URL or missing MyAnimeList challenge."
+        },
+        "server": {
+            "description": "Enter the password to access this server.",
+            "enterPassword": "Password",
+            "passwordRequired": "Password is required",
+            "title": "Server authentication"
+        }
     },
     "toasts": {
         "featureDisabled": "This feature is disabled",
@@ -829,7 +856,16 @@
             }
         },
         "library": {
-            "scanned": "Library scanned"
+            "scanned": "Library scanned",
+            "emptyDirectoriesRemoved": "Empty directories removed",
+            "filesIgnored": "Files ignored",
+            "filesLocked": "Files locked",
+            "filesUnignored": "Files unignored",
+            "filesUnlocked": "Files unlocked",
+            "localFilesImported": "Local files imported",
+            "mediaAdded": "Media added",
+            "mediaUnmatched": "Media unmatched",
+            "noSuggestionsFound": "No suggestions found"
         },
         "manga": {
             "sourcesRefreshed": "Sources refreshed"
@@ -933,6 +969,48 @@
             "downloadQueueCleared": "Download queue cleared",
             "resetErroredChapters": "Reset errored chapters",
             "chaptersDeleted": "Chapters deleted"
+        },
+        "auth": {
+            "authenticated": "Authenticated successfully",
+            "loggedOut": "Logged out",
+            "loggedOutMyAnimeList": "Logged out of MyAnimeList"
+        },
+        "extensions": {
+            "configSaved": "Extension configuration saved",
+            "installedFromRepository": "Installed extensions from repository",
+            "permissionsGranted": "Permissions granted",
+            "reloaded": "Extension reloaded",
+            "uninstalled": "Extension uninstalled",
+            "updated": "Extension updated"
+        },
+        "home": {
+            "itemAdded": "Item added",
+            "itemRemoved": "Item removed",
+            "layoutUpdated": "Home layout updated"
+        },
+        "update": {
+            "installing": "Installing update..."
+        },
+        "issueReport": {
+            "downloadTokenFailed": "Failed to generate issue report token",
+            "saved": "Issue report saved",
+            "screenshotAdded": "Screenshot added to report",
+            "startDomRecordingFailed": "Failed to start DOM recording",
+            "unableToCaptureScreenshot": "Unable to capture screenshot"
+        },
+        "playlists": {
+            "created": "Playlist created",
+            "deleted": "Playlist deleted",
+            "episodeAdded": "Episode added to playlist",
+            "episodeAlreadyAdded": "Episode is already in the playlist",
+            "maxEpisodes": "A playlist can contain up to {{count}} episodes",
+            "mediaNotAvailable": "This media is not available",
+            "nameRequired": "Please enter a playlist name",
+            "playerClosed": "Player closed",
+            "playingEpisode": "Playing episode {{episode}} of {{title}}",
+            "progressUpdated": "Progress updated",
+            "starting": "Starting playlist...",
+            "updated": "Playlist updated"
         }
     },
     "mediaFilters": {
@@ -1720,7 +1798,14 @@
             "subtitleLoadFailed": "Failed to load subtitle track",
             "subtitleLoadFailedWithMessage": "Failed to load subtitle: {{message}}",
             "translationSettingsSaved": "Translation settings saved",
-            "unknownSubtitleType": "Unknown subtitle type"
+            "unknownSubtitleType": "Unknown subtitle type",
+            "cancellingPlaylist": "Cancelling playlist...",
+            "failedToPlayNextEpisode": "Failed to play the next episode",
+            "loadingNextEpisode": "Loading next episode...",
+            "loadingNextFile": "Loading next file...",
+            "playingNextEpisode": "Playing next episode",
+            "playingRandomEpisode": "Playing a random episode",
+            "requestingNextEpisode": "Requesting next episode..."
         },
         "watchParty": {
             "newChatMessage": "New chat message ({{count}})"
@@ -2351,6 +2436,388 @@
             "itemNotFound": "Item not found",
             "nothingFetched": "Nothing was fetched, please update your options.",
             "invalidItem": "Item \"{{name}}\" cannot be displayed because it is missing some required options."
+        }
+    },
+    "extensions": {
+        "actions": {
+            "find": "Find",
+            "importAll": "Import all",
+            "install": "Install",
+            "installAll": "Install all"
+        },
+        "add": {
+            "alreadyInstalled": "Already installed",
+            "importFromRepositoryDescription": "Find extensions from a repository and import them into Seanime.",
+            "importFromRepositoryTitle": "Import from repository",
+            "installFromUrlDescription": "Paste a repository or package URL to install an extension.",
+            "installFromUrlTitle": "Install from URL",
+            "repositoryHint": "GitHub repository URLs are supported.",
+            "title": "Add extension",
+            "validUrlRequired": "Please enter a valid URL."
+        },
+        "common": {
+            "componentTypeNotFound": "Component type not found: {{type}}",
+            "unknown": "Unknown"
+        }
+    },
+    "scanLog": {
+        "actions": {
+            "clearLog": "Clear log",
+            "dropLogFile": "Drop a scan log file here",
+            "loadAnotherFile": "Load another file",
+            "loadLogFile": "Load log file"
+        },
+        "states": {
+            "loadingSavedLogs": "Loading saved logs..."
+        },
+        "title": "Scan log viewer",
+        "toasts": {
+            "cleared": "Cleared saved scan log",
+            "failedToSave": "Failed to save scan log",
+            "failedToSaveToBrowserStorage": "Failed to save scan log to browser storage",
+            "restoredPrevious": "Restored previous scan log",
+            "savedForFutureSessions": "Saved locally for future sessions",
+            "savingLocally": "Saving locally..."
+        }
+    },
+    "update": {
+        "desktopApplicationDescription": "The desktop app can download and install this update for you.",
+        "downloadAndInstall": "Download and install",
+        "downloadNewReleaseTitle": "Download new release",
+        "installDescription": "Seanime will download and install the latest release.",
+        "installModalTitle": "Install update",
+        "menuAvailable": "Update available",
+        "missingOptions": "Please select a release asset and a destination.",
+        "newUpdateAvailable": "A new update is available",
+        "seeOnGitHub": "See on GitHub",
+        "selectDestination": "Select destination",
+        "updateNow": "Update now"
+    },
+    "issueReport": {
+        "actions": {
+            "addNote": "Add note",
+            "attachScreenshot": "Attach screenshot",
+            "cancelRecording": "Cancel recording",
+            "clearReport": "Clear report",
+            "dropReportFile": "Drop an issue report file here",
+            "editNote": "Edit note",
+            "loadAnotherFile": "Load another file",
+            "loadReportFile": "Load report file",
+            "startRecording": "Start recording",
+            "stopAndSave": "Stop and save"
+        },
+        "console": {
+            "searchPlaceholder": "Search console logs..."
+        },
+        "fields": {
+            "descriptionPlaceholder": "Describe what happened...",
+            "descriptionTooltip": "Explain what you were doing when the issue occurred.",
+            "includeLibraryScannerLogs": "Include library scanner logs"
+        },
+        "filters": {
+            "all": "All ({{count}})",
+            "allShort": "All",
+            "errors": "Errors ({{count}})",
+            "logs": "Logs",
+            "warnings": "Warnings ({{count}})"
+        },
+        "network": {
+            "requests": "{{count}} requests",
+            "searchPlaceholder": "Search network logs..."
+        },
+        "overview": {
+            "created": "Created",
+            "os": "OS",
+            "recording": "Recording",
+            "reportInfo": "Report info",
+            "totalEvents": "Total events",
+            "userAgent": "User Agent",
+            "userDescription": "User description",
+            "version": "Version",
+            "viewport": "Viewport"
+        },
+        "prompts": {
+            "screenshotCaption": "Add a caption for this screenshot"
+        },
+        "replay": {
+            "domEvents": "DOM events ({{count}})",
+            "empty": "No replay data available",
+            "includeServerLogs": "Include server logs",
+            "loadFailed": "Failed to load replay player.",
+            "timeline": "Timeline ({{count}})"
+        },
+        "scanLogs": {
+            "orderHint": "Newest logs appear first."
+        },
+        "screenshots": {
+            "empty": "No screenshots captured"
+        },
+        "states": {
+            "eventsCount": "{{count}} events",
+            "imagesCount": "{{count}} images",
+            "loadPrompt": "Load an issue report to get started.",
+            "loadingSavedReport": "Loading saved report...",
+            "recording": "Recording..."
+        },
+        "tabs": {
+            "clicks": "Clicks ({{count}})",
+            "console": "Console ({{count}})",
+            "network": "Network ({{count}})",
+            "overview": "Overview",
+            "scanLogs": "Scan logs ({{count}})",
+            "screenshots": "Screenshots ({{count}})",
+            "serverLogs": "Server logs",
+            "sessionReplay": "Session replay",
+            "timeline": "Timeline",
+            "websocket": "WebSocket ({{count}})"
+        },
+        "timeline": {
+            "errorsOnly": "Errors only",
+            "searchPlaceholder": "Search timeline events..."
+        },
+        "title": "Issue report",
+        "toasts": {
+            "cleared": "Cleared saved issue report",
+            "decompressing": "Decompressing issue report...",
+            "failedToDecompress": "Failed to decompress issue report",
+            "failedToParse": "Failed to parse issue report",
+            "failedToSaveToBrowserStorage": "Failed to save issue report to browser storage",
+            "loaded": "Issue report loaded",
+            "restoredPrevious": "Restored previous issue report"
+        },
+        "websocket": {
+            "eventsCount": "{{count}} events",
+            "incoming": "Incoming",
+            "outgoing": "Outgoing",
+            "searchPlaceholder": "Search WebSocket events..."
+        }
+    },
+    "libraryExplorer": {
+        "actions": {
+            "deleteFile": "Delete file",
+            "deleteFiles": "Delete selected files",
+            "editMetadata": "Edit metadata",
+            "ignoreFile": "Ignore file",
+            "ignoreFiles": "Ignore files",
+            "lock": "Lock",
+            "lockAllFiles": "Lock all files",
+            "matchFile": "Match file",
+            "matchFiles": "Match files",
+            "openInExplorer": "Open in explorer",
+            "previewAnime": "Preview anime",
+            "removeEmptyDirectories": "Remove empty directories",
+            "resolveUnknownMedia": "Resolve unknown media",
+            "superUpdate": "Super update",
+            "unIgnoreFile": "Unignore file",
+            "unIgnoreFiles": "Unignore files",
+            "unlock": "Unlock",
+            "unlockAllFiles": "Unlock all files",
+            "unmatchFile": "Unmatch file",
+            "unmatchFiles": "Unmatch files"
+        },
+        "bulkActions": {
+            "title": "Bulk actions"
+        },
+        "common": {
+            "library": "Library"
+        },
+        "details": {
+            "anidbEpisode": "AniDB episode",
+            "animeSeriesCount": "{{count}} anime series",
+            "associatedMedia": "Associated media",
+            "contents": "Contents",
+            "contentsSummary": "{{folders}} folders · {{files}} files",
+            "episode": "Episode",
+            "file": "File",
+            "fileExtension": "File extension: {{extension}}",
+            "folder": "Folder",
+            "libraryFile": "Library file",
+            "matched": "Matched",
+            "notMatched": "Not matched",
+            "path": "Path",
+            "selectPrompt": "Select a file or folder to view details.",
+            "size": "Size",
+            "type": "Type"
+        },
+        "dialogs": {
+            "lockAllFiles": {
+                "description": "Lock every selected file?",
+                "title": "Lock all files"
+            },
+            "removeEmptyDirectories": {
+                "description": "This will permanently remove empty directories from the selected path.",
+                "title": "Remove empty directories"
+            },
+            "selectFilesToDelete": "Select files to delete",
+            "unlockAllFiles": {
+                "description": "Unlock every selected file?",
+                "title": "Unlock all files"
+            }
+        },
+        "ignoredFiles": {
+            "empty": "No ignored files.",
+            "title": "Ignored files",
+            "unIgnoreSelection": "Unignore selection"
+        },
+        "labels": {
+            "selectAllFiles": "Select all files"
+        },
+        "metadata": {
+            "anidbEpisode": "AniDB episode",
+            "anidbHelp": "Set the AniDB episode number used for matching.",
+            "episodeHelp": "Set the episode number for this file.",
+            "episodeNumber": "Episode number",
+            "saved": "File metadata saved",
+            "title": "Edit file metadata",
+            "type": "Type",
+            "types": {
+                "main": "Main",
+                "ncOther": "NC / Other",
+                "special": "Special"
+            }
+        },
+        "states": {
+            "noMediaFound": "No media found"
+        },
+        "superUpdate": {
+            "addRule": "Add rule",
+            "apply": "Apply ({{count}})",
+            "description": "Rename selected files and optionally update their metadata.",
+            "editFileMetadata": "Edit file metadata",
+            "fields": {
+                "replacePlaceholder": "Enter replacement text...",
+                "replaceWith": "Replace with",
+                "searchFor": "Search for",
+                "searchPlaceholder": "Enter text to search for..."
+            },
+            "formatting": {
+                "label": "Text formatting"
+            },
+            "help": {
+                "enumerationPatterns": "Enumeration patterns"
+            },
+            "metadata": "Metadata",
+            "noChange": "No change",
+            "noFilesSelected": "No files selected",
+            "noMetadataRules": "No metadata rules added",
+            "noValidChanges": "No valid changes to apply",
+            "options": {
+                "caseSensitive": "Case sensitive",
+                "enumerateItems": "Enumerate items",
+                "matchAllOccurrences": "Match all occurrences",
+                "useRegex": "Use regex"
+            },
+            "original": "Original ({{count}})",
+            "partialApply": "Applied {{valid}} changes and skipped {{skipped}}.",
+            "renameFailed": "Rename failed: {{message}}",
+            "renamed": "Changed ({{count}})",
+            "renamedShort": "Renamed",
+            "rule": {
+                "fields": {
+                    "anidbEpisode": "AniDB episode",
+                    "episodeNumber": "Episode number",
+                    "fileType": "File type",
+                    "filterOptional": "Filter (optional)",
+                    "findTextRegex": "Find (text / regex)",
+                    "replace": "Replace",
+                    "search": "Search"
+                },
+                "help": {
+                    "anidb": "Supports regex patterns and case sensitivity options.",
+                    "anidbFilter": "AniDB operators: anidb>=, anidb<=, anidb=, anidb!=, !anidb= | Format: numbers (1, 12) or prefixed values (S1, C2, T1)",
+                    "episode": "Operators: >=, <=, >, <, =, !=, ! | Types: type=main|special|nc, !type=special",
+                    "type": "Same operators as episode: >=, <=, >, <, =, !=, ! | Types: type=main, !type=special"
+                },
+                "placeholders": {
+                    "anidbFilter": "e.g. anidb>=1;anidb=S1;anidb!=C2;type=special",
+                    "anidbReplace": "Replacement text (supports enumeration patterns)",
+                    "anidbSearch": "Enter text or regex pattern",
+                    "episodeReplace": "e.g. increment=1, decrement=1, start=1, or a direct value like 5",
+                    "episodeSearch": "e.g. >=1;<=12;!=5;type=main|special;!type=nc",
+                    "typeReplace": "Select new type",
+                    "typeSearch": "e.g. >=1;<12;=5;type=main;!type=special"
+                }
+            },
+            "updatedFileNames": "Updated {{count}} file names",
+            "updatedFilesAndMetadata": "Updated {{files}} file names and {{metadata}} metadata entries",
+            "updatedMetadata": "Updated {{count}} metadata entries"
+        },
+        "unknownMedia": {
+            "addAllToAniList": "Add all to AniList",
+            "addAllToCollection": "Add all to collection",
+            "collectionLabel": "Collection",
+            "description": "These files could not be matched automatically.",
+            "matchedTo": "Matched to",
+            "title": "Unknown media"
+        },
+        "watcher": {
+            "description": "Changes were detected in your library.",
+            "refreshingLibrary": "Refreshing library... {{progress}}%",
+            "scanLibrary": "Scan library",
+            "title": "Library watcher"
+        }
+    },
+    "playlists": {
+        "actions": {
+            "addEpisodes": "Add episodes",
+            "addToNew": "Add to new playlist",
+            "addToPlaylist": "Add to playlist",
+            "create": "Create",
+            "delete": "Delete playlist",
+            "deselectAll": "Deselect all",
+            "reopenEpisode": "Reopen episode",
+            "selectAll": "Select all"
+        },
+        "autoplay": {
+            "nextEpisode": "Next episode",
+            "playNow": "Play now",
+            "playingNextEpisodeIn": "Playing next episode in"
+        },
+        "common": {
+            "episodeNumber": "Episode {{number}}",
+            "episodesCount": "{{count}} episodes",
+            "movie": "Movie",
+            "name": "Playlist name",
+            "playlist": "Playlist",
+            "playlistLabel": "Playlist: {{name}}",
+            "playlists": "Playlists",
+            "watched": "Watched"
+        },
+        "editor": {
+            "createTitle": "Create playlist",
+            "editTitle": "Edit playlist",
+            "selectAnime": "Select an anime"
+        },
+        "filters": {
+            "current": "Current",
+            "paused": "Paused",
+            "planning": "Planning"
+        },
+        "progress": {
+            "autoUpdate": "Your progress will be updated automatically.",
+            "currentlyWatching": "Currently watching",
+            "nextLabel": "Next:",
+            "playNext": "Play next",
+            "playNextEpisode": "Play next episode",
+            "playNextEpisodeDescription": "Continue to the next episode now?",
+            "playNextEpisodeTitle": "Play next episode?",
+            "remainingAfterThis": "{{count}} remaining after this",
+            "stopPlaylistDescription": "Are you sure you want to stop the current playlist?",
+            "stopPlaylistTitle": "Stop playlist?",
+            "updateDescription": "Mark the current episode as completed before switching?",
+            "updateNow": "Update progress now",
+            "updateTitle": "Update progress?",
+            "updated": "Progress updated"
+        },
+        "states": {
+            "noEpisodesFound": "No episodes found",
+            "noPlaylists": "No playlists"
+        },
+        "watchTypes": {
+            "debridStreaming": "Debrid streaming",
+            "localFile": "Local file",
+            "onlineStreaming": "Online streaming",
+            "torrentStreaming": "Torrent streaming"
         }
     }
 }

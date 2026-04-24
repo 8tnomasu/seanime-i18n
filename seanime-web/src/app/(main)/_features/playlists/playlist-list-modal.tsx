@@ -18,9 +18,11 @@ import { BiEditAlt } from "react-icons/bi"
 import { FaCirclePlay } from "react-icons/fa6"
 import { LuPlus } from "react-icons/lu"
 import { MdOutlineVideoLibrary } from "react-icons/md"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 export function PlaylistListModal() {
+    const { t } = useTranslation()
     const ts = useThemeSettings()
     const { isModalOpen, setModalOpen, setSelectedMedia, selectedMedia } = usePlaylistEditorManager()
 
@@ -66,14 +68,14 @@ export function PlaylistListModal() {
     React.useEffect(() => {
         if (selectedMedia) {
             if (!allEntries.find(n => n?.mediaId === selectedMedia)) {
-                toast.warning("This anime is not in your library or currently watching collection.")
+                toast.warning(t("toasts.playlists.mediaNotAvailable"))
                 setSelectedMedia(null)
                 React.startTransition(() => {
                     setModalOpen(false)
                 })
             }
         }
-    }, [selectedMedia, allEntries])
+    }, [selectedMedia, allEntries, t])
 
     return (
         <>
@@ -96,7 +98,7 @@ export function PlaylistListModal() {
                 <div className="space-y-6">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div>
-                            <h4 className="flex items-center">Playlists</h4>
+                            <h4 className="flex items-center">{t("playlists.common.playlists")}</h4>
                         </div>
                         <div className="flex gap-2 items-center md:pr-8">
                             <PlaylistEditorModal
@@ -106,7 +108,7 @@ export function PlaylistListModal() {
                                         intent="white"
                                         className={cn("rounded-full", selectedMedia && "animate-pulse")}
                                     >
-                                        {selectedMedia ? "Add to new Playlist" : "Create a Playlist"}
+                                        {selectedMedia ? t("playlists.actions.addToNew") : t("playlists.actions.create")}
                                     </Button>
                                 }
                             />
@@ -124,6 +126,7 @@ export function PlaylistListModal() {
 
 
 function PlaylistLists({ libraryCollection }: { libraryCollection: Anime_LibraryCollection | undefined }) {
+    const { t } = useTranslation()
 
     const { data: playlists, isLoading } = useGetPlaylists()
     const { selectedMedia, setModalOpen } = usePlaylistEditorManager()
@@ -137,7 +140,7 @@ function PlaylistLists({ libraryCollection }: { libraryCollection: Anime_Library
             <div className="text-center text-[--muted] space-y-1 py-6">
                 <MdOutlineVideoLibrary className="mx-auto text-5xl text-[--muted]" />
                 <div>
-                    No playlists
+                    {t("playlists.states.noPlaylists")}
                 </div>
             </div>
         )
@@ -206,16 +209,14 @@ function PlaylistLists({ libraryCollection }: { libraryCollection: Anime_Library
                                             intent={selectedMedia ? "white" : "white-subtle"}
                                             size="sm"
 
-                                        >{selectedMedia ? "Add to Playlist" : "Edit"}</Button>} playlist={p}
+                                        >{selectedMedia ? t("playlists.actions.addToPlaylist") : t("common.buttons.edit")}</Button>} playlist={p}
                                     />
                                 </div>
                                 <div className="absolute w-full bottom-0 h-fit z-[6]">
                                     <div className="space-y-0 pb-3 items-center">
                                         <p className="text-md font-bold text-white max-w-lg truncate text-center">{p.name}</p>
                                         {p.episodes &&
-                                            <p className="text-sm text-[--muted] font-normal line-clamp-1 text-center">{p.episodes.length} episode{p.episodes.length > 1
-                                                ? `s`
-                                                : ""}</p>}
+                                            <p className="text-sm text-[--muted] font-normal line-clamp-1 text-center">{t("playlists.common.episodesCount", { count: p.episodes.length })}</p>}
                                     </div>
                                 </div>
 

@@ -4,6 +4,7 @@ import { LoadingOverlay } from "@/components/ui/loading-spinner"
 import { useRouter } from "@/lib/navigation"
 import { useAtomValue } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 type CallbackPageProps = {}
@@ -14,6 +15,7 @@ type CallbackPageProps = {}
  */
 export function CallbackPage(props: CallbackPageProps) {
     const router = useRouter()
+    const { t } = useTranslation()
     const {} = props
 
     const websocketConnected = useAtomValue(websocketConnectedAtom)
@@ -32,16 +34,16 @@ export function CallbackPage(props: CallbackPageProps) {
                 login({ token: _token })
                 called.current = true
             } else {
-                toast.error("Invalid token")
+                toast.error(t("auth.callback.invalidToken"))
                 router.push("/")
             }
         }
-    }, [websocketConnected])
+    }, [websocketConnected, login, router, t])
 
     return (
         <div>
             <LoadingOverlay className="fixed w-full h-full z-[80]">
-                <h3 className="mt-2">Authenticating...</h3>
+                <h3 className="mt-2">{t("common.states.authenticating")}</h3>
             </LoadingOverlay>
         </div>
     )

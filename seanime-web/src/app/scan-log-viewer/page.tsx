@@ -1,6 +1,8 @@
+import i18n from "@/i18n"
 import { ScanLogViewer } from "@/app/scan-log-viewer/scan-log-viewer"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { BiTrash, BiUpload } from "react-icons/bi"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 const DB_NAME = "seanime-scan-logs-db"
@@ -34,7 +36,7 @@ const saveLogToDB = async (content: string) => {
     }
     catch (error) {
         console.error("Failed to save log to DB:", error)
-        toast.error("Failed to save log to browser storage")
+        toast.error(i18n.t("scanLog.toasts.failedToSaveToBrowserStorage"))
     }
 }
 
@@ -72,6 +74,7 @@ const clearLogFromDB = async () => {
 }
 
 export default function Page() {
+    const { t } = useTranslation()
     const [content, setContent] = useState<string>("")
     const [isDragging, setIsDragging] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -83,11 +86,11 @@ export default function Page() {
         getLogFromDB().then((savedContent) => {
             if (savedContent) {
                 setContent(savedContent)
-                toast.success("Restored previous scan log")
+                toast.success(t("scanLog.toasts.restoredPrevious"))
             }
             setIsLoading(false)
         })
-    }, [])
+    }, [t])
 
     const readFile = useCallback((file: File) => {
         const reader = new FileReader()
@@ -95,19 +98,19 @@ export default function Page() {
             const result = e.target?.result as string
             setContent(result)
             toast.promise(saveLogToDB(result), {
-                loading: "Saving log locally...",
-                success: "Log saved for future sessions",
-                error: "Failed to save log",
+                loading: t("scanLog.toasts.savingLocally"),
+                success: t("scanLog.toasts.savedForFutureSessions"),
+                error: t("scanLog.toasts.failedToSave"),
             })
         }
         reader.readAsText(file)
-    }, [])
+    }, [t])
 
     const handleClear = useCallback(async () => {
         await clearLogFromDB()
         setContent("")
-        toast.success("Cleared saved log")
-    }, [])
+        toast.success(t("scanLog.toasts.cleared"))
+    }, [t])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
@@ -148,7 +151,7 @@ export default function Page() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen text-[--muted]">
-                <p>Loading saved logs...</p>
+                <p>{t("scanLog.states.loadingSavedLogs")}</p>
             </div>
         )
     }
@@ -165,7 +168,7 @@ export default function Page() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/80 backdrop-blur-sm">
                     <div className="flex flex-col items-center gap-3 p-8 border-2 border-dashed border-indigo-500 rounded-xl bg-gray-900/50">
                         <BiUpload className="text-4xl text-indigo-400" />
-                        <p className="text-lg font-medium text-indigo-300">Drop log file</p>
+                        <p className="text-lg font-medium text-indigo-300">{t("scanLog.actions.dropLogFile")}</p>
                     </div>
                 </div>
             )}
@@ -173,12 +176,12 @@ export default function Page() {
             <div className="mb-4">
                 <div className="flex items-center gap-4 justify-between">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-xl font-bold text-gray-200 tracking-tight">Scan Log Analyzer</h1>
+                        <h1 className="text-xl font-bold text-gray-200 tracking-tight">{t("scanLog.title")}</h1>
                         <label
                             className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 border border-[--border] rounded-md cursor-pointer hover:bg-gray-700 transition-colors text-sm text-gray-300"
                         >
                             <BiUpload />
-                            <span>{content ? "Load another file" : "Load scan log file"}</span>
+                            <span>{content ? t("scanLog.actions.loadAnotherFile") : t("scanLog.actions.loadLogFile")}</span>
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -195,7 +198,7 @@ export default function Page() {
                             className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-950/30 rounded-md transition-colors"
                         >
                             <BiTrash />
-                            Clear log
+                            {t("scanLog.actions.clearLog")}
                         </button>
                     )}
                 </div>

@@ -3,6 +3,7 @@ import { InstallLatestUpdate_Variables } from "@/api/generated/endpoint.types"
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Status, Updater_Update } from "@/api/generated/types"
 import { useSetServerStatus } from "@/app/(main)/_hooks/use-server-status"
+import i18n from "@/i18n"
 import { toast } from "sonner"
 
 export function useGetLatestUpdate(enabled: boolean) {
@@ -24,7 +25,7 @@ export function useInstallLatestUpdate() {
             if (data) {
                 setServerStatus(data)
             }
-            toast.info("Installing update...")
+            toast.info(i18n.t("toasts.update.installing"))
         },
     })
 }

@@ -56,7 +56,8 @@
             "pageNotFoundDescription": "找不到你要查看的頁面。",
             "pageNotFoundTitle": "找不到頁面",
             "unexpectedError": "發生未預期的錯誤。",
-            "noOptionsFound": "??????"
+            "noOptionsFound": "??????",
+            "authenticating": "驗證中..."
         },
         "words": {
             "all": "全部",
@@ -64,6 +65,20 @@
             "highest": "最高",
             "none": "無",
             "or": "或"
+        },
+        "dialogs": {
+            "delete": {
+                "title": "刪除項目",
+                "description": "此操作無法復原。"
+            }
+        },
+        "errors": {
+            "anilistError": "AniList 回傳錯誤。",
+            "anilistErrorWithMessage": "AniList 錯誤：{{message}}",
+            "anilistRateLimited": "已達 AniList 速率限制，請稍後再試。",
+            "noResponseFromServer": "伺服器沒有回應。",
+            "serverError": "伺服器錯誤：{{message}}",
+            "unknownError": "未知錯誤"
         }
     },
     "navigation": {
@@ -782,7 +797,19 @@
         "loginWithAniList": "使用 AniList 登入",
         "signOutDescription": "確定要登出嗎？",
         "signOutTitle": "登出",
-        "usingAniListRecommended": "建議使用 AniList 帳號。"
+        "usingAniListRecommended": "建議使用 AniList 帳號。",
+        "callback": {
+            "invalidToken": "AniList token 無效或遺失。"
+        },
+        "mal": {
+            "invalidUrlOrChallenge": "回呼網址無效，或缺少 MyAnimeList challenge。"
+        },
+        "server": {
+            "description": "請輸入密碼以存取此伺服器。",
+            "enterPassword": "密碼",
+            "passwordRequired": "請輸入密碼",
+            "title": "伺服器驗證"
+        }
     },
     "toasts": {
         "featureDisabled": "此功能已停用",
@@ -829,7 +856,16 @@
             }
         },
         "library": {
-            "scanned": "???????"
+            "scanned": "???????",
+            "emptyDirectoriesRemoved": "已移除空資料夾",
+            "filesIgnored": "已忽略檔案",
+            "filesLocked": "已鎖定檔案",
+            "filesUnignored": "已取消忽略檔案",
+            "filesUnlocked": "已解除鎖定檔案",
+            "localFilesImported": "已匯入本機檔案",
+            "mediaAdded": "已新增媒體",
+            "mediaUnmatched": "已取消媒體配對",
+            "noSuggestionsFound": "找不到建議結果"
         },
         "manga": {
             "sourcesRefreshed": "???????"
@@ -933,6 +969,48 @@
             "downloadQueueCleared": "下載佇列已清空",
             "resetErroredChapters": "已重設錯誤章節",
             "chaptersDeleted": "章節已刪除"
+        },
+        "auth": {
+            "authenticated": "驗證成功",
+            "loggedOut": "已登出",
+            "loggedOutMyAnimeList": "已登出 MyAnimeList"
+        },
+        "extensions": {
+            "configSaved": "已儲存 extension 設定",
+            "installedFromRepository": "已從 repository 安裝 extensions",
+            "permissionsGranted": "已授與權限",
+            "reloaded": "已重新載入 extension",
+            "uninstalled": "已解除安裝 extension",
+            "updated": "已更新 extension"
+        },
+        "home": {
+            "itemAdded": "已新增項目",
+            "itemRemoved": "已移除項目",
+            "layoutUpdated": "首頁版面已更新"
+        },
+        "update": {
+            "installing": "正在安裝更新..."
+        },
+        "issueReport": {
+            "downloadTokenFailed": "產生 issue report token 失敗",
+            "saved": "已儲存 issue report",
+            "screenshotAdded": "已將截圖加入報告",
+            "startDomRecordingFailed": "啟動 DOM 錄製失敗",
+            "unableToCaptureScreenshot": "無法擷取截圖"
+        },
+        "playlists": {
+            "created": "已建立播放清單",
+            "deleted": "已刪除播放清單",
+            "episodeAdded": "已將集數加入播放清單",
+            "episodeAlreadyAdded": "這一集已在播放清單中",
+            "maxEpisodes": "播放清單最多可包含 {{count}} 集",
+            "mediaNotAvailable": "此媒體目前無法使用",
+            "nameRequired": "請輸入播放清單名稱",
+            "playerClosed": "播放器已關閉",
+            "playingEpisode": "正在播放《{{title}}》第 {{episode}} 集",
+            "progressUpdated": "進度已更新",
+            "starting": "正在啟動播放清單...",
+            "updated": "播放清單已更新"
         }
     },
     "mediaFilters": {
@@ -1720,7 +1798,14 @@
             "subtitleLoadFailed": "字幕軌道載入失敗",
             "subtitleLoadFailedWithMessage": "字幕載入失敗：{{message}}",
             "translationSettingsSaved": "翻譯設定已儲存",
-            "unknownSubtitleType": "未知的字幕類型"
+            "unknownSubtitleType": "未知的字幕類型",
+            "cancellingPlaylist": "正在取消播放清單...",
+            "failedToPlayNextEpisode": "播放下一集失敗",
+            "loadingNextEpisode": "正在載入下一集...",
+            "loadingNextFile": "正在載入下一個檔案...",
+            "playingNextEpisode": "正在播放下一集",
+            "playingRandomEpisode": "正在播放隨機一集",
+            "requestingNextEpisode": "正在請求下一集..."
         },
         "watchParty": {
             "newChatMessage": "新的聊天訊息（{{count}}）"
@@ -2351,6 +2436,388 @@
             "itemNotFound": "?????",
             "nothingFetched": "??????????????????",
             "invalidItem": "???{{name}}???????????????"
+        }
+    },
+    "extensions": {
+        "actions": {
+            "find": "尋找",
+            "importAll": "全部匯入",
+            "install": "安裝",
+            "installAll": "全部安裝"
+        },
+        "add": {
+            "alreadyInstalled": "已安裝",
+            "importFromRepositoryDescription": "從 repository 尋找 extensions 並匯入 Seanime。",
+            "importFromRepositoryTitle": "從 repository 匯入",
+            "installFromUrlDescription": "貼上 repository 或套件 URL 來安裝 extension。",
+            "installFromUrlTitle": "從 URL 安裝",
+            "repositoryHint": "支援 GitHub repository URL。",
+            "title": "新增 extension",
+            "validUrlRequired": "請輸入有效的 URL。"
+        },
+        "common": {
+            "componentTypeNotFound": "找不到元件類型：{{type}}",
+            "unknown": "未知"
+        }
+    },
+    "scanLog": {
+        "actions": {
+            "clearLog": "清除記錄",
+            "dropLogFile": "將掃描記錄檔拖曳到這裡",
+            "loadAnotherFile": "載入其他檔案",
+            "loadLogFile": "載入記錄檔"
+        },
+        "states": {
+            "loadingSavedLogs": "正在載入已儲存的記錄..."
+        },
+        "title": "掃描記錄檢視器",
+        "toasts": {
+            "cleared": "已清除已儲存的掃描記錄",
+            "failedToSave": "儲存掃描記錄失敗",
+            "failedToSaveToBrowserStorage": "無法將掃描記錄儲存到瀏覽器儲存空間",
+            "restoredPrevious": "已還原先前的掃描記錄",
+            "savedForFutureSessions": "已儲存到本機，之後可再次開啟",
+            "savingLocally": "正在儲存到本機..."
+        }
+    },
+    "update": {
+        "desktopApplicationDescription": "桌面版應用程式可以為你下載並安裝這次更新。",
+        "downloadAndInstall": "下載並安裝",
+        "downloadNewReleaseTitle": "下載新版本",
+        "installDescription": "Seanime 會下載並安裝最新版本。",
+        "installModalTitle": "安裝更新",
+        "menuAvailable": "有可用更新",
+        "missingOptions": "請選擇版本檔案與下載目的地。",
+        "newUpdateAvailable": "有新的更新可用",
+        "seeOnGitHub": "在 GitHub 上查看",
+        "selectDestination": "選擇目的地",
+        "updateNow": "立即更新"
+    },
+    "issueReport": {
+        "actions": {
+            "addNote": "新增備註",
+            "attachScreenshot": "附加截圖",
+            "cancelRecording": "取消錄製",
+            "clearReport": "清除報告",
+            "dropReportFile": "將 issue report 檔案拖曳到這裡",
+            "editNote": "編輯備註",
+            "loadAnotherFile": "載入其他檔案",
+            "loadReportFile": "載入報告檔案",
+            "startRecording": "開始錄製",
+            "stopAndSave": "停止並儲存"
+        },
+        "console": {
+            "searchPlaceholder": "搜尋 console 記錄..."
+        },
+        "fields": {
+            "descriptionPlaceholder": "請描述發生了什麼事...",
+            "descriptionTooltip": "補充發生問題時你正在做的事情。",
+            "includeLibraryScannerLogs": "包含媒體庫掃描器記錄"
+        },
+        "filters": {
+            "all": "全部（{{count}}）",
+            "allShort": "全部",
+            "errors": "錯誤（{{count}}）",
+            "logs": "記錄",
+            "warnings": "警告（{{count}}）"
+        },
+        "network": {
+            "requests": "{{count}} 筆請求",
+            "searchPlaceholder": "搜尋網路記錄..."
+        },
+        "overview": {
+            "created": "建立時間",
+            "os": "作業系統",
+            "recording": "錄製",
+            "reportInfo": "報告資訊",
+            "totalEvents": "事件總數",
+            "userAgent": "User Agent",
+            "userDescription": "使用者描述",
+            "version": "版本",
+            "viewport": "Viewport"
+        },
+        "prompts": {
+            "screenshotCaption": "為這張截圖加上說明"
+        },
+        "replay": {
+            "domEvents": "DOM 事件（{{count}}）",
+            "empty": "沒有可用的 replay 資料",
+            "includeServerLogs": "包含伺服器記錄",
+            "loadFailed": "載入 replay player 失敗。",
+            "timeline": "時間軸（{{count}}）"
+        },
+        "scanLogs": {
+            "orderHint": "最新的記錄會顯示在最前面。"
+        },
+        "screenshots": {
+            "empty": "沒有擷取到截圖"
+        },
+        "states": {
+            "eventsCount": "{{count}} 個事件",
+            "imagesCount": "{{count}} 張圖片",
+            "loadPrompt": "載入 issue report 以開始查看。",
+            "loadingSavedReport": "正在載入已儲存的 issue report...",
+            "recording": "錄製中..."
+        },
+        "tabs": {
+            "clicks": "點擊（{{count}}）",
+            "console": "Console（{{count}}）",
+            "network": "網路（{{count}}）",
+            "overview": "總覽",
+            "scanLogs": "掃描記錄（{{count}}）",
+            "screenshots": "截圖（{{count}}）",
+            "serverLogs": "伺服器記錄",
+            "sessionReplay": "操作回放",
+            "timeline": "時間軸",
+            "websocket": "WebSocket（{{count}}）"
+        },
+        "timeline": {
+            "errorsOnly": "只看錯誤",
+            "searchPlaceholder": "搜尋時間軸事件..."
+        },
+        "title": "Issue report",
+        "toasts": {
+            "cleared": "已清除已儲存的 issue report",
+            "decompressing": "正在解壓縮 issue report...",
+            "failedToDecompress": "解壓縮 issue report 失敗",
+            "failedToParse": "解析 issue report 失敗",
+            "failedToSaveToBrowserStorage": "無法將 issue report 儲存到瀏覽器儲存空間",
+            "loaded": "已載入 issue report",
+            "restoredPrevious": "已還原先前的 issue report"
+        },
+        "websocket": {
+            "eventsCount": "{{count}} 個事件",
+            "incoming": "接收",
+            "outgoing": "送出",
+            "searchPlaceholder": "搜尋 WebSocket 事件..."
+        }
+    },
+    "libraryExplorer": {
+        "actions": {
+            "deleteFile": "刪除檔案",
+            "deleteFiles": "刪除已選檔案",
+            "editMetadata": "編輯中繼資料",
+            "ignoreFile": "忽略檔案",
+            "ignoreFiles": "忽略檔案",
+            "lock": "鎖定",
+            "lockAllFiles": "鎖定全部檔案",
+            "matchFile": "配對檔案",
+            "matchFiles": "配對檔案",
+            "openInExplorer": "在檔案總管中開啟",
+            "previewAnime": "預覽動畫",
+            "removeEmptyDirectories": "移除空資料夾",
+            "resolveUnknownMedia": "處理未知媒體",
+            "superUpdate": "批次更新",
+            "unIgnoreFile": "取消忽略檔案",
+            "unIgnoreFiles": "取消忽略檔案",
+            "unlock": "解除鎖定",
+            "unlockAllFiles": "解除鎖定全部檔案",
+            "unmatchFile": "取消配對檔案",
+            "unmatchFiles": "取消配對檔案"
+        },
+        "bulkActions": {
+            "title": "批次操作"
+        },
+        "common": {
+            "library": "媒體庫"
+        },
+        "details": {
+            "anidbEpisode": "AniDB 集數",
+            "animeSeriesCount": "{{count}} 部動畫",
+            "associatedMedia": "關聯媒體",
+            "contents": "內容",
+            "contentsSummary": "{{folders}} 個資料夾 · {{files}} 個檔案",
+            "episode": "集數",
+            "file": "檔案",
+            "fileExtension": "副檔名：{{extension}}",
+            "folder": "資料夾",
+            "libraryFile": "媒體庫檔案",
+            "matched": "已配對",
+            "notMatched": "未配對",
+            "path": "路徑",
+            "selectPrompt": "選擇檔案或資料夾以查看詳細資訊。",
+            "size": "大小",
+            "type": "類型"
+        },
+        "dialogs": {
+            "lockAllFiles": {
+                "description": "要鎖定所有已選檔案嗎？",
+                "title": "鎖定全部檔案"
+            },
+            "removeEmptyDirectories": {
+                "description": "這會永久移除選取路徑中的空資料夾。",
+                "title": "移除空資料夾"
+            },
+            "selectFilesToDelete": "選擇要刪除的檔案",
+            "unlockAllFiles": {
+                "description": "要解除鎖定所有已選檔案嗎？",
+                "title": "解除鎖定全部檔案"
+            }
+        },
+        "ignoredFiles": {
+            "empty": "沒有已忽略的檔案。",
+            "title": "已忽略的檔案",
+            "unIgnoreSelection": "取消忽略所選項目"
+        },
+        "labels": {
+            "selectAllFiles": "選取全部檔案"
+        },
+        "metadata": {
+            "anidbEpisode": "AniDB 集數",
+            "anidbHelp": "設定配對用的 AniDB 集數。",
+            "episodeHelp": "設定此檔案對應的集數。",
+            "episodeNumber": "集數",
+            "saved": "已儲存檔案中繼資料",
+            "title": "編輯檔案中繼資料",
+            "type": "類型",
+            "types": {
+                "main": "正片",
+                "ncOther": "NC / 其他",
+                "special": "特別篇"
+            }
+        },
+        "states": {
+            "noMediaFound": "找不到媒體"
+        },
+        "superUpdate": {
+            "addRule": "新增規則",
+            "apply": "套用（{{count}}）",
+            "description": "重新命名所選檔案，並可選擇同步更新其中繼資料。",
+            "editFileMetadata": "編輯檔案中繼資料",
+            "fields": {
+                "replacePlaceholder": "輸入取代文字...",
+                "replaceWith": "取代為",
+                "searchFor": "搜尋內容",
+                "searchPlaceholder": "輸入要搜尋的文字..."
+            },
+            "formatting": {
+                "label": "文字格式"
+            },
+            "help": {
+                "enumerationPatterns": "編號樣式"
+            },
+            "metadata": "中繼資料",
+            "noChange": "無變更",
+            "noFilesSelected": "尚未選取檔案",
+            "noMetadataRules": "尚未新增中繼資料規則",
+            "noValidChanges": "沒有可套用的有效變更",
+            "options": {
+                "caseSensitive": "區分大小寫",
+                "enumerateItems": "為項目編號",
+                "matchAllOccurrences": "比對所有出現位置",
+                "useRegex": "使用 regex"
+            },
+            "original": "原始（{{count}}）",
+            "partialApply": "已套用 {{valid}} 項變更，略過 {{skipped}} 項。",
+            "renameFailed": "重新命名失敗：{{message}}",
+            "renamed": "已變更（{{count}}）",
+            "renamedShort": "已重新命名",
+            "rule": {
+                "fields": {
+                    "anidbEpisode": "AniDB 集數",
+                    "episodeNumber": "集數",
+                    "fileType": "檔案類型",
+                    "filterOptional": "篩選（可選）",
+                    "findTextRegex": "尋找（文字 / regex）",
+                    "replace": "取代",
+                    "search": "搜尋"
+                },
+                "help": {
+                    "anidb": "支援 regex 與區分大小寫選項。",
+                    "anidbFilter": "AniDB 運算子：anidb>=、anidb<=、anidb=、anidb!=、!anidb= | 格式可用數字（1、12）或前綴值（S1、C2、T1）",
+                    "episode": "運算子：>=、<=、>、<、=、!=、! | 類型：type=main|special|nc、!type=special",
+                    "type": "與集數相同的運算子：>=、<=、>、<、=、!=、! | 類型：type=main、!type=special"
+                },
+                "placeholders": {
+                    "anidbFilter": "例如：anidb>=1;anidb=S1;anidb!=C2;type=special",
+                    "anidbReplace": "取代文字（支援編號樣式）",
+                    "anidbSearch": "輸入文字或 regex 樣式",
+                    "episodeReplace": "例如：increment=1、decrement=1、start=1，或直接輸入 5",
+                    "episodeSearch": "例如：>=1;<=12;!=5;type=main|special;!type=nc",
+                    "typeReplace": "選擇新類型",
+                    "typeSearch": "例如：>=1;<12;=5;type=main;!type=special"
+                }
+            },
+            "updatedFileNames": "已更新 {{count}} 個檔名",
+            "updatedFilesAndMetadata": "已更新 {{files}} 個檔名與 {{metadata}} 筆中繼資料",
+            "updatedMetadata": "已更新 {{count}} 筆中繼資料"
+        },
+        "unknownMedia": {
+            "addAllToAniList": "全部加入 AniList",
+            "addAllToCollection": "全部加入收藏",
+            "collectionLabel": "收藏",
+            "description": "這些檔案無法自動配對。",
+            "matchedTo": "配對到",
+            "title": "未知媒體"
+        },
+        "watcher": {
+            "description": "已偵測到媒體庫變更。",
+            "refreshingLibrary": "正在重新整理媒體庫... {{progress}}%",
+            "scanLibrary": "掃描媒體庫",
+            "title": "媒體庫監看"
+        }
+    },
+    "playlists": {
+        "actions": {
+            "addEpisodes": "新增集數",
+            "addToNew": "加入新播放清單",
+            "addToPlaylist": "加入播放清單",
+            "create": "建立",
+            "delete": "刪除播放清單",
+            "deselectAll": "取消全選",
+            "reopenEpisode": "重新開啟本集",
+            "selectAll": "全選"
+        },
+        "autoplay": {
+            "nextEpisode": "下一集",
+            "playNow": "立即播放",
+            "playingNextEpisodeIn": "將在以下時間後播放下一集"
+        },
+        "common": {
+            "episodeNumber": "第 {{number}} 集",
+            "episodesCount": "{{count}} 集",
+            "movie": "電影",
+            "name": "播放清單名稱",
+            "playlist": "播放清單",
+            "playlistLabel": "播放清單：{{name}}",
+            "playlists": "播放清單",
+            "watched": "已觀看"
+        },
+        "editor": {
+            "createTitle": "建立播放清單",
+            "editTitle": "編輯播放清單",
+            "selectAnime": "選擇動畫"
+        },
+        "filters": {
+            "current": "目前",
+            "paused": "暫停中",
+            "planning": "計畫中"
+        },
+        "progress": {
+            "autoUpdate": "你的進度會自動更新。",
+            "currentlyWatching": "目前觀看中",
+            "nextLabel": "下一個：",
+            "playNext": "播放下一個",
+            "playNextEpisode": "播放下一集",
+            "playNextEpisodeDescription": "要立即繼續播放下一集嗎？",
+            "playNextEpisodeTitle": "播放下一集？",
+            "remainingAfterThis": "之後還剩 {{count}} 個",
+            "stopPlaylistDescription": "你確定要停止目前的播放清單嗎？",
+            "stopPlaylistTitle": "停止播放清單？",
+            "updateDescription": "切換前要把目前這集標記為已完成嗎？",
+            "updateNow": "立即更新進度",
+            "updateTitle": "更新進度？",
+            "updated": "進度已更新"
+        },
+        "states": {
+            "noEpisodesFound": "找不到集數",
+            "noPlaylists": "沒有播放清單"
+        },
+        "watchTypes": {
+            "debridStreaming": "Debrid 串流",
+            "localFile": "本機檔案",
+            "onlineStreaming": "線上串流",
+            "torrentStreaming": "Torrent 串流"
         }
     }
 }

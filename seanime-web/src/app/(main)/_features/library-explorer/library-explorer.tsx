@@ -52,6 +52,7 @@ import {
 } from "react-icons/lu"
 import { MdOutlineAdd, MdOutlineRemoveDone, MdVideoFile } from "react-icons/md"
 import { RiFolderOpenFill } from "react-icons/ri"
+import { useTranslation } from "react-i18next"
 import { VscVerified } from "react-icons/vsc"
 import { useWindowSize } from "react-use"
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso"
@@ -181,6 +182,7 @@ function flattenTreeNodes(
 }
 
 export function LibraryExplorer() {
+    const { t } = useTranslation()
     const { data: fileTree, isLoading } = useGetLibraryExplorerFileTree()
     const refreshMutation = useRefreshLibraryExplorerFileTree()
     const [selectedNode, setSelectedNode] = useAtom(libraryExplorer_selectedNodeAtom)
@@ -272,14 +274,14 @@ export function LibraryExplorer() {
 
     // collapse all nodes below unexpanded node if they are expanded
     const prevExpandedNodes = React.useRef<Set<string>>(expandedNodes)
-    const t = React.useRef<NodeJS.Timeout | null>(null)
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
     React.useEffect(() => {
-        if (t.current) {
-            clearTimeout(t.current)
-            t.current = null
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
         }
-        t.current = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             if (expandedNodes.size === 0) return
             const currentExpanded = expandedNodes
             const previousExpanded = prevExpandedNodes.current
@@ -312,9 +314,9 @@ export function LibraryExplorer() {
         }, 100)
 
         return () => {
-            if (t.current) {
-                clearTimeout(t.current)
-                t.current = null
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+                timeoutRef.current = null
             }
         }
     }, [expandedNodes])
@@ -761,6 +763,7 @@ const VirtualizedTreeNode = memo(({
     onResolveMedia,
     onOpenInExplorer,
 }: VirtualizedTreeNodeProps) => {
+    const { t } = useTranslation()
     const { node, level } = item
     const isDirectory = node.kind === "directory"
     const isSelected = selectedPath === node.path
@@ -926,7 +929,7 @@ const VirtualizedTreeNode = memo(({
     const handleResolveMedia = () => {
         const id = media?.id ?? node.mediaIds?.[0] ?? 0
         if (!id || !localFiles) {
-            toast.error("No media found")
+            toast.error(t("libraryExplorer.states.noMediaFound"))
             return
         }
         onResolveMedia(Object.values(localFiles)?.filter(n => n.mediaId === id) ?? [])
@@ -937,7 +940,7 @@ const VirtualizedTreeNode = memo(({
     function handleOpenMediaPreview() {
         const id = media?.id ?? node.mediaIds?.[0] ?? 0
         if (!id) {
-            toast.error("No media found")
+            toast.error(t("libraryExplorer.states.noMediaFound"))
             return
         }
         setPreviewModalMediaId(id, "anime")
@@ -963,18 +966,18 @@ const VirtualizedTreeNode = memo(({
     const [contextMenuOpen, setContextMenuOpen] = React.useState(false)
 
     const confirmLockDialog = useConfirmationDialog({
-        title: "Lock all files",
-        description: "This will lock all files in the directory. Are you sure you want to proceed?",
-        actionText: "Lock all",
+        title: t("libraryExplorer.dialogs.lockAllFiles.title"),
+        description: t("libraryExplorer.dialogs.lockAllFiles.description"),
+        actionText: t("libraryExplorer.actions.lockAllFiles"),
         actionIntent: "primary",
         onConfirm: async () => {
             handleToggleLockedClick(new MouseEvent("click") as any)
         },
     })
     const confirmUnlockDialog = useConfirmationDialog({
-        title: "Unlock all files",
-        description: "This will unlock all files in the directory. Are you sure you want to proceed?",
-        actionText: "Unlock all",
+        title: t("libraryExplorer.dialogs.unlockAllFiles.title"),
+        description: t("libraryExplorer.dialogs.unlockAllFiles.description"),
+        actionText: t("libraryExplorer.actions.unlockAllFiles"),
         actionIntent: "primary",
         onConfirm: async () => {
             handleToggleLockedClick(new MouseEvent("click") as any)
@@ -995,43 +998,43 @@ const VirtualizedTreeNode = memo(({
                         {node.mediaIds?.length === 1 && <ContextMenuItem
                             onClick={handleOpenMediaPreview}
                         >
-                            <LuEye /> Preview anime
+                            <LuEye /> {t("libraryExplorer.actions.previewAnime")}
                         </ContextMenuItem>}
                         {isUnknownMedia && <ContextMenuItem
                             onClick={handleResolveMedia}
                         >
-                            <LuPlus /> Resolve unknown media
+                            <LuPlus /> {t("libraryExplorer.actions.resolveUnknownMedia")}
                         </ContextMenuItem>}
                         <ContextMenuItem
                             onClick={handleOpenSuperUpdate}
                             // className={cn("text-[--violet]")}
                         >
-                            <FaRegEdit /> Super update
+                            <FaRegEdit /> {t("libraryExplorer.actions.superUpdate")}
                         </ContextMenuItem>
                         {(isDirectory && allFileIgnored) && <ContextMenuItem
                             onClick={handleUnignoreDirectory}
                             className={cn("text-purple-300", isPending && "opacity-50 pointer-events-none")}
                         >
-                            <LuClipboardPlus className="text-lg" /> Un-ignore files
+                            <LuClipboardPlus className="text-lg" /> {t("libraryExplorer.actions.unIgnoreFiles")}
                         </ContextMenuItem>}
                         {(isDirectory && !!nonIgnoredFileCount) && <>
                             {allFileMatched && <ContextMenuItem
                                 onClick={handleUnmatchDirectory}
                                 className={cn("text-[--orange]", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <MdOutlineRemoveDone className="text-lg" /> Unmatch files
+                                <MdOutlineRemoveDone className="text-lg" /> {t("libraryExplorer.actions.unmatchFiles")}
                             </ContextMenuItem>}
                             {!allFileMatched && <ContextMenuItem
                                 onClick={handleMatchDirectory}
                                 className={cn("text-[--green]", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <MdOutlineAdd className="text-lg" /> Match files
+                                <MdOutlineAdd className="text-lg" /> {t("libraryExplorer.actions.matchFiles")}
                             </ContextMenuItem>}
                             {!allFileIgnored && <ContextMenuItem
                                 onClick={handleIgnoreDirectory}
                                 className={cn("", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <LuClipboardX className="text-lg" /> Ignore files
+                                <LuClipboardX className="text-lg" /> {t("libraryExplorer.actions.ignoreFiles")}
                             </ContextMenuItem>}
                         </>}
                         {(!isDirectory && isScannedFile) && <>
@@ -1039,51 +1042,51 @@ const VirtualizedTreeNode = memo(({
                                 onClick={() => setMetadataModalOpen(true)}
                                 className={cn("text-[--blue]", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <LuFilePen className="text-lg" /> Edit metadata
+                                <LuFilePen className="text-lg" /> {t("libraryExplorer.actions.editMetadata")}
                             </ContextMenuItem>}
                             {!!node.localFile?.mediaId && <ContextMenuItem
                                 onClick={handleUnmatchSingleFile}
                                 className={cn("text-[--orange]", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <MdOutlineRemoveDone className="text-lg" /> Unmatch file
+                                <MdOutlineRemoveDone className="text-lg" /> {t("libraryExplorer.actions.unmatchFile")}
                             </ContextMenuItem>}
                             {!node.localFile?.mediaId && <ContextMenuItem
                                 onClick={handleMatchSingleFile}
                                 className={cn("text-[--green]", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <MdOutlineAdd className="text-lg" /> Match file
+                                <MdOutlineAdd className="text-lg" /> {t("libraryExplorer.actions.matchFile")}
                             </ContextMenuItem>}
                             {!node?.localFile?.ignored && <ContextMenuItem
                                 onClick={handleIgnoreSingleFile}
                                 className={cn("", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <LuClipboardX className="text-lg" /> Ignore file
+                                <LuClipboardX className="text-lg" /> {t("libraryExplorer.actions.ignoreFile")}
                             </ContextMenuItem>}
                             {node?.localFile?.ignored && <ContextMenuItem
                                 onClick={handleUnignoreSingleFile}
                                 className={cn("text-purple-300", isPending && "opacity-50 pointer-events-none")}
                             >
-                                <LuClipboardPlus className="text-lg" /> Un-ignore file
+                                <LuClipboardPlus className="text-lg" /> {t("libraryExplorer.actions.unIgnoreFile")}
                             </ContextMenuItem>}
                         </>}
                         <ContextMenuSeparator className="!my-2" />
                         <ContextMenuSub
-                            triggerContent="More"
+                            triggerContent={t("navigation.more")}
                         >
                             {isDirectory && !!nonIgnoredFileCount && <ContextMenuItem
                                 onClick={handleDeleteDirectory}
                                 className={cn("text-[--red]")}
                             >
-                                <LuTrash2 className="text-lg" /> Delete files
+                                <LuTrash2 className="text-lg" /> {t("libraryExplorer.actions.deleteFiles")}
                             </ContextMenuItem>}
                             {(!isDirectory && isScannedFile) && <ContextMenuItem
                                 onClick={handleDeleteSingleFile}
                                 className={cn("text-[--red]")}
                             >
-                                <LuTrash2 className="text-lg" /> Delete file
+                                <LuTrash2 className="text-lg" /> {t("libraryExplorer.actions.deleteFile")}
                             </ContextMenuItem>}
                             <ContextMenuItem onClick={handleOpenInExplorerClick}>
-                                <BiFolder /> Open in explorer
+                                <BiFolder /> {t("libraryExplorer.actions.openInExplorer")}
                             </ContextMenuItem>
                         </ContextMenuSub>
 
@@ -1220,7 +1223,7 @@ const VirtualizedTreeNode = memo(({
                                     />
                                 }
                             >
-                                {isLocked ? (isDirectory ? "Unlock all files" : "Unlock") : (isDirectory ? "Lock all files" : "Lock")}
+                                {isLocked ? (isDirectory ? t("libraryExplorer.actions.unlockAllFiles") : t("libraryExplorer.actions.unlock")) : (isDirectory ? t("libraryExplorer.actions.lockAllFiles") : t("libraryExplorer.actions.lock"))}
                             </Tooltip>}
                         {((isDirectory && hasDirectoryChildren && matchedFileNodes?.length > 0)) && <Tooltip
                             trigger={
@@ -1241,7 +1244,7 @@ const VirtualizedTreeNode = memo(({
                                 />
                             }
                         >
-                            {isLocked ? "Unlock all files" : "Lock all files"}
+                            {isLocked ? t("libraryExplorer.actions.unlockAllFiles") : t("libraryExplorer.actions.lockAllFiles")}
                         </Tooltip>}
                     </div>
                 </ContextMenuTrigger>
@@ -1250,7 +1253,7 @@ const VirtualizedTreeNode = memo(({
             {node.localFile && <Modal
                 open={isMetadataModalOpen}
                 onOpenChange={() => setMetadataModalOpen(false)}
-                title="File metadata"
+                title={t("libraryExplorer.metadata.title")}
                 titleClass="text-center"
                 contentClass="max-w-xl"
             >
@@ -1268,7 +1271,7 @@ const VirtualizedTreeNode = memo(({
                                 },
                             }, () => {
                                 setMetadataModalOpen(false)
-                                toast.success("Metadata saved")
+                                toast.success(t("libraryExplorer.metadata.saved"))
                             })
                         }
                     }}
@@ -1277,22 +1280,22 @@ const VirtualizedTreeNode = memo(({
                     defaultValues={{ ...node.localFile.metadata }}
                 >
                     <Field.Number
-                        label="Episode number" name="episode"
-                        help="Relative episode number. If movie, episode number = 1"
+                        label={t("libraryExplorer.metadata.episodeNumber")} name="episode"
+                        help={t("libraryExplorer.metadata.episodeHelp")}
                         required
                     />
                     <Field.Text
-                        label="AniDB episode"
+                        label={t("libraryExplorer.metadata.anidbEpisode")}
                         name="aniDBEpisode"
-                        help="Specials typically contain the letter S"
+                        help={t("libraryExplorer.metadata.anidbHelp")}
                     />
                     <Field.Select
-                        label="Type"
+                        label={t("libraryExplorer.metadata.type")}
                         name="type"
                         options={[
-                            { label: "Main", value: "main" },
-                            { label: "Special", value: "special" },
-                            { label: "NC/Other", value: "nc" },
+                            { label: t("libraryExplorer.metadata.types.main"), value: "main" },
+                            { label: t("libraryExplorer.metadata.types.special"), value: "special" },
+                            { label: t("libraryExplorer.metadata.types.ncOther"), value: "nc" },
                         ]}
                     />
                     <div className="w-full flex justify-end">
@@ -1313,6 +1316,7 @@ const VirtualizedTreeNode = memo(({
 
 
 function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | undefined }) {
+    const { t } = useTranslation()
     const selectedNode = useAtomValue(libraryExplorer_selectedNodeAtom)
 
     const userMedia = useAtomValue(__anilist_userAnimeMediaAtom)
@@ -1333,7 +1337,7 @@ function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | un
             <div className="p-4 flex-1 flex items-center justify-center">
                 <div className="text-center text-gray-500">
                     <FiFolder className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm">Select a file or folder to view details</p>
+                    <p className="text-sm">{t("libraryExplorer.details.selectPrompt")}</p>
                 </div>
             </div>
         )
@@ -1365,7 +1369,7 @@ function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | un
                     {selectedNode.name}
                 </h3>
                 {fileExtension && (
-                    <span className="text-xs text-gray-400 mt-1">{fileExtension} File</span>
+                    <span className="text-xs text-gray-400 mt-1">{t("libraryExplorer.details.fileExtension", { extension: fileExtension })}</span>
                 )}
             </div>
 
@@ -1373,12 +1377,12 @@ function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | un
 
             <div className="space-y-3 text-sm">
                 <div>
-                    <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">Type</dt>
-                    <dd className="text-gray-200">{isDirectory ? "Folder" : "File"}</dd>
+                    <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">{t("libraryExplorer.details.type")}</dt>
+                    <dd className="text-gray-200">{isDirectory ? t("libraryExplorer.details.folder") : t("libraryExplorer.details.file")}</dd>
                 </div>
 
                 <div>
-                    <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">Path</dt>
+                    <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">{t("libraryExplorer.details.path")}</dt>
                     <dd className="text-gray-200 text-xs font-mono bg-gray-900 p-2 rounded break-all">
                         {selectedNode.path}
                     </dd>
@@ -1386,7 +1390,7 @@ function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | un
 
                 {selectedNode.size && (
                     <div>
-                        <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">Size</dt>
+                        <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">{t("libraryExplorer.details.size")}</dt>
                         <dd className="text-gray-200">{formatFileSize(selectedNode.size)}</dd>
                     </div>
                 )}
@@ -1394,10 +1398,10 @@ function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | un
                 {isDirectory && selectedNode.mediaIds && selectedNode.mediaIds.length > 0 && (
                     <div>
                         <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">
-                            Associated Media
+                            {t("libraryExplorer.details.associatedMedia")}
                         </dt>
                         <dd className="text-gray-200">
-                            {selectedNode.mediaIds.length} anime series
+                            {t("libraryExplorer.details.animeSeriesCount", { count: selectedNode.mediaIds.length })}
                         </dd>
                         {selectedNode.mediaIds.length > 1 && selectedNode.mediaIds.length <= 5 && associatedMedia?.map(media => (
                             <dd
@@ -1414,28 +1418,27 @@ function LibraryInfoPanel({}: { localFiles: Record<string, Anime_LocalFile> | un
                 {selectedNode.localFile && (
                     <div className="space-y-1.5">
                         <dt className="text-gray-400 text-sm uppercase tracking-wide">
-                            Library File
+                            {t("libraryExplorer.details.libraryFile")}
                         </dt>
-                        {selectedNode.localFile?.mediaId > 0 && <dd className="text-[--green] text-sm">✓ Matched</dd>}
-                        {selectedNode.localFile?.mediaId === 0 && <dd className="text-[--orange] text-sm">Not matched</dd>}
+                        {selectedNode.localFile?.mediaId > 0 && <dd className="text-[--green] text-sm">{t("libraryExplorer.details.matched")}</dd>}
+                        {selectedNode.localFile?.mediaId === 0 && <dd className="text-[--orange] text-sm">{t("libraryExplorer.details.notMatched")}</dd>}
                         <dd className="text-gray-200 text-sm">
-                            Episode: <span className="font-semibold">{selectedNode.localFile?.metadata?.episode ?? "N/A"}</span>
+                            {t("libraryExplorer.details.episode")}: <span className="font-semibold">{selectedNode.localFile?.metadata?.episode ?? "N/A"}</span>
                         </dd>
                         <dd className="text-gray-200 text-sm">
-                            AniDB Episode: <span className="font-semibold">{selectedNode.localFile?.metadata?.aniDBEpisode ?? "N/A"}</span>
+                            {t("libraryExplorer.details.anidbEpisode")}: <span className="font-semibold">{selectedNode.localFile?.metadata?.aniDBEpisode ?? "N/A"}</span>
                         </dd>
                         <dd className="text-gray-200 text-sm">
-                            Type: <span className="font-semibold">{selectedNode.localFile?.metadata?.type?.toUpperCase()}</span>
+                            {t("libraryExplorer.details.type")}: <span className="font-semibold">{selectedNode.localFile?.metadata?.type?.toUpperCase()}</span>
                         </dd>
                     </div>
                 )}
 
                 {isDirectory && selectedNode.children && (
                     <div>
-                        <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">Contents</dt>
+                        <dt className="text-gray-400 text-sm uppercase tracking-wide mb-1">{t("libraryExplorer.details.contents")}</dt>
                         <dd className="text-gray-200">
-                            {directoryCount} folder{directoryCount != 1 ? "s" : ""}, {" "}
-                            {fileCount} file{fileCount != 1 ? "s" : ""}
+                            {t("libraryExplorer.details.contentsSummary", { folders: directoryCount, files: fileCount })}
                         </dd>
                     </div>
                 )}
@@ -1477,6 +1480,7 @@ type LibraryExplorerDeleteFileModalProps = {
 }
 
 function LibraryExplorerDeleteFileModal(props: LibraryExplorerDeleteFileModalProps) {
+    const { t } = useTranslation()
     const { open, onOpenChange, selectedPaths, isDirectory } = props
 
     const [filepaths, setFilepaths] = React.useState<string[]>([])
@@ -1492,10 +1496,10 @@ function LibraryExplorerDeleteFileModal(props: LibraryExplorerDeleteFileModalPro
     const refreshMutation = useRefreshLibraryExplorerFileTree()
 
     const confirmDelete = useConfirmationDialog({
-        title: "Delete file",
-        description: "This action cannot be undone.",
+        title: t("common.dialogs.delete.title"),
+        description: t("common.dialogs.delete.description"),
         actionIntent: "alert",
-        actionText: "Delete",
+        actionText: t("common.buttons.delete"),
         onConfirm: () => {
             if (filepaths.length === 0) return
 
@@ -1514,7 +1518,7 @@ function LibraryExplorerDeleteFileModal(props: LibraryExplorerDeleteFileModalPro
                 open={open}
                 onOpenChange={onOpenChange}
                 contentClass="max-w-2xl"
-                title={<span>Delete file</span>}
+                title={<span>{t("libraryExplorer.actions.deleteFile")}</span>}
                 titleClass="text-center"
             >
                 <div className="space-y-2 mt-2">
@@ -1538,14 +1542,14 @@ function LibraryExplorerDeleteFileModal(props: LibraryExplorerDeleteFileModalPro
                             onClick={() => confirmDelete.open()}
                             loading={isDeleting}
                         >
-                            Delete
+                            {t("common.buttons.delete")}
                         </Button>
                         <Button
                             intent="white"
                             onClick={() => onOpenChange(false)}
                             disabled={isDeleting}
                         >
-                            Cancel
+                            {t("common.buttons.cancel")}
                         </Button>
                     </div>
                 </div>
@@ -1563,6 +1567,7 @@ type LibraryExplorerBulkDeleteModalProps = {
 }
 
 function LibraryExplorerBulkDeleteModal(props: LibraryExplorerBulkDeleteModalProps) {
+    const { t } = useTranslation()
     const { open, onOpenChange, selectedPaths, fileNodes } = props
 
     const [filepaths, setFilepaths] = React.useState<string[]>([])
@@ -1588,10 +1593,10 @@ function LibraryExplorerBulkDeleteModal(props: LibraryExplorerBulkDeleteModalPro
     const refreshMutation = useRefreshLibraryExplorerFileTree()
 
     const confirmDelete = useConfirmationDialog({
-        title: "Delete files",
-        description: "This action cannot be undone.",
+        title: t("common.dialogs.delete.title"),
+        description: t("common.dialogs.delete.description"),
         actionIntent: "alert",
-        actionText: "Delete",
+        actionText: t("common.buttons.delete"),
         onConfirm: () => {
             if (filepaths.length === 0) return
 
@@ -1622,7 +1627,7 @@ function LibraryExplorerBulkDeleteModal(props: LibraryExplorerBulkDeleteModalPro
                 open={open}
                 onOpenChange={onOpenChange}
                 contentClass="max-w-2xl"
-                title={<span>Select files to delete</span>}
+                title={<span>{t("libraryExplorer.dialogs.selectFilesToDelete")}</span>}
                 titleClass="text-center"
             >
                 <div className="space-y-2 mt-2">
@@ -1650,14 +1655,14 @@ function LibraryExplorerBulkDeleteModal(props: LibraryExplorerBulkDeleteModalPro
                             onClick={() => confirmDelete.open()}
                             loading={isDeleting}
                         >
-                            Delete
+                            {t("common.buttons.delete")}
                         </Button>
                         <Button
                             intent="white"
                             onClick={() => onOpenChange(false)}
                             disabled={isDeleting}
                         >
-                            Cancel
+                            {t("common.buttons.cancel")}
                         </Button>
                     </div>
                 </div>

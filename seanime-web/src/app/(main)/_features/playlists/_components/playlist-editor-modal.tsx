@@ -6,6 +6,7 @@ import { DangerZone } from "@/components/ui/form"
 import { Modal } from "@/components/ui/modal"
 import { TextInput } from "@/components/ui/text-input"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 type PlaylistEditorModalProps = {
@@ -15,6 +16,7 @@ type PlaylistEditorModalProps = {
 }
 
 export function PlaylistEditorModal(props: PlaylistEditorModalProps) {
+    const { t } = useTranslation()
 
     const {
         libraryCollection,
@@ -47,7 +49,7 @@ export function PlaylistEditorModal(props: PlaylistEditorModalProps) {
 
     function handleSubmit() {
         if (name.length === 0) {
-            toast.error("Please enter a name for the playlist")
+            toast.error(t("toasts.playlists.nameRequired"))
             return
         }
         if (isUpdate && !!playlist) {
@@ -65,7 +67,7 @@ export function PlaylistEditorModal(props: PlaylistEditorModalProps) {
 
     return (
         <Modal
-            title={isUpdate ? "Edit playlist" : "Create a playlist"}
+            title={isUpdate ? t("playlists.editor.editTitle") : t("playlists.editor.createTitle")}
             trigger={trigger}
             open={isOpen}
             onOpenChange={v => setIsOpen(v)}
@@ -76,7 +78,7 @@ export function PlaylistEditorModal(props: PlaylistEditorModalProps) {
 
                 <div className="space-y-4">
                     <TextInput
-                        label="Name"
+                        label={t("playlists.common.name")}
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
@@ -100,13 +102,13 @@ export function PlaylistEditorModal(props: PlaylistEditorModalProps) {
                             loading={isCreating || isDeleting || isUpdating}
                             className="w-full"
                         >
-                            {isUpdate ? "Update" : "Create"}
+                            {isUpdate ? t("common.buttons.update") : t("common.buttons.add")}
                         </Button>
                     </div>
                 </div>
 
                 {isUpdate && <DangerZone
-                    actionText="Delete playlist" onDelete={() => {
+                    actionText={t("playlists.actions.delete")} onDelete={() => {
                     if (isUpdate && !!playlist) {
                         deletePlaylist({ dbId: playlist.dbId }, {
                             onSuccess: () => {

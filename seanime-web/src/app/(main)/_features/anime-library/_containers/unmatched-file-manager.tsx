@@ -19,6 +19,7 @@ import { upath } from "@/lib/helpers/upath"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
 import { FcFolder } from "react-icons/fc"
 import { FiSearch } from "react-icons/fi"
@@ -32,6 +33,7 @@ type UnmatchedFileManagerProps = {
 }
 
 export function UnmatchedFileManager(props: UnmatchedFileManagerProps) {
+    const { t } = useTranslation()
 
     const { unmatchedGroups } = props
 
@@ -123,12 +125,12 @@ export function UnmatchedFileManager(props: UnmatchedFileManagerProps) {
             onSuccess: data => {
                 setTimeout(() => {
                     if (!data?.length) {
-                        toast.warning("No suggestions found, try searching manually")
+                        toast.warning(t("toasts.library.noSuggestionsFound"))
                     }
                 }, 500)
             },
         })
-    }, [currentGroup?.dir, fetchSuggestions])
+    }, [currentGroup?.dir, fetchSuggestions, t])
 
     function handleIgnoreSelected() {
         if (selectedPaths.length > 0) {
@@ -138,7 +140,7 @@ export function UnmatchedFileManager(props: UnmatchedFileManagerProps) {
             }, {
                 onSuccess: () => {
                     onActionSuccess()
-                    toast.success("Files ignored")
+                    toast.success(t("toasts.library.filesIgnored"))
                 },
             })
         }

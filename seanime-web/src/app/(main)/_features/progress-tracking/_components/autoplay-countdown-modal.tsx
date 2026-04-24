@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
 import { logger } from "@/lib/helpers/debug"
 import { BiSolidSkipNextCircle } from "react-icons/bi"
+import { useTranslation } from "react-i18next"
 
 interface AutoplayCountdownModalProps {
     autoplayState: AutoplayState
@@ -15,6 +16,7 @@ export function AutoplayCountdownModal({
     onCancel,
     onPlayNow,
 }: AutoplayCountdownModalProps) {
+    const { t } = useTranslation()
 
     const { isActive, countdown, nextEpisode, streamingType } = autoplayState
 
@@ -31,13 +33,13 @@ export function AutoplayCountdownModal({
     const getStreamingTypeLabel = () => {
         switch (streamingType) {
             case "local":
-                return "Local File"
+                return t("playlists.watchTypes.localFile")
             case "torrent":
-                return "Torrent Stream"
+                return t("playlists.watchTypes.torrentStreaming")
             case "debrid":
-                return "Debrid Stream"
+                return t("playlists.watchTypes.debridStreaming")
             default:
-                return "Unknown"
+                return t("extensions.common.unknown")
         }
     }
 
@@ -51,7 +53,7 @@ export function AutoplayCountdownModal({
         }
 
         return {
-            title: "Next Episode",
+            title: t("playlists.autoplay.nextEpisode"),
             episodeTitle: null,
             image: null,
         }
@@ -69,7 +71,7 @@ export function AutoplayCountdownModal({
             }}
             titleClass="text-center"
             hideCloseButton
-            title="Playing next episode in"
+            title={t("playlists.autoplay.playingNextEpisodeIn")}
             contentClass="!space-y-4 relative max-w-xl border-transparent !rounded-3xl"
             closeClass="!text-[--red]"
         >
@@ -118,7 +120,7 @@ export function AutoplayCountdownModal({
                         className="flex-1"
                         size="sm"
                     >
-                        Cancel
+                        {t("common.buttons.cancel")}
                     </Button>
 
                     {onPlayNow && (
@@ -129,7 +131,7 @@ export function AutoplayCountdownModal({
                             size="sm"
                             leftIcon={<BiSolidSkipNextCircle />}
                         >
-                            Play Now
+                            {t("playlists.autoplay.playNow")}
                         </Button>
                     )}
                 </div>

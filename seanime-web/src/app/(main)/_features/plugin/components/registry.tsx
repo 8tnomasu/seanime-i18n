@@ -32,6 +32,7 @@ import {
 } from "@/app/(main)/_features/plugin/components/registry-components"
 import type React from "react"
 import { createContext, useContext } from "react"
+import { useTranslation } from "react-i18next"
 
 // Create and initialize the registry
 export const registry: ComponentRegistry = new Map([
@@ -77,14 +78,18 @@ interface RenderPluginComponentsProps {
 
 // Fallback component when type is not found
 function DefaultFallback({ type }: { type: string }) {
-    return <div className="p-4 text-muted-foreground">Component type &quot;{type}&quot; not found</div>
+    const { t } = useTranslation()
+
+    return <div className="p-4 text-muted-foreground">{t("extensions.common.componentTypeNotFound", { type })}</div>
 }
 
 // Error fallback
 function ErrorFallbackComponent({ error }: { error: Error }) {
+    const { t } = useTranslation()
+
     return (
         <div className="p-4 text-destructive" role="alert">
-            <p>Something went wrong:</p>
+            <p>{t("common.states.unexpectedError")}</p>
             <pre className="mt-2 text-sm">{error.message}</pre>
         </div>
     )

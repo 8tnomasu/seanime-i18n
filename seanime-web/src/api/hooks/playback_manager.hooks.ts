@@ -3,6 +3,7 @@ import { PlaybackPlayVideo_Variables, PlaybackStartManualTracking_Variables } fr
 import { API_ENDPOINTS } from "@/api/generated/endpoints"
 import { Anime_LocalFile } from "@/api/generated/types"
 import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
+import i18n from "@/i18n"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -39,7 +40,7 @@ export function usePlaybackCancelCurrentPlaylist(...keys: any) {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackCancelCurrentPlaylist.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackCancelCurrentPlaylist.key, ...keys],
         onSuccess: async () => {
-            toast.info("Cancelling playlist")
+            toast.info(i18n.t("player.toasts.cancellingPlaylist"))
         },
     })
 }
@@ -50,7 +51,7 @@ export function usePlaybackPlaylistNext(...keys: any) {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlaylistNext.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlaylistNext.key, ...keys],
         onSuccess: async () => {
-            toast.info("Loading next file")
+            toast.info(i18n.t("player.toasts.loadingNextFile"))
         },
     })
 }
@@ -72,7 +73,7 @@ export function usePlaybackPlayRandomVideo() {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlayRandomVideo.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackPlayRandomVideo.key],
         onSuccess: async () => {
-            toast.success("Playing random episode")
+            toast.success(i18n.t("player.toasts.playingRandomEpisode"))
         },
     })
 }
@@ -113,7 +114,7 @@ export function usePlaybackAutoPlayNextEpisode() {
         method: API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackAutoPlayNextEpisode.methods[0],
         mutationKey: [API_ENDPOINTS.PLAYBACK_MANAGER.PlaybackAutoPlayNextEpisode.key],
         onSuccess: async () => {
-            toast.info("Loading next episode")
+            toast.info(i18n.t("player.toasts.loadingNextEpisode"))
         },
     })
 }

@@ -173,28 +173,28 @@ export function useServerQuery<R, V = any>(
 //----------------------------------------------------------------------------------------------------------------------
 
 function _handleSeaError(data: any): string {
-    if (typeof data === "string") return "Server Error: " + data
+    if (typeof data === "string") return i18n.t("common.errors.serverError", { message: data })
 
     const err = data?.error as string
 
-    if (!err) return "Unknown error"
+    if (!err) return i18n.t("common.errors.unknownError")
 
     if (err.includes("Too many requests"))
-        return "AniList: Too many requests, please wait a moment and try again."
+        return i18n.t("common.errors.anilistRateLimited")
 
     try {
         const graphqlErr = JSON.parse(err) as any
         console.log("AniList error", graphqlErr)
         if (graphqlErr.graphqlErrors && graphqlErr.graphqlErrors.length > 0 && !!graphqlErr.graphqlErrors[0]?.message) {
-            return "AniList error: " + graphqlErr.graphqlErrors[0]?.message
+            return i18n.t("common.errors.anilistErrorWithMessage", { message: graphqlErr.graphqlErrors[0]?.message })
         }
-        return "AniList error"
+        return i18n.t("common.errors.anilistError")
     }
     catch (e) {
         if (err.includes("no cached data") || err.includes("cache lookup failed")) {
             return ""
         }
-        return "Error: " + err
+        return i18n.t("common.errors.serverError", { message: err })
     }
 }
 
@@ -207,6 +207,6 @@ function _handleSeaResponse<T>(res: unknown): { data: T | undefined, error: stri
         return { data: res.data as T, error: undefined }
     }
 
-    return { data: undefined, error: "No response from the server" }
+    return { data: undefined, error: i18n.t("common.errors.noResponseFromServer") }
 
 }

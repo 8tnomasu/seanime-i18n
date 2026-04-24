@@ -37,6 +37,7 @@ import React from "react"
 import { BiX } from "react-icons/bi"
 import { LuRefreshCw } from "react-icons/lu"
 import { MdSkipNext, MdSkipPrevious } from "react-icons/md"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 const log = logger("PLAYLIST MANAGER")
@@ -51,6 +52,7 @@ const pm_currentPlaylistEpisode = atom<Anime_PlaylistEpisode | null>(null)
 const pm_confirmProgressUpdateModalOpen = atom<"next" | "previous" | null>(null)
 
 export function usePlaylistManager() {
+    const { t } = useTranslation()
     const { sendMessage } = useWebsocketSender()
     const clientId = useAtomValue(clientIdAtom)
 
@@ -62,7 +64,7 @@ export function usePlaylistManager() {
     const { activeOnDevice } = useMediastreamActiveOnDevice()
 
     function startPlaylist(playlist: Anime_Playlist) {
-        toast.info("Starting playlist...")
+        toast.info(t("toasts.playlists.starting"))
         sendMessage({
             type: WSEvents.PLAYLIST,
             payload: {
@@ -155,6 +157,7 @@ export function usePlaylistManager() {
 }
 
 export function GlobalPlaylistManager() {
+    const { t } = useTranslation()
     const { sendMessage } = useWebsocketSender()
     const websocketConnected = useAtomValue(websocketConnectedAtom)
     const serverStatus = useServerStatus()
@@ -225,7 +228,10 @@ export function GlobalPlaylistManager() {
                     const payload2 = data.payload as { playlistEpisode: Anime_PlaylistEpisode }
                     const episode = payload2.playlistEpisode
 
-                    toast.info(`Playing episode ${episode.episode?.aniDBEpisode} of ${episode.episode?.baseAnime?.title?.userPreferred}`)
+                    toast.info(t("toasts.playlists.playingEpisode", {
+                        episode: episode.episode?.aniDBEpisode,
+                        title: episode.episode?.baseAnime?.title?.userPreferred,
+                    }))
 
                     switch (payload2.playlistEpisode.watchType) {
                         case "nakama":
@@ -327,18 +333,18 @@ export function GlobalPlaylistManager() {
                     setConfirmProgress(null)
                 }
             }}
-            title="Update progress?"
+            title={t("playlists.progress.updateTitle")}
         >
             <p>
-                Do you want to update the progress of the current episode?
+                {t("playlists.progress.updateDescription")}
             </p>
 
             <div className="flex gap-2 mt-4 justify-end">
                 <Button intent="primary" onClick={() => onConfirmedProgress(true)}>
-                    Yes
+                    {t("common.buttons.confirm")}
                 </Button>
                 <Button intent="white-subtle" onClick={() => onConfirmedProgress(false)}>
-                    No
+                    {t("common.buttons.cancel")}
                 </Button>
             </div>
 
@@ -346,7 +352,7 @@ export function GlobalPlaylistManager() {
 
         {!nativePlayerState.active && <PlaylistManagerPopup position="bottom-right">
             <p className="p-3 text-sm font-semibold">
-                Playlist: {currentPlaylist.name}
+                {t("playlists.common.playlistLabel", { name: currentPlaylist.name })}
             </p>
             <div className="p-3 space-y-2 overflow-auto">
                 <div className="space-y-2 relative">
@@ -375,7 +381,7 @@ export function GlobalPlaylistManager() {
                         />
                     </span>}
                     >
-                        Reopen episode
+                        {t("playlists.actions.reopenEpisode")}
                     </Tooltip>
                     <Tooltip
                         className="z-[99999]" trigger={<span>
@@ -387,7 +393,7 @@ export function GlobalPlaylistManager() {
                         />
                     </span>}
                     >
-                        Stop playlist
+                        {t("common.buttons.stop")}
                     </Tooltip>
                     <div className="flex flex-1"></div>
                     <IconButton
@@ -404,6 +410,7 @@ export function GlobalPlaylistManager() {
 }
 
 function EpisodeItem({ episode }: { episode: Anime_PlaylistEpisode }) {
+    const { t } = useTranslation()
 
     const currentPlaylistEpisode = useAtomValue(pm_currentPlaylistEpisode)
 
@@ -433,12 +440,12 @@ function EpisodeItem({ episode }: { episode: Anime_PlaylistEpisode }) {
             </div>
             <div className="max-w-full space-y-1">
                 <p className="text-sm text-[--muted]">{episode.episode?.baseAnime?.title?.userPreferred}</p>
-                <p className="">{episode.episode?.baseAnime?.format !== "MOVIE" ? `Episode ${episode.episode!.episodeNumber}` : "Movie"}</p>
+                <p className="">{episode.episode?.baseAnime?.format !== "MOVIE" ? t("playlists.common.episodeNumber", { number: episode.episode!.episodeNumber }) : t("playlists.common.movie")}</p>
 
                 <div>
                     <div className="text-xs text-[--muted] line-clamp-1 tracking-wide">
-                        {episode.watchType === "torrent" ? "Torrent streaming" : episode.watchType === "debrid" ? "Debrid streaming" :
-                            episode.watchType === "online" ? "Online streaming" :
+                        {episode.watchType === "torrent" ? t("playlists.watchTypes.torrentStreaming") : episode.watchType === "debrid" ? t("playlists.watchTypes.debridStreaming") :
+                            episode.watchType === "online" ? t("playlists.watchTypes.onlineStreaming") :
                                 episode.episode?.localFile?.name}
                     </div>
                 </div>

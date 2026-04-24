@@ -4,8 +4,10 @@ import { LoadingOverlay } from "@/components/ui/loading-spinner"
 import { useRouter } from "@/lib/navigation"
 import { useQueryClient } from "@tanstack/react-query"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export default function _page() {
+    const { t } = useTranslation()
 
     const router = useRouter()
     const qc = useQueryClient()
@@ -39,14 +41,14 @@ export default function _page() {
 
     if (!state || !code || !challenge) return (
         <div className="p-12 space-y-4 text-center">
-            Invalid URL or Challenge
+            {t("auth.mal.invalidUrlOrChallenge")}
         </div>
     )
 
     return (
         <div>
             <LoadingOverlay className="fixed w-full h-full z-[80]">
-                <h3 className="mt-2">Authenticating...</h3>
+                <h3 className="mt-2">{t("common.states.authenticating")}</h3>
             </LoadingOverlay>
         </div>
     )
