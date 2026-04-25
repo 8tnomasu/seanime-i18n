@@ -1246,6 +1246,85 @@
             "from": "from"
         }
     },
+    "discover": {
+        "tabs": {
+            "anime": "Anime",
+            "schedule": "Schedule",
+            "manga": "Manga"
+        },
+        "sections": {
+            "trendingNow": "Trending Right Now",
+            "topOfSeason": "Top of the Season",
+            "bestOfLastSeason": "Best of Last Season",
+            "comingSoon": "Coming Soon",
+            "trendingMovies": "Trending Movies",
+            "trendingManga": "Trending Manga",
+            "trendingManhwa": "Trending Manhwa",
+            "trendingManhua": "Trending Manhua",
+            "airingSchedule": "Airing Schedule",
+            "airedRecently": "Aired Recently"
+        },
+        "actions": {
+            "openPage": "Open page",
+            "goToSlide": "Go to slide {{number}}"
+        },
+        "schedule": {
+            "today": "Today",
+            "episodeAiringAt": "Ep {{episode}} airing at {{time}}"
+        },
+        "header": {
+            "releasingNow": "Releasing now",
+            "episodesReleased_one": "{{count}} episode released",
+            "episodesReleased_other": "{{count}} episodes released",
+            "totalEpisodes_one": "{{count}} total episode",
+            "totalEpisodes_other": "{{count}} total episodes"
+        }
+    },
+    "scanSummaries": {
+        "title": "Scan summaries",
+        "subtitle": "View the logs of your latest scans",
+        "search": {
+            "placeholder": "Search filename"
+        },
+        "empty": {
+            "title": "No scan summaries available",
+            "description": "Run a library scan to generate summaries."
+        },
+        "success": {
+            "scannedMedia": "Seanime successfully scanned {{count}} media",
+            "unmatchedFiles_one": "{{count}} file was not matched",
+            "unmatchedFiles_other": "{{count}} files were not matched",
+            "matchingSuffix": "{{count}} matching"
+        },
+        "sections": {
+            "unmatchedFiles": "Unmatched files",
+            "mediaScanned": "Media scanned",
+            "errorsFound": "Errors found",
+            "warningsFound": "Warnings found"
+        },
+        "status": {
+            "inAniListCollection": "Anime is present in your AniList collection",
+            "notInAniListCollection": "Anime is not present in your AniList collection"
+        },
+        "stats": {
+            "filesScanned_one": "{{count}} file scanned",
+            "filesScanned_other": "{{count}} files scanned"
+        },
+        "actions": {
+            "openInLibraryExplorer": "Open in Library Explorer",
+            "viewScannerLogs": "View scanner logs"
+        },
+        "parsedData": {
+            "title": "Title",
+            "episode": "Episode",
+            "season": "Season",
+            "part": "Part",
+            "episodeTitle": "Episode Title"
+        },
+        "errors": {
+            "reportIssue": "Please report this issue on the GitHub repository"
+        }
+    },
     "mediaDetail": {
         "accessibility": {
             "characterImageAlt": "character image",

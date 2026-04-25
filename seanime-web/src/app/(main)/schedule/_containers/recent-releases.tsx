@@ -3,10 +3,13 @@ import { MediaEntryCard } from "@/app/(main)/_features/media/_components/media-e
 import { MediaEntryCardSkeleton } from "@/app/(main)/_features/media/_components/media-entry-card-skeleton"
 import { AppLayoutStack } from "@/components/ui/app-layout"
 import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/carousel"
+import { getDateFnsLocale } from "@/i18n/labels"
 import { addSeconds, formatDistanceToNow, subDays } from "date-fns"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export function RecentReleases() {
+    const { t, i18n } = useTranslation()
 
     const { data, isLoading } = useAnilistListRecentAiringAnime({
         page: 1,
@@ -25,7 +28,7 @@ export function RecentReleases() {
 
     return (
         <AppLayoutStack className="pb-6">
-            <h2>Aired Recently</h2>
+            <h2>{t("discover.sections.airedRecently")}</h2>
             <Carousel
                 className="w-full max-w-full"
                 gap="md"
@@ -51,11 +54,14 @@ export function RecentReleases() {
                                 overlay={<div className="flex flex-col w-fit absolute right-0 items-end">
                                     <div
                                         className="font-semibold text-white bg-gray-950 z-[1] pl-3 pr-[0.2rem] w-full py-1.5 text-center !tracking-wider !bg-opacity-80 rounded-none rounded-bl-lg"
-                                    >{item?.media?.format === "MOVIE" ? "Movie" :
+                                    >{item?.media?.format === "MOVIE" ? t("mediaFilters.options.formats.MOVIE") :
                                         <span className="tracking-wider"><span className="!text-lg">{item.episode}</span><span className="text-[--muted] tracking-wider !text-md">/{item.media?.episodes ?? "-"}</span></span>}</div>
                                     <div className="text-xs font-semibold z-[-1] w-fit h-fit pl-2 pr-[0.3rem] py-1 ml-2 text-center bg-gray-700 !bg-opacity-70 rounded-none rounded-bl-lg">
                                         {item.airingAt
-                                            ? formatDistanceToNow(addSeconds(new Date(), item.timeUntilAiring), { addSuffix: true })
+                                            ? formatDistanceToNow(addSeconds(new Date(), item.timeUntilAiring), {
+                                                addSuffix: true,
+                                                locale: getDateFnsLocale(i18n.resolvedLanguage),
+                                            })
                                                 ?.replace("less than a", "1")
                                                 ?.replace("about ", "")
                                                 ?.replace(" minutes", "m")

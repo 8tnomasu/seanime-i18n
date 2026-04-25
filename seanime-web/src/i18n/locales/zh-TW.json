@@ -56,7 +56,7 @@
             "pageNotFoundDescription": "找不到你要查看的頁面。",
             "pageNotFoundTitle": "找不到頁面",
             "unexpectedError": "發生未預期的錯誤。",
-            "noOptionsFound": "??????",
+            "noOptionsFound": "找不到選項",
             "authenticating": "驗證中..."
         },
         "words": {
@@ -856,7 +856,7 @@
             }
         },
         "library": {
-            "scanned": "???????",
+            "scanned": "媒體庫掃描完成",
             "emptyDirectoriesRemoved": "已移除空資料夾",
             "filesIgnored": "已忽略檔案",
             "filesLocked": "已鎖定檔案",
@@ -868,7 +868,7 @@
             "noSuggestionsFound": "找不到建議結果"
         },
         "manga": {
-            "sourcesRefreshed": "???????"
+            "sourcesRefreshed": "來源已重新整理"
         },
         "downloads": {
             "downloadStarted": "已開始下載",
@@ -1014,113 +1014,113 @@
         }
     },
     "mediaFilters": {
-        "titlePlaceholder": "??",
-        "sorting": "??",
-        "genre": "??",
-        "allGenres": "????",
-        "format": "??",
-        "allFormats": "????",
-        "country": "??",
-        "allCountries": "????",
-        "status": "??",
-        "allStatuses": "????",
-        "season": "??",
-        "allSeasons": "????",
-        "year": "??",
-        "timeless": "????",
-        "allScores": "????",
-        "adult": "???",
+        "titlePlaceholder": "標題",
+        "sorting": "排序",
+        "genre": "類型",
+        "allGenres": "全部類型",
+        "format": "格式",
+        "allFormats": "全部格式",
+        "country": "國家",
+        "allCountries": "全部國家",
+        "status": "狀態",
+        "allStatuses": "全部狀態",
+        "season": "季度",
+        "allSeasons": "全部季度",
+        "year": "年份",
+        "timeless": "不限年份",
+        "allScores": "全部評分",
+        "adult": "成人向",
         "options": {
             "types": {
-                "anime": "??",
-                "manga": "??"
+                "anime": "動畫",
+                "manga": "漫畫"
             },
             "countries": {
-                "JP": "??",
-                "KR": "??",
-                "CN": "??",
-                "TW": "??"
+                "JP": "日本",
+                "KR": "韓國",
+                "CN": "中國",
+                "TW": "台灣"
             },
             "formats": {
                 "TV": "TV",
-                "MOVIE": "??",
+                "MOVIE": "劇場版",
                 "ONA": "ONA",
                 "OVA": "OVA",
-                "TV_SHORT": "?? TV",
-                "SPECIAL": "???",
-                "MANGA": "??",
-                "ONE_SHOT": "??"
+                "TV_SHORT": "短篇 TV",
+                "SPECIAL": "特別篇",
+                "MANGA": "漫畫",
+                "ONE_SHOT": "單篇"
             },
             "status": {
-                "FINISHED": "???",
-                "RELEASING": "???",
-                "NOT_YET_RELEASED": "????",
-                "HIATUS": "???",
-                "CANCELLED": "???"
+                "FINISHED": "已完結",
+                "RELEASING": "更新中",
+                "NOT_YET_RELEASED": "即將推出",
+                "HIATUS": "休止中",
+                "CANCELLED": "已取消"
             },
             "seasons": {
-                "WINTER": "??",
-                "SPRING": "??",
-                "SUMMER": "??",
-                "FALL": "??"
+                "WINTER": "冬季",
+                "SPRING": "春季",
+                "SUMMER": "夏季",
+                "FALL": "秋季"
             },
             "genres": {
-                "action": "??",
-                "adventure": "??",
-                "comedy": "??",
-                "drama": "??",
-                "ecchi": "??",
-                "fantasy": "??",
-                "horror": "??",
-                "mahouShoujo": "????",
-                "mecha": "??",
-                "music": "??",
-                "mystery": "??",
-                "psychological": "??",
-                "romance": "??",
-                "sciFi": "??",
-                "sliceOfLife": "??",
-                "sports": "??",
-                "supernatural": "???",
-                "thriller": "??"
+                "action": "動作",
+                "adventure": "冒險",
+                "comedy": "喜劇",
+                "drama": "劇情",
+                "ecchi": "Ecchi",
+                "fantasy": "奇幻",
+                "horror": "恐怖",
+                "mahouShoujo": "魔法少女",
+                "mecha": "機甲",
+                "music": "音樂",
+                "mystery": "懸疑",
+                "psychological": "心理",
+                "romance": "愛情",
+                "sciFi": "科幻",
+                "sliceOfLife": "日常",
+                "sports": "運動",
+                "supernatural": "超自然",
+                "thriller": "驚悚"
             },
             "searchSorting": {
-                "TRENDING_DESC": "????",
-                "START_DATE_DESC": "????",
-                "SCORE_DESC": "????",
-                "POPULARITY_DESC": "????",
-                "EPISODES_DESC": "????",
-                "CHAPTERS_DESC": "????"
+                "TRENDING_DESC": "熱門度",
+                "START_DATE_DESC": "發行日期",
+                "SCORE_DESC": "最高評分",
+                "POPULARITY_DESC": "最高人氣",
+                "EPISODES_DESC": "集數",
+                "CHAPTERS_DESC": "章節數"
             },
             "collectionSorting": {
-                "AIRDATE_DESC": "???????????",
-                "AIRDATE": "???????????",
-                "UNWATCHED_EPISODES_DESC": "???????",
-                "UNWATCHED_EPISODES": "???????",
-                "LAST_WATCHED_DESC": "????",
-                "LAST_WATCHED": "?????",
-                "SCORE_DESC": "????",
-                "SCORE": "????",
-                "TITLE": "??",
-                "TITLE_DESC": "???Z-A?",
-                "AUDIENCE_SCORE_DESC": "??????",
-                "AUDIENCE_SCORE": "??????",
-                "PROGRESS_DESC": "????",
-                "PROGRESS": "????",
-                "START_DATE_DESC": "????",
-                "START_DATE": "????",
-                "END_DATE_DESC": "????",
-                "END_DATE": "????",
-                "RELEASE_DATE_DESC": "????",
-                "RELEASE_DATE": "????",
-                "UNREAD_CHAPTERS_DESC": "??????",
-                "UNREAD_CHAPTERS": "??????"
+                "AIRDATE_DESC": "最近播出且尚未追上",
+                "AIRDATE": "最早播出且尚未追上",
+                "UNWATCHED_EPISODES_DESC": "未看集數最多",
+                "UNWATCHED_EPISODES": "未看集數最少",
+                "LAST_WATCHED_DESC": "最近觀看",
+                "LAST_WATCHED": "最早觀看",
+                "SCORE_DESC": "最高評分",
+                "SCORE": "最低評分",
+                "TITLE": "標題",
+                "TITLE_DESC": "標題（Z-A）",
+                "AUDIENCE_SCORE_DESC": "最高觀眾評分",
+                "AUDIENCE_SCORE": "最低觀眾評分",
+                "PROGRESS_DESC": "最高進度",
+                "PROGRESS": "最低進度",
+                "START_DATE_DESC": "最近開始",
+                "START_DATE": "最早開始日期",
+                "END_DATE_DESC": "最近完成",
+                "END_DATE": "最早完成日期",
+                "RELEASE_DATE_DESC": "最近發行",
+                "RELEASE_DATE": "最早發行",
+                "UNREAD_CHAPTERS_DESC": "未讀章節最多",
+                "UNREAD_CHAPTERS": "未讀章節最少"
             }
         }
     },
     "mediaList": {
         "tabs": {
-            "lists": "??"
+            "lists": "清單"
         },
         "status": {
             "current": "目前",
@@ -1136,114 +1136,193 @@
         }
     },
     "library": {
-        "hostLibrary": "{{username}} ????",
+        "hostLibrary": "{{username}} 的媒體庫",
         "accessibility": {
             "bannerImageAlt": "橫幅圖片",
             "coverImageAlt": "封面圖片",
             "episodeImageAlt": "集數圖片"
         },
         "stats": {
-            "library": "???",
-            "files": "??",
-            "entries": "??",
-            "tvShows": "TV ??",
-            "movies": "??",
-            "specials": "???"
+            "library": "媒體庫",
+            "files": "檔案",
+            "entries": "項目",
+            "tvShows": "電視動畫",
+            "movies": "劇場版",
+            "specials": "特別篇"
         },
         "filters": {
-            "showUnwatchedOnly": "???????"
+            "showUnwatchedOnly": "只顯示未觀看"
         },
         "empty": {
-            "title": "?????",
-            "description": "??????????",
-            "scanYourLibrary": "???????",
-            "setPathAndScan": "??????????????",
-            "includeOnlineStreaming": "????????????",
-            "includeTorrentStreaming": "? Torrent ?????????",
-            "includeDebridStreaming": "? Debrid ?????????",
-            "trendingThisSeason": "??????"
+            "title": "媒體庫是空的",
+            "description": "你的媒體庫目前是空的",
+            "scanYourLibrary": "掃描媒體庫",
+            "setPathAndScan": "設定本機媒體庫路徑後再進行掃描",
+            "includeOnlineStreaming": "將線上串流加入媒體庫",
+            "includeTorrentStreaming": "將 Torrent 串流加入媒體庫",
+            "includeDebridStreaming": "將 Debrid 串流加入媒體庫",
+            "trendingThisSeason": "本季熱門"
         },
         "continueWatching": {
-            "title": "????",
-            "seaCommandTitle": "????",
-            "episodeShort": "?",
-            "movie": "??",
-            "releasingNow": "????",
-            "goToEpisode": "??? {{number}} ?"
+            "title": "繼續觀看",
+            "seaCommandTitle": "繼續觀看",
+            "episodeShort": "集",
+            "movie": "劇場版",
+            "releasingNow": "更新中",
+            "goToEpisode": "前往第 {{number}} 集"
         },
         "scanner": {
-            "title": "??????",
-            "seaCommandGroup": "???",
-            "refreshLibrary": "???????",
-            "guestWarning": "???????????????? AniList ??????????????????? rate limit ???????????????????????",
+            "title": "媒體庫掃描器",
+            "seaCommandGroup": "媒體庫",
+            "refreshLibrary": "重新整理媒體庫",
+            "guestWarning": "如果你的媒體庫很大，不建議在沒有 AniList 帳號的情況下使用這個功能，因為可能觸發 rate limit 並讓掃描變慢。建議登入帳號以獲得較佳體驗。",
             "sections": {
-                "localFiles": "????",
-                "matchingData": "????"
+                "localFiles": "本機檔案",
+                "matchingData": "配對資料"
             },
             "options": {
-                "skipLockedFiles": "???????",
-                "skipIgnoredFiles": "???????",
-                "myAniListCollectionOnly": "????? AniList ??",
-                "myAniListCollectionOnlyHelp": "???????????????????????????????????",
-                "myAniListCollectionOnlyActiveHelp": "????? AniList ??????????",
-                "enhancedMatchingMethod": "??????",
-                "useAnimeOfflineDatabase": "?? Anime Offline Database",
-                "useAniListApi": "?? AniList API",
-                "offlineDatabaseHelp": "????????? AniList ??????????????????",
-                "aniListApiHelp": "<0>????????</0>?Seanime ?????????????????? API ??????? rate limit ?????????"
+                "skipLockedFiles": "略過已鎖定檔案",
+                "skipIgnoredFiles": "略過已忽略檔案",
+                "myAniListCollectionOnly": "只使用我的 AniList 收藏",
+                "myAniListCollectionOnlyHelp": "如果你的收藏沒有包含媒體庫中的所有動畫，這個方式雖然較快，但通常較不準確。",
+                "myAniListCollectionOnlyActiveHelp": "將本機檔案與你的 AniList 收藏配對。",
+                "enhancedMatchingMethod": "增強配對方式",
+                "useAnimeOfflineDatabase": "使用 Anime Offline Database",
+                "useAniListApi": "使用 AniList API",
+                "offlineDatabaseHelp": "將本機檔案與完整 AniList 目錄配對，掃描會較慢。",
+                "aniListApiHelp": "<0>大型媒體庫會較慢</0>。Seanime 會對媒體庫中找到的每個動畫標題送出 API 請求，這可能導致 rate limit 並讓掃描變慢。"
             },
             "status": {
-                "scanning": "???..."
+                "scanning": "掃描中..."
             }
         }
     },
     "mangaLibrary": {
         "empty": {
-            "title": "?????",
-            "description": "????????????????",
-            "browse": "????"
+            "title": "找不到漫畫",
+            "description": "你的媒體庫中還沒有加入任何漫畫。",
+            "browse": "瀏覽漫畫"
         },
         "current": {
-            "seaCommandTitle": "???",
-            "title": "????"
+            "seaCommandTitle": "目前閱讀中",
+            "title": "繼續閱讀"
         },
         "actions": {
-            "refetchingFromSources": "??????????...",
-            "refetching": "?????...",
-            "refreshSources": "??????",
-            "unreadChaptersOnly": "???????"
+            "refetchingFromSources": "正在從來源重新抓取...",
+            "refetching": "重新抓取中...",
+            "refreshSources": "重新整理來源",
+            "unreadChaptersOnly": "只顯示未讀章節"
         }
     },
     "lists": {
         "tabs": {
-            "anime": "??",
-            "manga": "??",
-            "stats": "??"
+            "anime": "動畫",
+            "manga": "漫畫",
+            "stats": "統計"
         },
         "filters": {
-            "allLists": "????"
+            "allLists": "全部清單"
         }
     },
     "search": {
         "actions": {
-            "discoverSeries": "????",
-            "customSources": "????",
-            "loadMore": "????"
+            "discoverSeries": "探索作品",
+            "customSources": "自訂來源",
+            "loadMore": "載入更多"
         },
         "pageTitle": {
             "sorting": {
-                "TRENDING_DESC": "??",
-                "START_DATE_DESC": "??",
-                "SCORE_DESC": "????",
-                "POPULARITY_DESC": "???",
-                "EPISODES_DESC": "????",
-                "CHAPTERS_DESC": "????"
+                "TRENDING_DESC": "熱門",
+                "START_DATE_DESC": "最新",
+                "SCORE_DESC": "最高評分",
+                "POPULARITY_DESC": "人氣",
+                "EPISODES_DESC": "最多集數",
+                "CHAPTERS_DESC": "最多章節"
             },
             "types": {
-                "anime": "??",
-                "manga": "??"
+                "anime": "動畫",
+                "manga": "漫畫"
             },
-            "from": "??"
+            "from": "來自"
+        }
+    },
+    "discover": {
+        "tabs": {
+            "anime": "動畫",
+            "schedule": "時程表",
+            "manga": "漫畫"
+        },
+        "sections": {
+            "trendingNow": "目前熱門",
+            "topOfSeason": "本季精選",
+            "bestOfLastSeason": "上季精選",
+            "comingSoon": "即將播出",
+            "trendingMovies": "熱門劇場版",
+            "trendingManga": "熱門漫畫",
+            "trendingManhwa": "熱門韓漫",
+            "trendingManhua": "熱門華漫",
+            "airingSchedule": "播出時程",
+            "airedRecently": "最近播出"
+        },
+        "actions": {
+            "openPage": "開啟頁面",
+            "goToSlide": "前往第 {{number}} 張"
+        },
+        "schedule": {
+            "today": "今天",
+            "episodeAiringAt": "第 {{episode}} 集將於 {{time}} 播出"
+        },
+        "header": {
+            "releasingNow": "更新中",
+            "episodesReleased_one": "已播出 {{count}} 集",
+            "episodesReleased_other": "已播出 {{count}} 集",
+            "totalEpisodes_one": "共 {{count}} 集",
+            "totalEpisodes_other": "共 {{count}} 集"
+        }
+    },
+    "scanSummaries": {
+        "title": "掃描摘要",
+        "subtitle": "查看最近掃描的紀錄",
+        "search": {
+            "placeholder": "搜尋檔名"
+        },
+        "empty": {
+            "title": "沒有可用的掃描摘要",
+            "description": "執行一次媒體庫掃描後就會產生摘要。"
+        },
+        "success": {
+            "scannedMedia": "Seanime 已成功掃描 {{count}} 個媒體",
+            "unmatchedFiles_one": "有 {{count}} 個檔案未配對",
+            "unmatchedFiles_other": "有 {{count}} 個檔案未配對",
+            "matchingSuffix": "{{count}} 筆符合"
+        },
+        "sections": {
+            "unmatchedFiles": "未配對檔案",
+            "mediaScanned": "已掃描媒體",
+            "errorsFound": "找到錯誤",
+            "warningsFound": "找到警告"
+        },
+        "status": {
+            "inAniListCollection": "此動畫已存在於你的 AniList 收藏中",
+            "notInAniListCollection": "此動畫不在你的 AniList 收藏中"
+        },
+        "stats": {
+            "filesScanned_one": "已掃描 {{count}} 個檔案",
+            "filesScanned_other": "已掃描 {{count}} 個檔案"
+        },
+        "actions": {
+            "openInLibraryExplorer": "在 Library Explorer 中開啟",
+            "viewScannerLogs": "查看掃描紀錄"
+        },
+        "parsedData": {
+            "title": "標題",
+            "episode": "集數",
+            "season": "季度",
+            "part": "Part",
+            "episodeTitle": "集標題"
+        },
+        "errors": {
+            "reportIssue": "請到 GitHub repository 回報這個問題"
         }
     },
     "mediaDetail": {
@@ -2419,23 +2498,23 @@
     },
     "home": {
         "empty": {
-            "title": "?????????",
-            "scanAnimeLibrary": "?????????",
-            "addSeriesToCollection": "?????????",
-            "addCurrentlyWatchedToLibrary": "??????????????",
-            "noneCurrentlyWatched": "???????????",
-            "currentlyWatchingHint": "??????????????????",
-            "trendingNow": "??????"
+            "title": "首頁目前是空的",
+            "scanAnimeLibrary": "掃描動畫媒體庫",
+            "addSeriesToCollection": "將作品加入收藏",
+            "addCurrentlyWatchedToLibrary": "將目前觀看中的作品加入媒體庫",
+            "noneCurrentlyWatched": "目前沒有正在觀看的作品",
+            "currentlyWatchingHint": "將作品加入「觀看中」清單即可開始使用",
+            "trendingNow": "目前熱門"
         },
         "sections": {
-            "animeCarousel": "????",
-            "mangaCarousel": "????",
-            "missedSequels": "?????"
+            "animeCarousel": "動畫輪播",
+            "mangaCarousel": "漫畫輪播",
+            "missedSequels": "錯過的續作"
         },
         "states": {
-            "itemNotFound": "?????",
-            "nothingFetched": "??????????????????",
-            "invalidItem": "???{{name}}???????????????"
+            "itemNotFound": "找不到項目",
+            "nothingFetched": "沒有取得任何內容，請更新你的選項。",
+            "invalidItem": "項目「{{name}}」缺少必要選項，因此無法顯示。"
         }
     },
     "extensions": {

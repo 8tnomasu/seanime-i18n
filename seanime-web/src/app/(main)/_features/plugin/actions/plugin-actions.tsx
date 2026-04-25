@@ -4,6 +4,7 @@ import { ContextMenuItem, ContextMenuSeparator } from "@/components/ui/context-m
 import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Tooltip } from "@/components/ui/tooltip"
 import React, { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { BiDotsHorizontal } from "react-icons/bi"
 import {
     usePluginListenActionRenderAnimeLibraryDropdownItemsEvent,
@@ -40,6 +41,7 @@ type PluginAnimePageButton = {
 }
 
 export function PluginAnimePageButtons(props: { media: AL_BaseAnime }) {
+    const { t } = useTranslation()
     const [buttons, setButtons] = useState<PluginAnimePageButton[]>([])
 
     const { sendActionRenderAnimePageButtonsEvent } = usePluginSendActionRenderAnimePageButtonsEvent()
@@ -79,7 +81,7 @@ export function PluginAnimePageButtons(props: { media: AL_BaseAnime }) {
                 style={b.style}
                 loading={b.loading}
                 disabled={b.disabled}
-            >{b.label || "???"}</Button>
+            >{b.label || t("extensions.common.unknown")}</Button>
         ) : (
             <Tooltip
                 key={b.id} trigger={
@@ -91,11 +93,11 @@ export function PluginAnimePageButtons(props: { media: AL_BaseAnime }) {
                         style={b.style}
                         loading={b.loading}
                         disabled={b.disabled}
-                    >{b.label || "???"}</Button>
+                    >{b.label || t("extensions.common.unknown")}</Button>
                 </div>
             }
             >
-                {b.tooltipText || "???"}
+                {b.tooltipText || t("extensions.common.unknown")}
             </Tooltip>
         ))}
     </>
@@ -117,6 +119,7 @@ type PluginMangaPageButton = {
 }
 
 export function PluginMangaPageButtons(props: { media: AL_BaseManga }) {
+    const { t } = useTranslation()
     const [buttons, setButtons] = useState<PluginMangaPageButton[]>([])
 
     const { sendActionRenderMangaPageButtonsEvent } = usePluginSendActionRenderMangaPageButtonsEvent()
@@ -156,7 +159,7 @@ export function PluginMangaPageButtons(props: { media: AL_BaseManga }) {
                 style={b.style}
                 loading={b.loading}
                 disabled={b.disabled}
-            >{b.label || "???"}</Button>
+            >{b.label || t("extensions.common.unknown")}</Button>
         ) : (
             <Tooltip
                 key={b.id} trigger={
@@ -168,11 +171,11 @@ export function PluginMangaPageButtons(props: { media: AL_BaseManga }) {
                         style={b.style}
                         loading={b.loading}
                         disabled={b.disabled}
-                    >{b.label || "???"}</Button>
+                    >{b.label || t("extensions.common.unknown")}</Button>
                 </div>
             }
             >
-                {b.tooltipText || "???"}
+                {b.tooltipText || t("extensions.common.unknown")}
             </Tooltip>
         ))}
     </>
@@ -196,6 +199,7 @@ type PluginMediaCardContextMenuItemsProps = {
 }
 
 export function PluginMediaCardContextMenuItems(props: PluginMediaCardContextMenuItemsProps) {
+    const { t } = useTranslation()
     const [items, setItems] = useState<PluginMediaCardContextMenuItem[]>([])
 
     const { sendActionRenderMediaCardContextMenuItemsEvent } = usePluginSendActionRenderMediaCardContextMenuItemsEvent()
@@ -231,7 +235,7 @@ export function PluginMediaCardContextMenuItems(props: PluginMediaCardContextMen
     return <>
         <ContextMenuSeparator className="!my-2" />
         {items.map(i => (
-            <ContextMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || "???"}</ContextMenuItem>
+            <ContextMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || t("extensions.common.unknown")}</ContextMenuItem>
         ))}
     </>
 }
@@ -248,6 +252,7 @@ type PluginAnimeLibraryDropdownMenuItem = {
 }
 
 export function PluginAnimeLibraryDropdownItems() {
+    const { t } = useTranslation()
     const [items, setItems] = useState<PluginAnimeLibraryDropdownMenuItem[]>([])
 
     const { sendActionRenderAnimeLibraryDropdownItemsEvent } = usePluginSendActionRenderAnimeLibraryDropdownItemsEvent()
@@ -280,7 +285,7 @@ export function PluginAnimeLibraryDropdownItems() {
     return <>
         <DropdownMenuSeparator />
         {items.map(i => (
-            <DropdownMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || "???"}</DropdownMenuItem>
+            <DropdownMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || t("extensions.common.unknown")}</DropdownMenuItem>
         ))}
     </>
 }
@@ -297,6 +302,7 @@ type PluginEpisodeCardContextMenuItem = {
 }
 
 export function PluginEpisodeCardContextMenuItems(props: { episode: Anime_Episode | undefined }) {
+    const { t } = useTranslation()
     const [items, setItems] = useState<PluginEpisodeCardContextMenuItem[]>([])
 
     const { sendActionRenderEpisodeCardContextMenuItemsEvent } = usePluginSendActionRenderEpisodeCardContextMenuItemsEvent()
@@ -330,7 +336,7 @@ export function PluginEpisodeCardContextMenuItems(props: { episode: Anime_Episod
     return <>
         <ContextMenuSeparator className="!my-2" />
         {items.map(i => (
-            <ContextMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || "???"}</ContextMenuItem>
+            <ContextMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || t("extensions.common.unknown")}</ContextMenuItem>
         ))}
     </>
 }
@@ -352,6 +358,7 @@ export function PluginEpisodeGridItemMenuItems(props: {
     type: PluginEpisodeGridItemMenuItem["type"],
     episode: Anime_Episode | Onlinestream_Episode | undefined
 }) {
+    const { t } = useTranslation()
     const [items, setItems] = useState<PluginEpisodeGridItemMenuItem[]>([])
 
     const { sendActionRenderEpisodeGridItemMenuItemsEvent } = usePluginSendActionRenderEpisodeGridItemMenuItemsEvent()
@@ -400,7 +407,7 @@ export function PluginEpisodeGridItemMenuItems(props: {
                     onClick={() => handleClick(i)}
                     style={i.style}
                     disabled={i.disabled}
-                >{i.label || "???"}</DropdownMenuItem>
+                >{i.label || t("extensions.common.unknown")}</DropdownMenuItem>
             ))}
         </DropdownMenu>
     }
@@ -408,7 +415,7 @@ export function PluginEpisodeGridItemMenuItems(props: {
     return <>
         <DropdownMenuSeparator />
         {items.map(i => (
-            <DropdownMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || "???"}</DropdownMenuItem>
+            <DropdownMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || t("extensions.common.unknown")}</DropdownMenuItem>
         ))}
     </>
 }
@@ -425,6 +432,7 @@ type PluginAnimePageDropdownMenuItem = {
 }
 
 export function PluginAnimePageDropdownItems(props: { media: AL_BaseAnime }) {
+    const { t } = useTranslation()
     const [items, setItems] = useState<PluginAnimePageDropdownMenuItem[]>([])
 
     const { sendActionRenderAnimePageDropdownItemsEvent } = usePluginSendActionRenderAnimePageDropdownItemsEvent()
@@ -458,7 +466,7 @@ export function PluginAnimePageDropdownItems(props: { media: AL_BaseAnime }) {
     return <>
         <DropdownMenuSeparator />
         {items.map(i => (
-            <DropdownMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || "???"}</DropdownMenuItem>
+            <DropdownMenuItem key={i.id} onClick={() => handleClick(i)} style={i.style} disabled={i.disabled}>{i.label || t("extensions.common.unknown")}</DropdownMenuItem>
         ))}
     </>
 

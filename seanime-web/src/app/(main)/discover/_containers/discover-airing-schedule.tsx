@@ -6,15 +6,18 @@ import { SeaLink } from "@/components/shared/sea-link"
 import { ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuTrigger } from "@/components/ui/context-menu"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Separator } from "@/components/ui/separator"
+import { getDateFnsLocale } from "@/i18n/labels"
 import { useRouter } from "@/lib/navigation"
 import { format, isSameMonth, isToday, subDays } from "date-fns"
 import { addDays } from "date-fns/addDays"
 import { isSameDay } from "date-fns/isSameDay"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuDock, LuEye } from "react-icons/lu"
 
 
 export function DiscoverAiringSchedule() {
+    const { t, i18n } = useTranslation()
     const { data, isLoading } = useAnilistListRecentAiringAnime({
         page: 1,
         perPage: 50,
@@ -65,7 +68,9 @@ export function DiscoverAiringSchedule() {
                 return {
                     id: item.id + item?.episode!,
                     name: item.media?.title?.userPreferred,
-                    time: format(new Date(item?.airingAt! * 1000), "h:mm a"),
+                    time: format(new Date(item?.airingAt! * 1000), "p", {
+                        locale: getDateFnsLocale(i18n.resolvedLanguage),
+                    }),
                     datetime: format(new Date(item?.airingAt! * 1000), "yyyy-MM-dd'T'HH:mm"),
                     href: `/entry?id=${item.id}`,
                     media: item.media,
@@ -91,7 +96,7 @@ export function DiscoverAiringSchedule() {
 
     return (
         <div className="space-y-4 z-[5] relative" data-discover-airing-schedule-container>
-            <h2 className="text-center">Airing Schedule</h2>
+            <h2 className="text-center">{t("discover.sections.airingSchedule")}</h2>
             <div className="space-y-6">
                 {days.map((day, index) => {
                     if (day.events.length === 0) return null
@@ -99,8 +104,10 @@ export function DiscoverAiringSchedule() {
                         <React.Fragment key={day.date}>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-2">
-                                    <h3 className="font-semibold">{format(new Date(day.date), "EEEE, PP")}</h3>
-                                    {day.isToday && <span className="text-[--muted]">Today</span>}
+                                    <h3 className="font-semibold">{format(new Date(day.date), "EEEE, PP", {
+                                        locale: getDateFnsLocale(i18n.resolvedLanguage),
+                                    })}</h3>
+                                    {day.isToday && <span className="text-[--muted]">{t("discover.schedule.today")}</span>}
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                                     {day.events?.toSorted((a, b) => a.datetime.localeCompare(b.datetime))?.map((event, index) => {
@@ -116,14 +123,14 @@ export function DiscoverAiringSchedule() {
                                                                 setPreviewModalMediaId(event.media?.id || 0, "anime")
                                                             }}
                                                         >
-                                                            <LuEye /> Preview
+                                                            <LuEye /> {t("common.buttons.preview")}
                                                         </ContextMenuItem>
                                                         <ContextMenuItem
                                                             onClick={() => {
                                                                 router.push(`/entry?id=${event.media?.id}`)
                                                             }}
                                                         >
-                                                            <LuDock /> Open page
+                                                            <LuDock /> {t("discover.actions.openPage")}
                                                         </ContextMenuItem>
                                                     </ContextMenuGroup>}
                                                 >
@@ -153,7 +160,10 @@ export function DiscoverAiringSchedule() {
                                                                 >{event.media?.title?.userPreferred}</SeaLink>
 
                                                                 <p className="text-[--muted]">
-                                                                    Ep {event.episode} airing at {event.time}
+                                                                    {t("discover.schedule.episodeAiringAt", {
+                                                                        episode: event.episode,
+                                                                        time: event.time,
+                                                                    })}
                                                                 </p>
                                                             </div>
                                                         </div>

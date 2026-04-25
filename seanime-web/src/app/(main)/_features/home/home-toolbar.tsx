@@ -22,6 +22,7 @@ import { TORRENT_PROVIDER } from "@/lib/server/settings"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { useAtom, useSetAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { BiCollection, BiDotsVerticalRounded, BiFolder } from "react-icons/bi"
 import { HiExclamation } from "react-icons/hi"
 import { IoHome, IoLibraryOutline, IoLibrarySharp } from "react-icons/io5"
@@ -44,6 +45,7 @@ export type HomeToolbarProps = {
 }
 
 export function HomeToolbar(props: HomeToolbarProps) {
+    const { t } = useTranslation()
 
     const {
         collectionList,
@@ -256,7 +258,7 @@ export function HomeToolbar(props: HomeToolbarProps) {
                                 // className={cn({ "!text-[--muted]": !hasEntries })}
                             >
                                 <TbReportSearch />
-                                <span>Scan summaries</span>
+                                <span>{t("navigation.scanSummaries")}</span>
                             </DropdownMenuItem>
                         </SeaLink>
 
