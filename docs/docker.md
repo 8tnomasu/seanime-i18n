@@ -50,7 +50,7 @@ The Docker image is built from release binaries published by this fork.
 
 Current defaults:
 
-- release tag: `v3.6.1-i18n.1`
+- release tag: `v3.6.1-i18n.2`
 - linux amd64 asset: `seanime-3.6.1_Linux_x86_64.tar.gz`
 - linux arm64 asset: `seanime-3.6.1_Linux_arm64.tar.gz`
 
@@ -73,5 +73,5 @@ After the GHCR workflow publishes the image, you can switch from `build: .` to a
 ```yaml
 services:
   seanime:
-    image: ghcr.io/8tnomasu/seanime-i18n:v3.6.1-i18n.1
+    image: ghcr.io/8tnomasu/seanime-i18n:v3.6.1-i18n.2
 ```
