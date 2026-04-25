@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-ARG RELEASE_TAG=v3.6.1-i18n.2
+ARG RELEASE_TAG=v3.6.1-i18n.3
 ARG SEANIME_VERSION=3.6.1
 ARG RELEASE_REPOSITORY=8tnomasu/seanime-i18n
 
