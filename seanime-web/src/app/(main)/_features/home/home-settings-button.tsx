@@ -4,6 +4,7 @@ import { Tooltip } from "@/components/ui/tooltip"
 import { useAtom } from "jotai/react"
 import { atomWithStorage } from "jotai/utils"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { LuSettings2 } from "react-icons/lu"
 
 // by default, the button will be highlighted until the user clicks it for the first time
@@ -16,6 +17,7 @@ type HomeSettingsButtonProps = {
 
 export function HomeSettingsButton(props: HomeSettingsButtonProps) {
     const { type } = props
+    const { t } = useTranslation()
     const [discoveredOnce, setDiscoveredOnce] = useAtom(__home_settingsToolbarButtonDiscovered)
     const [isModalOpen, setIsModalOpen] = useAtom(__home_settingsModalOpen)
 
@@ -55,7 +57,7 @@ export function HomeSettingsButton(props: HomeSettingsButtonProps) {
                     }}
                 />}
             >
-                Home Settings
+                {t("home.toolbar.settings")}
             </Tooltip>
         </>
     )

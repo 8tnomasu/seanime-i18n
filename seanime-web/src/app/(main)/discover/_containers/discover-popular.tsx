@@ -10,8 +10,10 @@ import {
 } from "@/app/(main)/discover/_lib/handle-discover-queries"
 import { ADVANCED_SEARCH_MEDIA_GENRES } from "@/app/(main)/search/_lib/advanced-search-constants"
 import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/carousel"
+import { getGenreLabel } from "@/i18n/labels"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export function DiscoverPopular() {
 
@@ -49,6 +51,7 @@ export function DiscoverPopular() {
 }
 
 export function DiscoverThisSeason() {
+    const { t } = useTranslation()
 
     const ref = React.useRef<HTMLDivElement>(null)
     const { data } = useDiscoverCurrentSeasonAnime(ref)
@@ -69,12 +72,12 @@ export function DiscoverThisSeason() {
             <MediaGenreSelector
                 items={[
                     {
-                        name: "All",
+                        name: t("discover.genres.all"),
                         isCurrent: selectedGenre.length === 0,
                         onClick: () => setSelectedGenre([]),
                     },
                     ...ADVANCED_SEARCH_MEDIA_GENRES.map(genre => ({
-                        name: genre,
+                        name: getGenreLabel(t, genre),
                         isCurrent: selectedGenre.includes(genre),
                         onClick: () => setSelectedGenre([genre]),
                     })),
@@ -101,6 +104,7 @@ export function DiscoverThisSeason() {
 }
 
 export function DiscoverPastSeason() {
+    const { t } = useTranslation()
 
     const ref = React.useRef<HTMLDivElement>(null)
     const { data } = useDiscoverPastSeasonAnime(ref)
@@ -121,12 +125,12 @@ export function DiscoverPastSeason() {
             <MediaGenreSelector
                 items={[
                     {
-                        name: "All",
+                        name: t("discover.genres.all"),
                         isCurrent: selectedGenre.length === 0,
                         onClick: () => setSelectedGenre([]),
                     },
                     ...ADVANCED_SEARCH_MEDIA_GENRES.map(genre => ({
-                        name: genre,
+                        name: getGenreLabel(t, genre),
                         isCurrent: selectedGenre.includes(genre),
                         onClick: () => setSelectedGenre([genre]),
                     })),

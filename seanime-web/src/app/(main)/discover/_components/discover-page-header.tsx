@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/components/ui/core/styling"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getGenreLabel } from "@/i18n/labels"
 import { usePathname } from "@/lib/navigation"
 import { ThemeMediaPageBannerSize, ThemeMediaPageBannerType, useThemeSettings } from "@/lib/theme/theme-hooks"
 import { __isDesktop__, __isElectronDesktop__ } from "@/types/constants"
@@ -290,7 +291,7 @@ function MediaMetadata({ media, pageType, isTransitioning, onHoverChange }: Medi
                 <div className="flex flex-wrap gap-2">
                     {media.genres?.slice(0, 3).map((genre) => (
                         <div key={genre} className="text-sm font-semibold px-1 text-gray-300">
-                            {genre}
+                            {getGenreLabel(t, genre)}
                         </div>
                     ))}
                 </div>

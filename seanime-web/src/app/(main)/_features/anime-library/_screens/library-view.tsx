@@ -6,11 +6,13 @@ import { PageWrapper } from "@/components/shared/page-wrapper"
 import { cn } from "@/components/ui/core/styling"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useDebounce } from "@/hooks/use-debounce"
+import { getGenreLabel } from "@/i18n/labels"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { useSetAtom } from "jotai"
 import { useAtom } from "jotai/react"
 import { AnimatePresence } from "motion/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 
 type LibraryViewProps = {
@@ -107,6 +109,7 @@ export function LibraryView(props: LibraryViewProps) {
 function GenreSelector({
     genres,
 }: { genres: string[] }) {
+    const { t } = useTranslation()
     const [params, setParams] = useAtom(__mainLibrary_paramsInputAtom)
     const setActualParams = useSetAtom(__mainLibrary_paramsAtom)
     const debouncedParams = useDebounce(params, 200)
@@ -122,7 +125,7 @@ function GenreSelector({
             <MediaGenreSelector
                 items={[
                     ...genres.map(genre => ({
-                        name: genre,
+                        name: getGenreLabel(t, genre),
                         isCurrent: params!.genre?.includes(genre) ?? false,
                         onClick: () => setParams(draft => {
                             if (draft.genre?.includes(genre)) {

@@ -1013,6 +1013,64 @@
             "updated": "播放清單已更新"
         }
     },
+    "anilist": {
+        "tags": {
+            "comingOfAge": "成長",
+            "timeSkip": "時間跳躍",
+            "revenge": "復仇",
+            "femaleProtagonist": "女性主角",
+            "maleProtagonist": "男性主角",
+            "ensembleCast": "群像劇",
+            "foundFamily": "擬似家庭",
+            "school": "校園",
+            "work": "職場",
+            "urbanFantasy": "都市奇幻",
+            "isekai": "異世界",
+            "reincarnation": "轉生",
+            "magic": "魔法",
+            "superPower": "超能力",
+            "demons": "惡魔",
+            "vampire": "吸血鬼",
+            "robots": "機器人",
+            "aliens": "外星人",
+            "postApocalyptic": "後末日",
+            "survival": "生存",
+            "war": "戰爭",
+            "military": "軍事",
+            "crime": "犯罪",
+            "detective": "偵探",
+            "timeManipulation": "時間操作",
+            "alternateUniverse": "平行宇宙",
+            "virtualWorld": "虛擬世界",
+            "videoGames": "電子遊戲",
+            "idol": "偶像",
+            "band": "樂團",
+            "food": "美食",
+            "travel": "旅行",
+            "iyashikei": "治癒系",
+            "cgi": "CGI",
+            "episodic": "單元劇",
+            "anthology": "選集",
+            "parody": "惡搞",
+            "satire": "諷刺",
+            "slapstick": "鬧劇",
+            "tragedy": "悲劇",
+            "gore": "血腥",
+            "bodyHorror": "身體恐怖",
+            "cosmicHorror": "宇宙恐怖",
+            "ghost": "幽靈",
+            "zombie": "殭屍",
+            "animals": "動物",
+            "anthropomorphism": "擬人化",
+            "kemonomimi": "獸耳",
+            "nekomimi": "貓耳",
+            "henshin": "變身",
+            "shoujo": "少女",
+            "shounen": "少年",
+            "seinen": "青年",
+            "josei": "女性向"
+        }
+    },
     "mediaFilters": {
         "titlePlaceholder": "標題",
         "sorting": "排序",
@@ -1230,6 +1288,9 @@
             "customSources": "自訂來源",
             "loadMore": "載入更多"
         },
+        "placeholder": {
+            "manga": "搜尋漫畫"
+        },
         "pageTitle": {
             "sorting": {
                 "TRENDING_DESC": "熱門",
@@ -1251,6 +1312,9 @@
             "anime": "動畫",
             "schedule": "時程表",
             "manga": "漫畫"
+        },
+        "genres": {
+            "all": "全部"
         },
         "sections": {
             "trendingNow": "目前熱門",
@@ -2496,6 +2560,31 @@
             "rules": "規則"
         }
     },
+    "gettingStarted": {
+        "note": "這些設定之後都可以再修改",
+        "steps": {
+            "library": {
+                "title": "本機動畫媒體庫",
+                "description": "選擇你的動畫媒體庫資料夾"
+            },
+            "player": {
+                "title": "媒體播放器",
+                "description": "設定你的影片播放器"
+            },
+            "torrents": {
+                "title": "下載",
+                "description": "設定下載方式"
+            },
+            "debrid": {
+                "title": "Debrid 服務",
+                "description": "選用的進階串流服務"
+            },
+            "features": {
+                "title": "功能",
+                "description": "啟用其他功能"
+            }
+        }
+    },
     "home": {
         "empty": {
             "title": "首頁目前是空的",
@@ -2510,6 +2599,130 @@
             "animeCarousel": "動畫輪播",
             "mangaCarousel": "漫畫輪播",
             "missedSequels": "錯過的續作"
+        },
+        "toolbar": {
+            "addMissingExtensions": "補上缺少的 extensions",
+            "localAnimeLibrary": "本機動畫媒體庫",
+            "noTorrentProvidersInstalled": "尚未安裝 Torrent provider。",
+            "refreshAnimeLibrary": "重新整理動畫媒體庫",
+            "resolveHiddenMedia": "處理隱藏媒體（{{count}}）",
+            "resolveUnmatched": "處理未配對項目（{{count}}）",
+            "scanAnimeLibrary": "掃描動畫媒體庫",
+            "settings": "首頁設定"
+        },
+        "menu": {
+            "openDirectory": "開啟資料夾",
+            "searchInLibrary": "在媒體庫中搜尋"
+        },
+        "settings": {
+            "title": "首頁",
+            "layout": {
+                "title": "首頁版面",
+                "empty": "尚未新增項目。可在下方新增項目來自訂首頁。"
+            },
+            "availableItems": {
+                "title": "可用項目",
+                "empty": "所有可用項目都已加入首頁。"
+            },
+            "animeLibrary": {
+                "title": "動畫媒體庫",
+                "localOnly": "僅本機動畫",
+                "localAndStreaming": "本機動畫 + 串流",
+                "localOnlyDescription": "只會顯示本機媒體庫中的動畫",
+                "localAndStreamingDescription": "目前觀看清單中的所有動畫都會納入媒體庫"
+            },
+            "configure": {
+                "title": "設定{{name}}",
+                "description": "自訂這個首頁項目的設定。"
+            },
+            "kinds": {
+                "row": "列",
+                "header": "標頭"
+            },
+            "options": {
+                "countryOfOrigin": "原產國",
+                "customListName": "自訂清單名稱（可選）",
+                "layout": "版面",
+                "layoutValues": {
+                    "grid": "網格",
+                    "carousel": "輪播"
+                },
+                "name": "名稱",
+                "scheduleTypes": {
+                    "myLists": "我的清單",
+                    "global": "全域"
+                },
+                "statuses": "狀態",
+                "text": "文字",
+                "type": "類型"
+            },
+            "placeholders": {
+                "enter": "輸入{{label}}",
+                "select": "選擇{{label}}"
+            },
+            "unsupportedFieldType": "不支援的欄位類型：{{type}}"
+        },
+        "items": {
+            "centeredTitle": {
+                "name": "置中文字標題",
+                "description": "顯示置中的標題文字。"
+            },
+            "animeContinueWatching": {
+                "name": "繼續觀看",
+                "description": "顯示你目前正在觀看的集數清單。"
+            },
+            "animeContinueWatchingHeader": {
+                "name": "繼續觀看標頭",
+                "description": "顯示你目前正在觀看動畫的輪播標頭。"
+            },
+            "animeLibrary": {
+                "name": "動畫媒體庫",
+                "description": "依狀態顯示你已下載或正在觀看的動畫。"
+            },
+            "myLists": {
+                "name": "我的清單",
+                "description": "依狀態顯示你清單中的媒體。"
+            },
+            "localAnimeLibrary": {
+                "name": "本機動畫媒體庫",
+                "description": "顯示本機媒體庫中的完整動畫網格。"
+            },
+            "libraryUpcomingEpisodes": {
+                "name": "媒體庫即將播出集數",
+                "description": "顯示你媒體庫中動畫的即將播出集數輪播。"
+            },
+            "airedRecently": {
+                "name": "最近播出（全域）",
+                "description": "顯示最近播出的動畫集數輪播。"
+            },
+            "missedSequels": {
+                "name": "錯過的續作",
+                "description": "顯示尚未加入收藏的續作輪播。"
+            },
+            "animeScheduleCalendar": {
+                "name": "動畫時程日曆",
+                "description": "依播出時程顯示動畫集數日曆。"
+            },
+            "localAnimeLibraryStats": {
+                "name": "本機動畫媒體庫統計",
+                "description": "顯示本機動畫媒體庫的統計資料。"
+            },
+            "discoverHeader": {
+                "name": "探索標頭",
+                "description": "顯示熱門動畫輪播標頭。"
+            },
+            "animeCarousel": {
+                "name": "動畫輪播",
+                "description": "依所選選項顯示動畫輪播。"
+            },
+            "mangaCarousel": {
+                "name": "漫畫輪播",
+                "description": "依所選選項顯示漫畫輪播。"
+            },
+            "mangaLibrary": {
+                "name": "漫畫媒體庫",
+                "description": "依狀態顯示你媒體庫中的漫畫清單。"
+            }
         },
         "states": {
             "itemNotFound": "找不到項目",
@@ -2672,6 +2885,10 @@
         }
     },
     "libraryExplorer": {
+        "title": "媒體庫檔案總管",
+        "mobile": {
+            "unsupported": "媒體庫檔案總管只能在較大的螢幕上顯示。"
+        },
         "actions": {
             "deleteFile": "刪除檔案",
             "deleteFiles": "刪除已選檔案",
@@ -2686,6 +2903,9 @@
             "previewAnime": "預覽動畫",
             "removeEmptyDirectories": "移除空資料夾",
             "resolveUnknownMedia": "處理未知媒體",
+            "searchPlaceholder": "搜尋檔案與資料夾...",
+            "select": "選取",
+            "selecting": "選取中",
             "superUpdate": "批次更新",
             "unIgnoreFile": "取消忽略檔案",
             "unIgnoreFiles": "取消忽略檔案",
@@ -2699,6 +2919,12 @@
         },
         "common": {
             "library": "媒體庫"
+        },
+        "filters": {
+            "title": "篩選",
+            "active": "篩選：{{filter}}",
+            "unmatchedFiles": "未配對檔案",
+            "unlockedFiles": "未鎖定檔案"
         },
         "details": {
             "anidbEpisode": "AniDB 集數",
@@ -2756,7 +2982,13 @@
             }
         },
         "states": {
-            "noMediaFound": "找不到媒體"
+            "hiddenMediaFiles_one": "含隱藏媒體的 {{count}} 個檔案",
+            "hiddenMediaFiles_other": "含隱藏媒體的 {{count}} 個檔案",
+            "lockedFiles": "鎖定所有已正確配對的檔案",
+            "noMediaFound": "找不到媒體",
+            "unmatchedFiles_one": "{{count}} 個未配對檔案",
+            "unmatchedFiles_other": "{{count}} 個未配對檔案",
+            "unscannedFiles": "仍有部分檔案尚未掃描，請先掃描媒體庫後再執行操作。"
         },
         "superUpdate": {
             "addRule": "新增規則",

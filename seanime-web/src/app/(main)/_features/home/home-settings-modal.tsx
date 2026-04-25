@@ -15,12 +15,23 @@ import { NumberInput } from "@/components/ui/number-input"
 import { RadioGroup } from "@/components/ui/radio-group"
 import { Select } from "@/components/ui/select"
 import { TextInput } from "@/components/ui/text-input"
+import {
+    getAdvancedSearchSortingLabel,
+    getAniListGenreLabel,
+    getCollectionStatusLabel,
+    getCountryLabel,
+    getMediaFormatLabel,
+    getMediaSeasonLabel,
+    getMediaStatusLabel,
+    getMediaTypeLabel,
+} from "@/i18n/labels"
 import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { DndContext, DragEndEvent } from "@dnd-kit/core"
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { useQueryClient } from "@tanstack/react-query"
+import { TFunction } from "i18next"
 import { atom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
@@ -63,6 +74,132 @@ const HOME_ITEM_ICONS = {
     "missed-sequels": LuMilestone,
     "my-lists": LuListTodo,
 } as const
+
+const HOME_ITEM_NAME_KEYS: Record<string, string> = {
+    "centered-title": "home.items.centeredTitle.name",
+    "anime-continue-watching": "home.items.animeContinueWatching.name",
+    "anime-continue-watching-header": "home.items.animeContinueWatchingHeader.name",
+    "anime-library": "home.items.animeLibrary.name",
+    "my-lists": "home.items.myLists.name",
+    "local-anime-library": "home.items.localAnimeLibrary.name",
+    "library-upcoming-episodes": "home.items.libraryUpcomingEpisodes.name",
+    "aired-recently": "home.items.airedRecently.name",
+    "missed-sequels": "home.items.missedSequels.name",
+    "anime-schedule-calendar": "home.items.animeScheduleCalendar.name",
+    "local-anime-library-stats": "home.items.localAnimeLibraryStats.name",
+    "discover-header": "home.items.discoverHeader.name",
+    "anime-carousel": "home.items.animeCarousel.name",
+    "manga-carousel": "home.items.mangaCarousel.name",
+    "manga-library": "home.items.mangaLibrary.name",
+}
+
+const HOME_ITEM_DESCRIPTION_KEYS: Record<string, string> = {
+    "centered-title": "home.items.centeredTitle.description",
+    "anime-continue-watching": "home.items.animeContinueWatching.description",
+    "anime-continue-watching-header": "home.items.animeContinueWatchingHeader.description",
+    "anime-library": "home.items.animeLibrary.description",
+    "my-lists": "home.items.myLists.description",
+    "local-anime-library": "home.items.localAnimeLibrary.description",
+    "library-upcoming-episodes": "home.items.libraryUpcomingEpisodes.description",
+    "aired-recently": "home.items.airedRecently.description",
+    "missed-sequels": "home.items.missedSequels.description",
+    "anime-schedule-calendar": "home.items.animeScheduleCalendar.description",
+    "local-anime-library-stats": "home.items.localAnimeLibraryStats.description",
+    "discover-header": "home.items.discoverHeader.description",
+    "anime-carousel": "home.items.animeCarousel.description",
+    "manga-carousel": "home.items.mangaCarousel.description",
+    "manga-library": "home.items.mangaLibrary.description",
+}
+
+function getHomeItemName(t: TFunction, type: string) {
+    return t(HOME_ITEM_NAME_KEYS[type] ?? type)
+}
+
+function getHomeItemDescription(t: TFunction, type: string) {
+    const key = HOME_ITEM_DESCRIPTION_KEYS[type]
+    return key ? t(key) : ""
+}
+
+function getHomeItemKindLabel(t: TFunction, kind: "row" | "header") {
+    return t(`home.settings.kinds.${kind}`)
+}
+
+function getHomeOptionLabel(t: TFunction, optionName: string, fallbackLabel?: string) {
+    switch (optionName) {
+        case "name":
+            return t("home.settings.options.name")
+        case "text":
+            return t("home.settings.options.text")
+        case "sorting":
+            return t("mediaFilters.sorting")
+        case "status":
+            return t("mediaFilters.status")
+        case "format":
+            return t("mediaFilters.format")
+        case "genres":
+            return t("mediaFilters.genre")
+        case "season":
+            return t("mediaFilters.season")
+        case "year":
+            return t("mediaFilters.year")
+        case "countryOfOrigin":
+            return t("home.settings.options.countryOfOrigin")
+        case "statuses":
+            return t("home.settings.options.statuses")
+        case "layout":
+            return t("home.settings.options.layout")
+        case "type":
+            return t("home.settings.options.type")
+        case "customListName":
+            return t("home.settings.options.customListName")
+        default:
+            return fallbackLabel ?? optionName
+    }
+}
+
+function getHomeOptionValueLabel(
+    t: TFunction,
+    itemType: string,
+    optionName: string,
+    option: { value?: string, label?: string },
+) {
+    const value = option.value
+
+    switch (optionName) {
+        case "sorting":
+            return getAdvancedSearchSortingLabel(t, value) || option.label || value || ""
+        case "status":
+            return getMediaStatusLabel(t, value) || option.label || value || ""
+        case "format":
+            return getMediaFormatLabel(t, value) || option.label || value || ""
+        case "genres":
+            return getAniListGenreLabel(t, value || option.label) || option.label || value || ""
+        case "season":
+            return getMediaSeasonLabel(t, value) || option.label || value || ""
+        case "countryOfOrigin":
+            return getCountryLabel(t, value) || option.label || value || ""
+        case "statuses":
+            if (itemType === "anime-library") return getCollectionStatusLabel(t, value, "anime")
+            if (itemType === "manga-library") return getCollectionStatusLabel(t, value, "manga")
+            return getCollectionStatusLabel(t, value, "generic")
+        case "layout": {
+            if (value === "grid" || value === "carousel") {
+                return t(`home.settings.options.layoutValues.${value}`)
+            }
+            return option.label || value || ""
+        }
+        case "type":
+            if (itemType === "anime-schedule-calendar") {
+                if (value === "my-lists" || value === "global") {
+                    return t(`home.settings.options.scheduleTypes.${value === "my-lists" ? "myLists" : "global"}`)
+                }
+                return option.label || value || ""
+            }
+            return getMediaTypeLabel(t, value) || option.label || value || ""
+        default:
+            return option.label || value || ""
+    }
+}
 
 export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibrary?: boolean, isNakamaLibrary: boolean }) {
     const { t } = useTranslation()
@@ -198,7 +335,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
                 onOpenChange={setIsModalOpen}
                 title={<div className="flex items-center gap-2 w-full justify-center">
                     <IoHomeOutline className="size-5" />
-                    Home
+                    {t("home.settings.title")}
                 </div>}
                 contentClass={cn(
                     "max-w-5xl bg-gray-950 bg-opacity-90 sm:rounded-3xl",
@@ -220,7 +357,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <LuCirclePlay className="size-5" />
-                            <h4 className="text-lg font-semibold">Anime Library</h4>
+                            <h4 className="text-lg font-semibold">{t("home.settings.animeLibrary.title")}</h4>
                         </div>
 
                         <RadioGroup
@@ -254,8 +391,8 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
                             }}
                             disabled={isSavingSettings || isSavingTorrentstreamSettings || isSavingDebridSettings}
                             options={[
-                                { label: "Local anime only", value: "local" },
-                                { label: "Local anime + Streaming", value: "stream" },
+                                { label: t("home.settings.animeLibrary.localOnly"), value: "local" },
+                                { label: t("home.settings.animeLibrary.localAndStreaming"), value: "stream" },
                             ]}
 
                             {...{
@@ -287,8 +424,8 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
 
                         <p className="text-sm text-[--muted] pt-4">
                             {animeLibraryType === "local"
-                                ? "Only anime in your local library will be displayed"
-                                : "All anime in your currently watching list will be included in the library"}
+                                ? t("home.settings.animeLibrary.localOnlyDescription")
+                                : t("home.settings.animeLibrary.localAndStreamingDescription")}
                         </p>
 
 
@@ -302,7 +439,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
                     >
                         <div className="flex items-center gap-2 mb-4">
                             <LuLayoutPanelLeft className="size-5" />
-                            <h4 className="text-lg font-semibold">Home Layout</h4>
+                            <h4 className="text-lg font-semibold">{t("home.settings.layout.title")}</h4>
                         </div>
 
                         {isLoadingHomeItems ? (
@@ -318,7 +455,7 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
                                     <div className="space-y-2 bg-gray-900/30 rounded-xl p-4 border border-gray-800">
                                         {currentItems.length === 0 ? (
                                             <div className="text-center py-8 text-gray-400">
-                                                No items added yet. Add some items below to customize your home screen.
+                                                {t("home.settings.layout.empty")}
                                             </div>
                                         ) : (
                                             currentItems.map((item, index) => (
@@ -347,16 +484,16 @@ export function HomeSettingsModal({ emptyLibrary, isNakamaLibrary }: { emptyLibr
                     >
                         <div className="flex items-center gap-2 mb-4">
                             <BiPlus className="size-5" />
-                            <h4 className="text-lg font-semibold">Available Items</h4>
+                            <h4 className="text-lg font-semibold">{t("home.settings.availableItems.title")}</h4>
                         </div>
 
                         {availableItems.length === 0 ? (
                             <div className="text-center py-6 text-gray-400">
-                                All available items have been added to your home screen.
+                                {t("home.settings.availableItems.empty")}
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {availableItems.toSorted((a, b) => HOME_ITEMS[a].name.localeCompare(HOME_ITEMS[b].name)).map((itemType) => (
+                                {availableItems.toSorted((a, b) => getHomeItemName(t, a).localeCompare(getHomeItemName(t, b))).map((itemType) => (
                                     <AvailableHomeItem
                                         key={itemType}
                                         id={itemType}
@@ -394,6 +531,7 @@ interface SortableHomeItemProps {
 }
 
 function SortableHomeItem({ item, onRemove, onEditOptions, isUpdating, index }: SortableHomeItemProps) {
+    const { t } = useTranslation()
     const {
         attributes,
         listeners,
@@ -429,15 +567,15 @@ function SortableHomeItem({ item, onRemove, onEditOptions, isUpdating, index }: 
             </div>
 
             <div className="flex-1">
-                <div className="font-medium text-white">{homeItemConfig.name}{!!item.options?.name && `: "${item.options.name}"`}
+                <div className="font-medium text-white">{getHomeItemName(t, item.type)}{!!item.options?.name && `: "${item.options.name}"`}
                     {(item.type === "centered-title" && item.options?.text) && `: "${item.options.text}"`}
-                    {(item.type === "my-lists") && `: ${item.options?.type === "manga" ? "Manga" : "Anime"}`}
+                    {(item.type === "my-lists") && `: ${item.options?.type === "manga" ? t("mediaFilters.options.types.manga") : t("mediaFilters.options.types.anime")}`}
                 </div>
                 <p className="text-xs text-[--muted] line-clamp-1">
-                    {homeItemConfig.description}
+                    {getHomeItemDescription(t, item.type)}
                 </p>
                 <div className="text-sm text-gray-400">
-                    {homeItemConfig.kind.map(k => k.charAt(0).toUpperCase() + k.slice(1)).join(", ")}
+                    {homeItemConfig.kind.map(k => getHomeItemKindLabel(t, k)).join(", ")}
                 </div>
             </div>
 
@@ -479,6 +617,7 @@ interface AvailableHomeItemProps {
 }
 
 function AvailableHomeItem({ id, type, onAdd, isUpdating }: AvailableHomeItemProps) {
+    const { t } = useTranslation()
     const homeItemConfig = HOME_ITEMS[type]
     const Icon = HOME_ITEM_ICONS[type as keyof typeof HOME_ITEM_ICONS] || IoHomeOutline
 
@@ -491,12 +630,12 @@ function AvailableHomeItem({ id, type, onAdd, isUpdating }: AvailableHomeItemPro
             </div>
 
             <div className="flex-1">
-                <div className="font-medium text-white">{homeItemConfig.name}</div>
+                <div className="font-medium text-white">{getHomeItemName(t, type)}</div>
                 <p className="text-xs text-[--muted]">
-                    {homeItemConfig.description}
+                    {getHomeItemDescription(t, type)}
                 </p>
                 <div className="text-sm text-gray-400">
-                    {homeItemConfig.kind.map(k => k.charAt(0).toUpperCase() + k.slice(1)).join(", ")}
+                    {homeItemConfig.kind.map(k => getHomeItemKindLabel(t, k)).join(", ")}
                 </div>
             </div>
 
@@ -507,7 +646,7 @@ function AvailableHomeItem({ id, type, onAdd, isUpdating }: AvailableHomeItemPro
                 disabled={isUpdating}
                 leftIcon={<BiPlus />}
             >
-                Add
+                {t("common.buttons.add")}
             </Button>
         </div>
     )
@@ -523,6 +662,7 @@ interface HomeItemOptionsModalProps {
 }
 
 function HomeItemOptionsModal({ id, item, isOpen, onClose, onSave, isUpdating }: HomeItemOptionsModalProps) {
+    const { t } = useTranslation()
     const homeItemConfig = HOME_ITEMS[item.type]
     const [formData, setFormData] = React.useState<Record<string, any>>(item.options || {})
 
@@ -554,7 +694,7 @@ function HomeItemOptionsModal({ id, item, isOpen, onClose, onSave, isUpdating }:
             title={
                 <div className="flex items-center gap-2">
                     <BiCog className="size-5" />
-                    Configure {homeItemConfig.name}
+                    {t("home.settings.configure.title", { name: getHomeItemName(t, item.type) })}
                 </div>
             }
             contentClass="max-w-2xl bg-gray-950 bg-opacity-90 firefox:bg-opacity-100 firefox:backdrop-blur-none sm:rounded-3xl"
@@ -562,13 +702,14 @@ function HomeItemOptionsModal({ id, item, isOpen, onClose, onSave, isUpdating }:
         >
             <div className="space-y-6">
                 <div className="text-sm text-gray-400">
-                    Customize the settings for this home item.
+                    {t("home.settings.configure.description")}
                 </div>
 
                 <div className="space-y-4">
                     {(homeItemConfig.options || []).map((option: any) => (
                         <OptionField
                             key={option.name}
+                            itemType={item.type}
                             option={option}
                             value={formData[option.name]}
                             onChange={(value) => handleFieldChange(option.name, value)}
@@ -582,14 +723,14 @@ function HomeItemOptionsModal({ id, item, isOpen, onClose, onSave, isUpdating }:
                         onClick={onClose}
                         disabled={isUpdating}
                     >
-                        Cancel
+                        {t("common.buttons.cancel")}
                     </Button>
                     <Button
                         intent="primary"
                         onClick={handleSave}
                         loading={isUpdating}
                     >
-                        Save
+                        {t("common.buttons.save")}
                     </Button>
                 </div>
             </div>
@@ -598,13 +739,16 @@ function HomeItemOptionsModal({ id, item, isOpen, onClose, onSave, isUpdating }:
 }
 
 interface OptionFieldProps {
+    itemType: string
     option: any
     value: any
     onChange: (value: any) => void
 }
 
-function OptionField({ option, value, onChange }: OptionFieldProps) {
+function OptionField({ itemType, option, value, onChange }: OptionFieldProps) {
+    const { t } = useTranslation()
     const { label, type, name, options, min, max } = option
+    const localizedLabel = getHomeOptionLabel(t, name, label)
 
     const handleMultiSelectChange = (selectedValue: string) => {
         const currentValues = Array.isArray(value) ? value : []
@@ -618,11 +762,11 @@ function OptionField({ option, value, onChange }: OptionFieldProps) {
         case "text":
             return (
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">{label}</label>
+                    <label className="text-sm font-medium text-white">{localizedLabel}</label>
                     <TextInput
                         value={value || ""}
                         onChange={(e) => onChange(e.target.value)}
-                        placeholder={`Enter ${label.toLowerCase()}`}
+                        placeholder={t("home.settings.placeholders.enter", { label: localizedLabel.toLowerCase() })}
                     />
                 </div>
             )
@@ -630,7 +774,7 @@ function OptionField({ option, value, onChange }: OptionFieldProps) {
         case "number":
             return (
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">{label}</label>
+                    <label className="text-sm font-medium text-white">{localizedLabel}</label>
                     <NumberInput
                         value={value || min || 0}
                         onValueChange={(valueAsNumber) => onChange(valueAsNumber)}
@@ -644,13 +788,16 @@ function OptionField({ option, value, onChange }: OptionFieldProps) {
         case "select":
             return (
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">{label}</label>
+                    <label className="text-sm font-medium text-white">{localizedLabel}</label>
                     <Select
                         value={value || ""}
                         onValueChange={onChange}
-                        placeholder={`Select ${label.toLowerCase()}`}
+                        placeholder={t("home.settings.placeholders.select", { label: localizedLabel.toLowerCase() })}
                         options={[
-                            ...options,
+                            ...options.map((opt: any) => ({
+                                ...opt,
+                                label: getHomeOptionValueLabel(t, itemType, name, opt),
+                            })),
                         ]}
                     />
                 </div>
@@ -660,7 +807,7 @@ function OptionField({ option, value, onChange }: OptionFieldProps) {
             const selectedValues = Array.isArray(value) ? value : []
             return (
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">{label}</label>
+                    <label className="text-sm font-medium text-white">{localizedLabel}</label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-3 bg-gray-900/30 rounded-lg border border-gray-800">
                         {options.map((opt: any) => (
                             <button
@@ -674,7 +821,7 @@ function OptionField({ option, value, onChange }: OptionFieldProps) {
                                         : "bg-gray-800/50 border-gray-700 text-gray-300 hover:border-gray-600",
                                 )}
                             >
-                                {opt.label}
+                                {getHomeOptionValueLabel(t, itemType, name, opt)}
                             </button>
                         ))}
                     </div>
@@ -690,7 +837,7 @@ function OptionField({ option, value, onChange }: OptionFieldProps) {
         default:
             return (
                 <div className="text-sm text-gray-400">
-                    Unsupported field type: {type}
+                    {t("home.settings.unsupportedFieldType", { type })}
                 </div>
             )
     }

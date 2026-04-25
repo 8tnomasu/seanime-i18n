@@ -31,8 +31,6 @@ import { Tooltip } from "@/components/ui/tooltip"
 import { upath } from "@/lib/helpers/upath"
 import { ContextMenuGroup } from "@radix-ui/react-context-menu"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
-import camelCase from "lodash/camelCase"
-import upperFirst from "lodash/upperFirst"
 import React, { memo } from "react"
 import { BiChevronDown, BiChevronRight, BiFolder, BiListCheck, BiLockOpenAlt, BiSearch } from "react-icons/bi"
 import { FaRegEdit } from "react-icons/fa"
@@ -448,12 +446,12 @@ export function LibraryExplorer() {
                     <div className="p-4 border-b space-y-3">
                         <div className="flex items-center gap-2">
                             <div className="flex items-center gap-3 flex-wrap">
-                                <h2 className="text-lg font-semibold text-gray-100 2xl:block hidden">Library Explorer</h2>
+                                <h2 className="text-lg font-semibold text-gray-100 2xl:block hidden">{t("libraryExplorer.title")}</h2>
                                 {hasUnlockedFiles && (
                                     <Alert
                                         intent="info"
                                         className="text-sm py-1 px-3 cursor-pointer"
-                                        description="Lock all correctly matched files"
+                                        description={t("libraryExplorer.states.lockedFiles")}
                                         onClick={() => {
                                             setSelectedFilter("UNLOCKED")
                                         }}
@@ -463,7 +461,7 @@ export function LibraryExplorer() {
                                     <Alert
                                         intent="warning"
                                         className="text-sm py-1 px-3 cursor-pointer"
-                                        description={`${unmatchedFiles.length} unmatched file${unmatchedFiles.length != 1 ? "s" : ""}`}
+                                        description={t("libraryExplorer.states.unmatchedFiles", { count: unmatchedFiles.length })}
                                         onClick={() => {
                                             setSelectedFilter("UNMATCHED")
                                         }}
@@ -473,7 +471,7 @@ export function LibraryExplorer() {
                                     <Alert
                                         intent="warning"
                                         className="text-sm py-1 px-3 cursor-pointer"
-                                        description={`${unknownMediaFiles.length} file${unknownMediaFiles.length != 1 ? "s" : ""} with hidden media`}
+                                        description={t("libraryExplorer.states.hiddenMediaFiles", { count: unknownMediaFiles.length })}
                                         onClick={() => {
                                             setSelectedFilter("UNKNOWN_MEDIA")
                                         }}
@@ -501,20 +499,20 @@ export function LibraryExplorer() {
                                         !!selectedFilter && "animate-pulse",
                                     )}
                                 >
-                                    Filter
+                                    {t("libraryExplorer.filters.title")}
                                 </Button>}
                             >
                                 <Button intent="gray-link" size="sm" className="w-full" onClick={() => handleToggleFilter("UNMATCHED")}>
-                                    Unmatched files
+                                    {t("libraryExplorer.filters.unmatchedFiles")}
                                 </Button>
                                 <Button intent="gray-link" size="sm" className="w-full" onClick={() => handleToggleFilter("UNLOCKED")}>
-                                    Unlocked files
+                                    {t("libraryExplorer.filters.unlockedFiles")}
                                 </Button>
                                 <Button intent="gray-link" size="sm" className="w-full" onClick={() => handleToggleFilter("IGNORED")}>
-                                    Ignored files
+                                    {t("libraryExplorer.ignoredFiles.title")}
                                 </Button>
                                 <Button intent="gray-link" size="sm" className="w-full" onClick={() => handleToggleFilter("UNKNOWN_MEDIA")}>
-                                    Unknown media
+                                    {t("libraryExplorer.unknownMedia.title")}
                                 </Button>
                             </Popover>}
                             {!!selectedFilter && (
@@ -527,7 +525,17 @@ export function LibraryExplorer() {
                                         "animate-pulse",
                                     )}
                                 >
-                                    Filter: {!!selectedFilter ? upperFirst(camelCase(selectedFilter)) : ""}
+                                    {t("libraryExplorer.filters.active", {
+                                        filter: selectedFilter === "UNMATCHED"
+                                            ? t("libraryExplorer.filters.unmatchedFiles")
+                                            : selectedFilter === "UNLOCKED"
+                                                ? t("libraryExplorer.filters.unlockedFiles")
+                                                : selectedFilter === "IGNORED"
+                                                    ? t("libraryExplorer.ignoredFiles.title")
+                                                    : selectedFilter === "UNKNOWN_MEDIA"
+                                                        ? t("libraryExplorer.unknownMedia.title")
+                                                        : "",
+                                    })}
                                 </Button>
                             )}
                             <Button
@@ -539,7 +547,7 @@ export function LibraryExplorer() {
                                     isSelectingPaths && "animate-pulse",
                                 )}
                             >
-                                Select{isSelectingPaths ? "ing" : ""}
+                                {isSelectingPaths ? t("libraryExplorer.actions.selecting") : t("libraryExplorer.actions.select")}
                             </Button>
                             <IconButton
                                 icon={<LuFolderSync />}
@@ -550,7 +558,7 @@ export function LibraryExplorer() {
                             />
                         </div>
                         <TextInput
-                            placeholder="Search files and folders..."
+                            placeholder={t("libraryExplorer.actions.searchPlaceholder")}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             leftIcon={<BiSearch />}
@@ -560,7 +568,7 @@ export function LibraryExplorer() {
                         {hasUnscannedFiles && (
                             <Alert
                                 intent="warning"
-                                description="Some files have not been scanned yet. Please scan the library to be able to perform actions on them."
+                                description={t("libraryExplorer.states.unscannedFiles")}
                             />
                         )}
                     </div>

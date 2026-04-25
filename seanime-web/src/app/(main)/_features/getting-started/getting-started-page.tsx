@@ -22,6 +22,7 @@ import { __isDesktop__, __isElectronDesktop__ } from "@/types/constants"
 import { AnimatePresence, motion } from "motion/react"
 import React from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { BiChevronLeft, BiChevronRight, BiDownload, BiFolder, BiPlay, BiRocket } from "react-icons/bi"
 import { FaBook, FaDiscord } from "react-icons/fa"
 import { HiOutlineDesktopComputer } from "react-icons/hi"
@@ -85,42 +86,43 @@ const stepVariants = {
 const STEPS = [
     {
         id: "library",
-        title: "Local Anime Library",
-        description: "Choose your anime library folder",
+        title: "gettingStarted.steps.library.title",
+        description: "gettingStarted.steps.library.description",
         icon: BiFolder,
         gradient: "from-blue-500 to-cyan-500",
     },
     {
         id: "player",
-        title: "Media Player",
-        description: "Configure your video player",
+        title: "gettingStarted.steps.player.title",
+        description: "gettingStarted.steps.player.description",
         icon: BiPlay,
         gradient: "from-green-500 to-emerald-500",
     },
     {
         id: "torrents",
-        title: "Downloading",
-        description: "Set up downloading",
+        title: "gettingStarted.steps.torrents.title",
+        description: "gettingStarted.steps.torrents.description",
         icon: BiDownload,
         gradient: "from-orange-500 to-red-500",
     },
     {
         id: "debrid",
-        title: "Debrid Service",
-        description: "Optional premium streaming",
+        title: "gettingStarted.steps.debrid.title",
+        description: "gettingStarted.steps.debrid.description",
         icon: HiServerStack,
         gradient: "from-indigo-500 to-indigo-500",
     },
     {
         id: "features",
-        title: "Features",
-        description: "Enable additional features",
+        title: "gettingStarted.steps.features.title",
+        description: "gettingStarted.steps.features.description",
         icon: LuSparkles,
         gradient: "from-teal-500 to-blue-500",
     },
 ]
 
 function StepIndicator({ currentStep, totalSteps, onStepClick }: { currentStep: number; totalSteps: number; onStepClick: (step: number) => void }) {
+    const { t } = useTranslation()
     return (
         <div className="mb-12">
             <div className="flex items-center justify-center mb-6">
@@ -138,7 +140,7 @@ function StepIndicator({ currentStep, totalSteps, onStepClick }: { currentStep: 
 
             <div className="text-center mb-8">
                 <p className="text-[--muted] text-sm ">
-                    These settings can be changed later
+                    {t("gettingStarted.note")}
                 </p>
             </div>
 
@@ -190,7 +192,7 @@ function StepIndicator({ currentStep, totalSteps, onStepClick }: { currentStep: 
                                     "group-hover:text-[--brand]",
                                 )}
                             >
-                                {step.title}
+                                {t(step.title)}
                             </h3>
                             {/* <p className="text-xs text-gray-500 mt-1 max-w-20">
                              {step.description}

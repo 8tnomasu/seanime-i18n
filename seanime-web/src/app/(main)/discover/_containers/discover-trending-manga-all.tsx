@@ -8,10 +8,12 @@ import { ADVANCED_SEARCH_MEDIA_GENRES } from "@/app/(main)/search/_lib/advanced-
 import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/carousel"
 import { TextInput } from "@/components/ui/text-input"
 import { useDebounce } from "@/hooks/use-debounce"
+import { getGenreLabel } from "@/i18n/labels"
 import { atom } from "jotai"
 import { useAtom, useAtomValue, useSetAtom } from "jotai/react"
 import React from "react"
 import { FiSearch } from "react-icons/fi"
+import { useTranslation } from "react-i18next"
 
 const trendingGenresAtom = atom<string[]>([])
 
@@ -109,6 +111,7 @@ export function DiscoverTrendingMangaAll() {
 }
 
 function GenreSelector() {
+    const { t } = useTranslation()
 
     const [selectedGenre, setSelectedGenre] = useAtom(trendingGenresAtom)
 
@@ -116,12 +119,12 @@ function GenreSelector() {
         <MediaGenreSelector
             items={[
                 {
-                    name: "All",
+                    name: t("discover.genres.all"),
                     isCurrent: selectedGenre.length === 0,
                     onClick: () => setSelectedGenre([]),
                 },
                 ...ADVANCED_SEARCH_MEDIA_GENRES.map(genre => ({
-                    name: genre,
+                    name: getGenreLabel(t, genre),
                     isCurrent: selectedGenre.includes(genre),
                     onClick: () => setSelectedGenre([genre]),
                 })),
@@ -133,6 +136,7 @@ function GenreSelector() {
 const mangaSearchInputAtom = atom<string>("")
 
 export function DiscoverMangaSearchBar() {
+    const { t } = useTranslation()
     const [searchInput, setSearchInput] = useAtom(mangaSearchInputAtom)
     const search = useDebounce(searchInput, 500)
 
@@ -152,7 +156,7 @@ export function DiscoverMangaSearchBar() {
                         setSearchInput(v)
                     }}
                     className="rounded-full"
-                    placeholder="Search manga"
+                    placeholder={t("search.placeholder.manga")}
                 />
             </div>
 

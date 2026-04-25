@@ -8,8 +8,10 @@ import { useThemeSettings } from "@/lib/theme/theme-hooks"
 import { ScopeProvider } from "jotai-scope"
 import { useAtom } from "jotai/react"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 export function LibraryExplorerDrawer(props: {}) {
+    const { t } = useTranslation()
 
     const ts = useThemeSettings()
     const [open, setOpen] = useAtom(libraryExplorer_drawerOpenAtom)
@@ -30,7 +32,7 @@ export function LibraryExplorerDrawer(props: {}) {
                 </ScopeProvider>
                 <div className="block lg:hidden">
                     <p className="text-center text-white text-lg font-semibold py-4">
-                        Library explorer can only be rendered on larger screens.
+                        {t("libraryExplorer.mobile.unsupported")}
                     </p>
                 </div>
             </VaulContent>

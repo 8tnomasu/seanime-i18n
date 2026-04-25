@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { HorizontalDraggableScroll } from "@/components/ui/horizontal-draggable-scroll"
 import { StaticTabs } from "@/components/ui/tabs"
 import { useDebounce } from "@/hooks/use-debounce"
+import { getGenreLabel } from "@/i18n/labels"
 import { useSetAtom } from "jotai"
 import { useAtom } from "jotai/react"
 import React from "react"
@@ -105,6 +106,7 @@ export function EmptyLibraryView(props: EmptyLibraryViewProps) {
 function GenreSelector({
     genres,
 }: { genres: string[] }) {
+    const { t } = useTranslation()
     const [params, setParams] = useAtom(__mainLibrary_paramsInputAtom)
     const setActualParams = useSetAtom(__mainLibrary_paramsAtom)
     const debouncedParams = useDebounce(params, 500)
@@ -131,7 +133,7 @@ function GenreSelector({
                     //     }),
                     // },
                     ...genres.map(genre => ({
-                        name: genre,
+                        name: getGenreLabel(t, genre),
                         isCurrent: params!.genre?.includes(genre) ?? false,
                         onClick: () => setParams(draft => {
                             if (draft.genre?.includes(genre)) {

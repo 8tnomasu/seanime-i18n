@@ -135,7 +135,7 @@ export function getCountryLabel(t: TFunction, value?: string | null) {
     }
 }
 
-export function getGenreLabel(t: TFunction, value?: string | null) {
+export function getAniListGenreLabel(t: TFunction, value?: string | null) {
     switch (value) {
         case "Action":
             return t("mediaFilters.options.genres.action")
@@ -176,6 +176,75 @@ export function getGenreLabel(t: TFunction, value?: string | null) {
         default:
             return value ?? ""
     }
+}
+
+export function getGenreLabel(t: TFunction, value?: string | null) {
+    return getAniListGenreLabel(t, value)
+}
+
+const ANILIST_TAG_TRANSLATION_KEYS: Record<string, string> = {
+    "Coming of Age": "comingOfAge",
+    "Time Skip": "timeSkip",
+    "Revenge": "revenge",
+    "Female Protagonist": "femaleProtagonist",
+    "Male Protagonist": "maleProtagonist",
+    "Ensemble Cast": "ensembleCast",
+    "Found Family": "foundFamily",
+    "School": "school",
+    "Work": "work",
+    "Urban Fantasy": "urbanFantasy",
+    "Isekai": "isekai",
+    "Reincarnation": "reincarnation",
+    "Magic": "magic",
+    "Super Power": "superPower",
+    "Demons": "demons",
+    "Vampire": "vampire",
+    "Robots": "robots",
+    "Aliens": "aliens",
+    "Post-Apocalyptic": "postApocalyptic",
+    "Survival": "survival",
+    "War": "war",
+    "Military": "military",
+    "Crime": "crime",
+    "Detective": "detective",
+    "Time Manipulation": "timeManipulation",
+    "Alternate Universe": "alternateUniverse",
+    "Virtual World": "virtualWorld",
+    "Video Games": "videoGames",
+    "Idol": "idol",
+    "Band": "band",
+    "Food": "food",
+    "Travel": "travel",
+    "Iyashikei": "iyashikei",
+    "CGI": "cgi",
+    "Episodic": "episodic",
+    "Anthology": "anthology",
+    "Parody": "parody",
+    "Satire": "satire",
+    "Slapstick": "slapstick",
+    "Tragedy": "tragedy",
+    "Gore": "gore",
+    "Body Horror": "bodyHorror",
+    "Cosmic Horror": "cosmicHorror",
+    "Ghost": "ghost",
+    "Zombie": "zombie",
+    "Animals": "animals",
+    "Anthropomorphism": "anthropomorphism",
+    "Kemonomimi": "kemonomimi",
+    "Nekomimi": "nekomimi",
+    "Henshin": "henshin",
+    "Shoujo": "shoujo",
+    "Shounen": "shounen",
+    "Seinen": "seinen",
+    "Josei": "josei",
+}
+
+export function getAniListTagLabel(t: TFunction, value?: string | null) {
+    const translationKey = value ? ANILIST_TAG_TRANSLATION_KEYS[value] : undefined
+
+    if (!translationKey) return value ?? ""
+
+    return t(`anilist.tags.${translationKey}`)
 }
 
 export function getMediaRelationTypeLabel(t: TFunction, value?: string | null) {

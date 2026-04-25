@@ -3,12 +3,14 @@ import { AppLayoutStack } from "@/components/ui/app-layout"
 import { AreaChart, BarChart, DonutChart } from "@/components/ui/charts"
 import { Separator } from "@/components/ui/separator"
 import { Stats } from "@/components/ui/stats"
+import { getGenreLabel } from "@/i18n/labels"
 import React from "react"
 import { FaRegStar } from "react-icons/fa"
 import { FiBookOpen } from "react-icons/fi"
 import { LuHourglass } from "react-icons/lu"
 import { PiTelevisionSimpleBold } from "react-icons/pi"
 import { TbHistory } from "react-icons/tb"
+import { useTranslation } from "react-i18next"
 
 type AnilistStatsProps = {
     stats?: AL_Stats
@@ -35,6 +37,7 @@ const statusName: Record<string, string> = {
 }
 
 export function AnilistStats(props: AnilistStatsProps) {
+    const { t } = useTranslation()
 
     const {
         stats,
@@ -72,13 +75,13 @@ export function AnilistStats(props: AnilistStatsProps) {
 
         return stats.animeStats.genres.map((item) => {
             return {
-                name: item.genre,
+                name: getGenreLabel(t, item.genre),
                 "Count": item.count,
                 hoursWatched: Math.round(item.minutesWatched / 60),
                 "Average score": Number((item.meanScore / 10).toFixed(1)),
             }
         }).sort((a, b) => b["Count"] - a["Count"])
-    }, [stats?.animeStats?.genres])
+    }, [stats?.animeStats?.genres, t])
 
     const [anime_thisYearStats, anime_lastYearStats] = React.useMemo(() => {
         if (!stats?.animeStats?.startYears) return []
@@ -122,13 +125,13 @@ export function AnilistStats(props: AnilistStatsProps) {
 
         return stats.mangaStats.genres.map((item) => {
             return {
-                name: item.genre,
+                name: getGenreLabel(t, item.genre),
                 "Count": item.count,
                 chaptersRead: item.chaptersRead,
                 "Average score": Number((item.meanScore / 10).toFixed(1)),
             }
         }).sort((a, b) => b["Count"] - a["Count"])
-    }, [stats?.mangaStats?.genres])
+    }, [stats?.mangaStats?.genres, t])
 
     const [manga_thisYearStats, manga_lastYearStats] = React.useMemo(() => {
         if (!stats?.mangaStats?.startYears) return []

@@ -65,6 +65,7 @@ Required rules:
 - React components should use `useTranslation()`.
 - Hooks, utilities, toasts, and other non-React modules should use `i18n.t(...)`.
 - Shared display labels should use `seanime-web/src/i18n/labels.ts` when appropriate instead of duplicating mapping logic.
+- AniList genre and tag translation must stay display-only and must not change raw AniList values used for filters, queries, or cache.
 
 ## Branch and Upstream Policy
 

@@ -312,7 +312,7 @@ export const HOME_ITEMS = {
         ],
     },
     "local-anime-library": {
-        name: "Local Anime Library",
+        name: "home.items.localAnimeLibrary.name",
         kind: ["row"],
         schemaVersion: 2,
         description: "Display a complete grid of anime you have in your local library.",
@@ -376,7 +376,7 @@ export const HOME_ITEMS = {
         ],
     },
     "local-anime-library-stats": {
-        name: "Local Anime Library Stats",
+        name: "home.items.localAnimeLibraryStats.name",
         kind: ["row"],
         schemaVersion: 1,
         description: "Display the stats for your local anime library.",

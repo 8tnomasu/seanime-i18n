@@ -6,9 +6,11 @@ import { __discover_hoveringHeaderAtom } from "@/app/(main)/discover/_components
 import { __discover_headerIsTransitioningAtom, __discover_randomTrendingAtom } from "@/app/(main)/discover/_containers/discover-trending"
 import { ADVANCED_SEARCH_MEDIA_GENRES } from "@/app/(main)/search/_lib/advanced-search-constants"
 import { Carousel, CarouselContent, CarouselDotButtons } from "@/components/ui/carousel"
+import { getGenreLabel } from "@/i18n/labels"
 import { atom } from "jotai"
 import { useAtom, useAtomValue, useSetAtom } from "jotai/react"
 import React, { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 const trendingGenresAtom = atom<string[]>([])
 
@@ -125,6 +127,7 @@ export function DiscoverTrendingCountry({ country, forDiscoverHeader }: { countr
 }
 
 function GenreSelector() {
+    const { t } = useTranslation()
 
     const [selectedGenre, setSelectedGenre] = useAtom(trendingGenresAtom)
 
@@ -132,12 +135,12 @@ function GenreSelector() {
         <MediaGenreSelector
             items={[
                 {
-                    name: "All",
+                    name: t("discover.genres.all"),
                     isCurrent: selectedGenre.length === 0,
                     onClick: () => setSelectedGenre([]),
                 },
                 ...ADVANCED_SEARCH_MEDIA_GENRES.map(genre => ({
-                    name: genre,
+                    name: getGenreLabel(t, genre),
                     isCurrent: selectedGenre.includes(genre),
                     onClick: () => setSelectedGenre([genre]),
                 })),
