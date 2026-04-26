@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Release tag to build from, for example v3.6.1-i18n.1"
+        description: "Release tag to build from, for example v3.7.0-i18n.1"
         required: true
-        default: "v3.6.1-i18n.1"
+        default: "v3.7.0-i18n.1"
 
 permissions:
   contents: read
@@ -33,21 +33,20 @@ jobs:
             release_tag="${{ inputs.release_tag }}"
           fi
 
-          seanime_version="${release_tag#v}"
-          seanime_version="${seanime_version%%-i18n.*}"
+          release_version="${release_tag#v}"
 
           echo "release_tag=${release_tag}" >> "${GITHUB_OUTPUT}"
-          echo "seanime_version=${seanime_version}" >> "${GITHUB_OUTPUT}"
+          echo "release_version=${release_version}" >> "${GITHUB_OUTPUT}"
 
       - name: Wait for Linux release assets
         shell: bash
         env:
           RELEASE_TAG: ${{ steps.vars.outputs.release_tag }}
-          SEANIME_VERSION: ${{ steps.vars.outputs.seanime_version }}
+          RELEASE_VERSION: ${{ steps.vars.outputs.release_version }}
         run: |
           assets=(
-            "seanime-${SEANIME_VERSION}_Linux_x86_64.tar.gz"
-            "seanime-${SEANIME_VERSION}_Linux_arm64.tar.gz"
+            "seanime-${RELEASE_VERSION}_Linux_x86_64.tar.gz"
+            "seanime-${RELEASE_VERSION}_Linux_arm64.tar.gz"
           )
 
           for asset in "${assets[@]}"; do
@@ -100,7 +99,7 @@ jobs:
           push: true
           build-args: |
             RELEASE_TAG=${{ steps.vars.outputs.release_tag }}
-            SEANIME_VERSION=${{ steps.vars.outputs.seanime_version }}
+            SEANIME_VERSION=${{ steps.vars.outputs.release_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

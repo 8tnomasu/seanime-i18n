@@ -7,10 +7,12 @@ import { PageWrapper } from "@/components/shared/page-wrapper"
 import { AppLayoutStack } from "@/components/ui/app-layout"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { ScheduleCalendar } from "./_components/schedule-calendar"
 
 
 export default function Page() {
+    const { t } = useTranslation()
 
     const { data, isLoading } = useGetMissingEpisodes()
 
@@ -27,8 +29,8 @@ export default function Page() {
                 <AppLayoutStack>
 
                     <div className="hidden lg:block space-y-2">
-                        <h2>Release schedule</h2>
-                        <p className="text-[--muted]">Based on your anime list</p>
+                        <h2>{t("schedulePage.releaseSchedule")}</h2>
+                        <p className="text-[--muted]">{t("schedulePage.basedOnAnimeList")}</p>
                     </div>
 
                     <ScheduleCalendar />
