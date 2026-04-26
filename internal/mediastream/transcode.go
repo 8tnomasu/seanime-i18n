@@ -148,7 +148,7 @@ func (r *Repository) ServeEchoTranscodeStream(c echo.Context, clientId string) e
 
 // ShutdownTranscodeStream It should be called when unmounting the player (playback is no longer needed).
 // This will also send an events.MediastreamShutdownStream event.
-func (r *Repository) ShutdownTranscodeStream(clientId string) {
+func (r *Repository) ShutdownTranscodeStream(clientId string, playbackId string) {
 	r.reqMu.Lock()
 	defer r.reqMu.Unlock()
 
@@ -160,11 +160,24 @@ func (r *Repository) ShutdownTranscodeStream(clientId string) {
 		return
 	}
 
-	r.logger.Warn().Str("client_id", clientId).Msg("mediastream: Received shutdown transcode stream request")
-
-	if !r.playbackManager.currentMediaContainer.IsPresent() {
+	mediaContainer, found := r.playbackManager.currentMediaContainer.Get()
+	if !found {
 		return
 	}
+
+	if playbackId != "" && mediaContainer.Filepath != playbackId {
+		r.logger.Debug().
+			Str("client_id", clientId).
+			Str("playback_id", playbackId).
+			Str("current_playback_id", mediaContainer.Filepath).
+			Msg("mediastream: Ignoring shutdown transcode stream request for stale playback")
+		return
+	}
+
+	r.logger.Warn().
+		Str("client_id", clientId).
+		Str("playback_id", playbackId).
+		Msg("mediastream: Received shutdown transcode stream request")
 
 	// Kill playback
 	r.playbackManager.KillPlayback()

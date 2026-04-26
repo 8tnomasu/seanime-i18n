@@ -15,6 +15,7 @@ import { WSEvents } from "@/lib/server/ws-events"
 import { __isDesktop__ } from "@/types/constants"
 import { useAtomValue } from "jotai"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { useWebsocketMessageListener } from "./_hooks/handle-websockets"
 
 type ServerDataWrapperProps = {
@@ -32,6 +33,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
 
     const pathname = usePathname()
     const router = useRouter()
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const setServerStatus = useSetServerStatus()
     const password = useAtomValue(serverAuthTokenAtom)
@@ -110,7 +112,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
                 <img src="/seanime-logo.png" alt="logo" className="w-14 h-auto" />
             </div>
             <p className="text-center text-lg">
-                Seanime is currently updating. Refresh the page once the update is complete and the connection has been reestablished.
+                {t("serverDataWrapper.updatingMessage")}
             </p>
         </div>
     }
@@ -120,7 +122,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
      */
 
     if (!currentServerStatus.mediastreamSettings?.transcodeEnabled && pathname.startsWith("/mediastream")) {
-        return <LuffyError title="Transcoding not enabled" />
+        return <LuffyError title={t("serverDataWrapper.transcodingNotEnabled")} />
     }
 
     if (!currentServerStatus.user && host === "127.0.0.1:43211" && !__isDesktop__) {
@@ -131,7 +133,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
                         <div className="mb-4 flex justify-center w-full">
                             <img src="/seanime-logo.png" alt="logo" className="w-24 h-auto" />
                         </div>
-                        <h3>Welcome!</h3>
+                        <h3>{t("serverDataWrapper.welcome")}</h3>
                         <Button
                             onClick={() => {
                                 const url = currentServerStatus.anilistClientId
@@ -149,7 +151,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
                             </svg>}
                             intent="primary"
                             size="xl"
-                        >Log in with AniList</Button>
+                        >{t("auth.loginWithAniList")}</Button>
                     </div>
                 </AppLayoutStack>
             </Card>
@@ -162,7 +164,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
                         <div className="mb-4 flex justify-center w-full">
                             <img src="/seanime-logo.png" alt="logo" className="w-24 h-auto" />
                         </div>
-                        <h3>Welcome!</h3>
+                        <h3>{t("serverDataWrapper.welcome")}</h3>
                         <a
                             href={ANILIST_PIN_URL}
                             target="_blank"
@@ -179,7 +181,7 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
                                 </svg>}
                                 intent="white"
                                 size="md"
-                            >Get AniList token</Button>
+                            >{t("auth.getAniListToken")}</Button>
                         </a>
 
                         <Form
@@ -192,10 +194,10 @@ export function ServerDataWrapper(props: ServerDataWrapperProps) {
                         >
                             <Field.Textarea
                                 name="token"
-                                label="Enter the token"
+                                label={t("auth.enterToken")}
                                 fieldClass="px-4"
                             />
-                            <Field.Submit showLoadingOverlayOnSuccess>Continue</Field.Submit>
+                            <Field.Submit showLoadingOverlayOnSuccess>{t("common.buttons.continue")}</Field.Submit>
                         </Form>
                     </div>
                 </AppLayoutStack>

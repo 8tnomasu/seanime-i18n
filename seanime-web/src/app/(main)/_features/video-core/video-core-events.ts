@@ -655,7 +655,6 @@ export function useVideoCoreSetupEvents(id: string,
                 case "terminate":
                     log.info("Terminate event received")
                     onTerminateStream()
-                    dispatchTerminatedEvent()
                     break
                 case "get-anime-4k":
                     log.info("Get anime 4k event received")

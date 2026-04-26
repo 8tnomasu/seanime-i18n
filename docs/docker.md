@@ -8,7 +8,7 @@ This fork includes Docker deployment support that is designed to stay compatible
 - downloads mount point inside the container: `/downloads`
 - default exposed port: `43211`
 
-The image is rootless-friendly and uses the `seanime` user by default. The example Compose file also keeps `user: "1000:1000"` so it remains close to a `latest-rootless` style deployment.
+The image is rootless-friendly and uses the `seanime` user by default. The example Compose file also keeps `user: "1000:1000"` so it remains close to a rootless-style deployment.
 
 ## Local build with Docker Compose
 
@@ -50,11 +50,18 @@ The Docker image is built from release binaries published by this fork.
 
 Current defaults:
 
-- release tag: `v3.6.1-i18n.3`
-- linux amd64 asset: `seanime-3.6.1_Linux_x86_64.tar.gz`
-- linux arm64 asset: `seanime-3.6.1_Linux_arm64.tar.gz`
+- release tag: `v3.7.0-i18n.1`
+- linux amd64 asset: `seanime-3.7.0-i18n.1_Linux_x86_64.tar.gz`
+- linux arm64 asset: `seanime-3.7.0-i18n.1_Linux_arm64.tar.gz`
 
 The Dockerfile uses `TARGETARCH` to select the correct Linux asset automatically.
+
+## FFmpeg / FFprobe
+
+The official Docker image includes FFmpeg and FFprobe in the final runtime image.
+
+- Browser-based mediastream transcoding playback works without installing FFmpeg on the host.
+- If you build or deploy a non-official image, make sure `ffmpeg` and `ffprobe` are available in the runtime environment.
 
 ## Existing homelab volume compatibility
 
@@ -73,5 +80,7 @@ After the GHCR workflow publishes the image, you can switch from `build: .` to a
 ```yaml
 services:
   seanime:
-    image: ghcr.io/8tnomasu/seanime-i18n:v3.6.1-i18n.3
+    image: ghcr.io/8tnomasu/seanime-i18n:v3.7.0-i18n.1
 ```
+
+For production deployments, prefer a fixed version tag instead of `latest`.

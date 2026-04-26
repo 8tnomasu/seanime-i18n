@@ -913,10 +913,10 @@ export function VideoCore(props: VideoCoreProps) {
         // Wait for watch history to be ready before starting playback (only if continuity is enabled)
         if (waitForWatchHistory && shouldWaitForWatchHistory && !state.playbackInfo?.disableRestoreFromContinuity) return
 
-        // If the playback info is null, the stream is loading or unmounted
+        // If the playback info is null, the player can be between sources on the same page.
+        // Unmount and explicit terminate actions already dispatch the terminated event.
         if (!state.playbackInfo) {
             log.info("Cleaning up")
-            dispatchTerminatedEvent()
             cancelDiscordActivity()
             hasSoughtRef.current = false
             isFirstError.current = true

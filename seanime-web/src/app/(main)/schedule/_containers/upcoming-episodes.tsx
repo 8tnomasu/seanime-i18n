@@ -7,12 +7,14 @@ import { Carousel, CarouselContent, CarouselDotButtons, CarouselItem } from "@/c
 import { useRouter } from "@/lib/navigation"
 import { addSeconds, formatDistanceToNow } from "date-fns"
 import React from "react"
+import { useTranslation } from "react-i18next"
 
 /**
  * @description
  * Displays a carousel of upcoming episodes based on the user's anime list.
  */
 export function UpcomingEpisodes() {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const router = useRouter()
 
@@ -27,8 +29,8 @@ export function UpcomingEpisodes() {
             {data?.episodes.length > 0 && (
                 <>
                     <div>
-                        <h2>Upcoming episodes</h2>
-                        <p className="text-[--muted]">Based on your anime list</p>
+                        <h2>{t("schedulePage.upcomingEpisodes")}</h2>
+                        <p className="text-[--muted]">{t("schedulePage.basedOnAnimeList")}</p>
                     </div>
 
                     <Carousel

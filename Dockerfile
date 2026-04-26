@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
-ARG RELEASE_TAG=v3.6.1-i18n.3
-ARG SEANIME_VERSION=3.6.1
+ARG RELEASE_TAG=v3.7.0-i18n.1
+ARG SEANIME_VERSION=3.7.0-i18n.1
 ARG RELEASE_REPOSITORY=8tnomasu/seanime-i18n
 
 FROM debian:bookworm-slim AS downloader
@@ -35,8 +35,9 @@ FROM debian:bookworm-slim
 ARG UID=1000
 ARG GID=1000
 
+# FFmpeg / FFprobe are required in the runtime image for browser-based mediastream transcoding.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates tzdata \
+    && apt-get install -y --no-install-recommends ca-certificates tzdata ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid "${GID}" seanime \

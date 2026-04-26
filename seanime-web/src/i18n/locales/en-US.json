@@ -812,6 +812,26 @@
             "title": "Server authentication"
         }
     },
+    "badges": {
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "experimental": "Experimental"
+    },
+    "directorySelector": {
+        "changeLibrary": "Change library",
+        "selectDirectory": "Select a directory",
+        "suggestions": "Suggestions:"
+    },
+    "schedulePage": {
+        "basedOnAnimeList": "Based on your anime list",
+        "releaseSchedule": "Release schedule",
+        "upcomingEpisodes": "Upcoming episodes"
+    },
+    "serverDataWrapper": {
+        "transcodingNotEnabled": "Transcoding not enabled",
+        "updatingMessage": "Seanime is currently updating. Refresh the page once the update is complete and the connection has been reestablished.",
+        "welcome": "Welcome!"
+    },
     "toasts": {
         "featureDisabled": "This feature is disabled",
         "settingsSaved": "Settings saved",

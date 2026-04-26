@@ -211,12 +211,12 @@ function MediastreamPage() {
     const onFatalError = React.useCallback((error: any) => {
         log.error("Fatal error", error)
         if (mediaContainer?.streamType === "transcode") {
-            shutdownTranscode()
+            shutdownTranscode({ playbackId: filePath || undefined })
         }
         setPlaybackError(t("integrations.mediastream.errors.playbackTriggered"))
         changeUrl(null) // reset url
         toast.error(t("toasts.mediastream.playbackErrorOccurred"))
-    }, [mediaContainer?.streamType, t])
+    }, [filePath, mediaContainer?.streamType, shutdownTranscode, t])
 
 
     // listen for shutdown stream event
@@ -248,6 +248,7 @@ function MediastreamPage() {
     // navigation helpers
     const goToEpisode = useLatestFunction((ep: Anime_Episode) => {
         if (ep.localFile?.path) {
+            changeUrl(null)
             setFilePath(ep.localFile.path)
             setStreamType("transcode") // reset to transcode if user prefers direct, the effect will switch it back
         }
@@ -334,7 +335,7 @@ function MediastreamPage() {
                     />
                 </>}
                 mediaPlayer={
-                    <VideoCoreProvider id="mediastream" key={filePath}>
+                    <VideoCoreProvider id="mediastream">
                         <div className="w-full aspect-video mx-auto border rounded-lg overflow-hidden bg-black relative z-20">
                             {isMediaContainerError || playbackError ? (
                                 <div className="flex flex-col items-center justify-center h-full w-full">
@@ -385,7 +386,7 @@ function MediastreamPage() {
                                             media={media!}
                                             onClick={() => {
                                                 if (episode.localFile?.path) {
-                                                    setFilePath(episode.localFile.path)
+                                                    goToEpisode(episode)
                                                 } else {
                                                     toast.error(t("toasts.mediastream.filePathNotFound"))
                                                 }
@@ -427,7 +428,7 @@ function MediastreamPage() {
                                 onEpisodeSelect={(num, id) => {
                                     const ep = episodes.find(e => e.localFile?.path === id)
                                     if (ep?.localFile?.path) {
-                                        setFilePath(ep.localFile.path)
+                                        goToEpisode(ep)
                                     }
                                 }}
                                 progress={progress}

@@ -812,6 +812,26 @@
             "title": "伺服器驗證"
         }
     },
+    "badges": {
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "experimental": "實驗性"
+    },
+    "directorySelector": {
+        "changeLibrary": "切換媒體庫",
+        "selectDirectory": "選擇資料夾",
+        "suggestions": "建議："
+    },
+    "schedulePage": {
+        "basedOnAnimeList": "根據你的動畫清單",
+        "releaseSchedule": "播出行程",
+        "upcomingEpisodes": "即將播出集數"
+    },
+    "serverDataWrapper": {
+        "transcodingNotEnabled": "未啟用轉碼",
+        "updatingMessage": "Seanime 目前正在更新。請在更新完成並重新建立連線後重新整理頁面。",
+        "welcome": "歡迎！"
+    },
     "toasts": {
         "featureDisabled": "此功能已停用",
         "settingsSaved": "設定已儲存",

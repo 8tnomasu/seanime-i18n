@@ -56,8 +56,11 @@ func NewRepository(opts *NewRepositoryOptions) *Repository {
 			switch e := event.(type) {
 			case *videocore.VideoTerminatedEvent:
 				if ret.TranscoderIsInitialized() {
-					opts.Logger.Debug().Str("clientId", e.GetClientId()).Msg("mediastream: Received VideoTerminatedEvent, killing transcoder")
-					ret.ShutdownTranscodeStream(e.GetClientId())
+					opts.Logger.Debug().
+						Str("clientId", e.GetClientId()).
+						Str("playbackId", e.GetPlaybackId()).
+						Msg("mediastream: Received VideoTerminatedEvent, evaluating transcoder shutdown")
+					ret.ShutdownTranscodeStream(e.GetClientId(), e.GetPlaybackId())
 				}
 			}
 			return true

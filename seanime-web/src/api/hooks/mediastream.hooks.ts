@@ -11,6 +11,10 @@ import { logger } from "@/lib/helpers/debug"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
+type ShutdownTranscodeStreamVariables = {
+    playbackId?: string
+}
+
 export function useGetMediastreamSettings(enabled?: boolean) {
     return useServerQuery<Models_MediastreamSettings>({
         endpoint: API_ENDPOINTS.MEDIASTREAM.GetMediastreamSettings.endpoint,
@@ -56,7 +60,7 @@ export function usePreloadMediastreamMediaContainer() {
 }
 
 export function useMediastreamShutdownTranscodeStream() {
-    return useServerMutation<boolean>({
+    return useServerMutation<boolean, ShutdownTranscodeStreamVariables>({
         endpoint: API_ENDPOINTS.MEDIASTREAM.MediastreamShutdownTranscodeStream.endpoint,
         method: API_ENDPOINTS.MEDIASTREAM.MediastreamShutdownTranscodeStream.methods[0],
         mutationKey: [API_ENDPOINTS.MEDIASTREAM.MediastreamShutdownTranscodeStream.key],
