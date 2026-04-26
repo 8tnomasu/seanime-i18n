@@ -336,6 +336,7 @@ export function DebridStreamPage(props: DebridStreamPageProps) {
                     )}
 
                     <TorrentStreamEpisodeSection
+                        contextType="debridstream"
                         episodeCollection={episodeCollection}
                         entry={entry}
                         onEpisodeClick={handleEpisodeClick}

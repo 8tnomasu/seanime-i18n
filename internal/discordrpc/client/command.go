@@ -1,7 +1,8 @@
 package discordrpc_client
 
 import (
-	"fmt"
+	"errors"
+
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 )
@@ -103,11 +104,11 @@ func (c *Client) SendPayload(payload Payload) error {
 
 	// TODO: Convert op codes to enums? Either way seems that 1000 is good, everything else is bad
 	if responseBody.Data.Code > 1000 {
-		return fmt.Errorf(responseBody.Data.Message)
+		return errors.New(responseBody.Data.Message)
 	}
 
 	if responseBody.Nonce != payload.Nonce {
-		return fmt.Errorf("invalid nonce")
+		return errors.New("invalid nonce")
 	}
 
 	return nil

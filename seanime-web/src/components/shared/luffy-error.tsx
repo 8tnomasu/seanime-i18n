@@ -1,9 +1,8 @@
 import { SeaImage } from "@/components/shared/sea-image"
 import { Button } from "@/components/ui/button/button"
 import { cn } from "@/components/ui/core/styling"
-import { useRouter } from "@/lib/navigation"
-import React from "react"
 import { useTranslation } from "react-i18next"
+import React from "react"
 
 interface LuffyErrorProps {
     children?: React.ReactNode
@@ -25,8 +24,6 @@ export const LuffyError: React.FC<LuffyErrorProps> = (props) => {
         imageContainerClass,
         ...rest
     } = props
-
-    const router = useRouter()
 
 
     return (
@@ -52,7 +49,11 @@ export const LuffyError: React.FC<LuffyErrorProps> = (props) => {
                     <div data-luffy-error-content-children>{children}</div>
                     <div data-luffy-error-content-buttons>
                         {(showRefreshButton && !reset) && (
-                            <Button data-luffy-error-content-button-refresh intent="warning-subtle" onClick={() => router.refresh()}>
+                            <Button
+                                data-luffy-error-content-button-refresh
+                                intent="warning-subtle"
+                                onClick={() => window.location.reload()}
+                            >
                                 {t("common.buttons.retry")}
                             </Button>
                         )}

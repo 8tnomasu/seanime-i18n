@@ -4,6 +4,7 @@ import { AutoSelectProfileButton } from "@/app/(main)/settings/_components/autos
 import { SettingsCard } from "@/app/(main)/settings/_components/settings-card"
 import { SettingsIsDirty, SettingsSubmitButton } from "@/app/(main)/settings/_components/settings-submit-button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Alert } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { defineSchema, Field, Form } from "@/components/ui/form"
 import React from "react"
@@ -232,6 +233,10 @@ export function TorrentstreamSettings(props: TorrentstreamSettingsProps) {
                                         leftIcon={<FcFolder />}
                                         help={t("settings.torrentStreaming.cacheDirectoryHelp")}
                                         shouldExist
+                                    />
+                                    <Alert
+                                        intent="warning"
+                                        description={t("settings.torrentStreaming.emptyDirectoryWarning")}
                                     />
                                 </AccordionContent>
                             </AccordionItem>

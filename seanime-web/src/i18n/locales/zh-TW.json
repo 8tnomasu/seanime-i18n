@@ -586,6 +586,7 @@
             "streamUrlAddressPlaceholder": "例如：0.0.0.0:43211",
             "streamUrlAddressHelp": "修改串流 URL 的格式。留空則使用預設值。",
             "cacheDirectoryHelp": "串流時 Torrent 下載到的目錄。留空則使用預設快取目錄。",
+            "emptyDirectoryWarning": "請選擇空目錄，以免遺失資料。",
             "dropTorrent": "移除 Torrent"
         },
         "mediastream": {
@@ -1076,6 +1077,8 @@
         "sorting": "排序",
         "genre": "類型",
         "allGenres": "全部類型",
+        "tags": "標籤",
+        "allTags": "全部標籤",
         "format": "格式",
         "allFormats": "全部格式",
         "country": "國家",
@@ -2167,6 +2170,7 @@
     },
     "denshi": {
         "server": {
+            "backgroundServerNotRespondingRecovering": "背景伺服器沒有回應，正在嘗試恢復...",
             "connectionLostReconnecting": "伺服器連線已中斷。請稍候，我們會嘗試重新連線。",
             "relaunchIfPersists": "如果多次嘗試後仍出現此訊息，請重新啟動應用程式。",
             "restartServer": "重新啟動伺服器",
@@ -2882,6 +2886,30 @@
             "incoming": "接收",
             "outgoing": "送出",
             "searchPlaceholder": "搜尋 WebSocket 事件..."
+        }
+    },
+    "tour": {
+        "changelog": {
+            "v3_7_0": {
+                "heading": "3.7.0 有哪些新功能？",
+                "intro": "一起看看這次新增的幾項功能。",
+                "security": {
+                    "title": "安全性改進",
+                    "content": "3.7.0 包含多項安全性改進，其中也加入了安全模式。更多資訊請參考說明文件。"
+                },
+                "tags": {
+                    "title": "標籤",
+                    "content": "搜尋頁面現在支援依標籤搜尋。"
+                },
+                "adultEntries": {
+                    "title": "全域搜尋中的成人內容",
+                    "content": "如果你已啟用成人內容，全域搜尋將不再過濾成人條目。（提醒：按下「s」即可開啟全域搜尋）"
+                },
+                "bugFixes": {
+                    "title": "錯誤修正",
+                    "content": "此版本修正了多項問題，其中包含與 Seanime Denshi 和 Plugin 相關的錯誤。更多細節請參閱完整變更記錄。"
+                }
+            }
         }
     },
     "libraryExplorer": {

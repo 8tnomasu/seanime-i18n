@@ -367,6 +367,7 @@ export function TorrentStreamPage(props: TorrentStreamPageProps) {
                     )}
 
                     <TorrentStreamEpisodeSection
+                        contextType="torrenstream"
                         episodeCollection={episodeCollection}
                         entry={entry}
                         onEpisodeClick={handleEpisodeClick}

@@ -25,7 +25,8 @@ func TestRefreshAnimeCollectionRefreshesMutableEntries(t *testing.T) {
 		nil,
 	))
 
-	// keep a mix of mutable and settled entries so refresh only fetches the ones that can change
+	// Keep a mix of mutable and settled entries so refresh only fetches
+	// entries that are still current and actively releasing.
 	manager.SaveSimulatedAnimeCollection(&anilist.AnimeCollection{
 		MediaListCollection: &anilist.AnimeCollection_MediaListCollection{
 			Lists: []*anilist.AnimeCollection_MediaListCollection_Lists{
@@ -49,7 +50,7 @@ func TestRefreshAnimeCollectionRefreshesMutableEntries(t *testing.T) {
 	_, err := sp.RefreshAnimeCollection(context.Background())
 	require.NoError(t, err)
 
-	require.ElementsMatch(t, []int{101, 102, 103}, client.animeCalls)
+	require.ElementsMatch(t, []int{101}, client.animeCalls)
 
 	collection := manager.GetSimulatedAnimeCollection().MustGet()
 	currentEntry, found := collection.GetListEntryFromAnimeId(101)
@@ -59,11 +60,11 @@ func TestRefreshAnimeCollectionRefreshesMutableEntries(t *testing.T) {
 
 	pausedEntry, found := collection.GetListEntryFromAnimeId(102)
 	require.True(t, found)
-	require.Equal(t, "anime paused fresh", *pausedEntry.GetMedia().GetTitle().GetEnglish())
+	require.Equal(t, "anime paused stale", *pausedEntry.GetMedia().GetTitle().GetEnglish())
 
 	planningEntry, found := collection.GetListEntryFromAnimeId(103)
 	require.True(t, found)
-	require.Equal(t, "anime planning fresh", *planningEntry.GetMedia().GetTitle().GetEnglish())
+	require.Equal(t, "anime planning stale", *planningEntry.GetMedia().GetTitle().GetEnglish())
 
 	completedEntry, found := collection.GetListEntryFromAnimeId(104)
 	require.True(t, found)
@@ -84,7 +85,7 @@ func TestRefreshMangaCollectionRefreshesMutableEntries(t *testing.T) {
 		},
 	))
 
-	// refresh should skip dropped or already settled manga entries.
+	// Refresh should skip dropped, paused, planning, or already settled manga entries.
 	manager.SaveSimulatedMangaCollection(&anilist.MangaCollection{
 		MediaListCollection: &anilist.MangaCollection_MediaListCollection{
 			Lists: []*anilist.MangaCollection_MediaListCollection_Lists{
@@ -108,7 +109,7 @@ func TestRefreshMangaCollectionRefreshesMutableEntries(t *testing.T) {
 	_, err := sp.RefreshMangaCollection(context.Background())
 	require.NoError(t, err)
 
-	require.ElementsMatch(t, []int{201, 202, 203}, client.mangaCalls)
+	require.ElementsMatch(t, []int{201}, client.mangaCalls)
 
 	collection := manager.GetSimulatedMangaCollection().MustGet()
 	currentEntry, found := collection.GetListEntryFromMangaId(201)
@@ -118,11 +119,11 @@ func TestRefreshMangaCollectionRefreshesMutableEntries(t *testing.T) {
 
 	pausedEntry, found := collection.GetListEntryFromMangaId(202)
 	require.True(t, found)
-	require.Equal(t, "manga paused fresh", *pausedEntry.GetMedia().GetTitle().GetEnglish())
+	require.Equal(t, "manga paused stale", *pausedEntry.GetMedia().GetTitle().GetEnglish())
 
 	planningEntry, found := collection.GetListEntryFromMangaId(203)
 	require.True(t, found)
-	require.Equal(t, "manga planning fresh", *planningEntry.GetMedia().GetTitle().GetEnglish())
+	require.Equal(t, "manga planning stale", *planningEntry.GetMedia().GetTitle().GetEnglish())
 
 	droppedEntry, found := collection.GetListEntryFromMangaId(204)
 	require.True(t, found)

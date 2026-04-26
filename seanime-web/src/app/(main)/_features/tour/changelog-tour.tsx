@@ -1,7 +1,9 @@
+import { useSeaCommand } from "@/app/(main)/_features/sea-command/sea-command.tsx"
 import { SeaImage } from "@/components/shared/sea-image"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import { useWindowSize } from "react-use"
 import { useServerStatus } from "../../_hooks/use-server-status"
 import { __settings_tabAtom } from "../../settings/_components/settings-page.atoms"
@@ -12,9 +14,11 @@ import { TourStep } from "./tour"
 export const seenChangelogAtom = atomWithStorage<string | null>("sea-seen-changelog", null, undefined, { getOnInit: true })
 
 function useSetupTour(): Record<string, () => TourStep[]> {
+    const { t } = useTranslation()
     const serverStatus = useServerStatus()
     const [, openScannerModal] = useAtom(__scanner_modalIsOpen)
     const [settingsTab, setSettingsTab] = useAtom(__settings_tabAtom)
+    const { setSeaCommandOpen, setSeaCommandInput } = useSeaCommand()
 
     const get3_5_0 = (): TourStep[] => {
         return [
@@ -117,7 +121,6 @@ function useSetupTour(): Record<string, () => TourStep[]> {
             {
                 id: "entry",
                 title: "New Player Features",
-                // content: "Use the 'H' keybind to quickly look up characters in the player. Use 'Z' to toggle Stats for Nerds.",
                 content: <div>
                     <SeaImage
                         src="https://github.com/5rahim/hibike/blob/main/changelog/3_5-videocore-characters.png?raw=true"
@@ -136,8 +139,67 @@ function useSetupTour(): Record<string, () => TourStep[]> {
         ]
     }
 
+    const get3_7_0 = (): TourStep[] => {
+        return [
+            {
+                id: "changelog-1",
+                content: (
+                    <div>
+                        <h4 className="text-xl font-bold text-white">{t("tour.changelog.v3_7_0.heading")}</h4>
+                        <p>{t("tour.changelog.v3_7_0.intro")}</p>
+                    </div>
+                ),
+                route: "/",
+                nextLabel: t("common.buttons.start"),
+                ignoreOutsideClick: true,
+            },
+            {
+                id: "security",
+                title: t("tour.changelog.v3_7_0.security.title"),
+                content: t("tour.changelog.v3_7_0.security.content"),
+                route: "/",
+                advanceOnTargetClick: true,
+                ignoreOutsideClick: true,
+            },
+            {
+                id: "search",
+                target: "[data-advanced-search-options-tags='true']",
+                title: t("tour.changelog.v3_7_0.tags.title"),
+                content: t("tour.changelog.v3_7_0.tags.content"),
+                route: "/search",
+                advanceOnTargetClick: false,
+                ignoreOutsideClick: true,
+            },
+            {
+                id: "search",
+                target: ".sea-command-content",
+                title: t("tour.changelog.v3_7_0.adultEntries.title"),
+                content: t("tour.changelog.v3_7_0.adultEntries.content"),
+                route: "/search",
+                advanceOnTargetClick: false,
+                ignoreOutsideClick: true,
+                prepare: async () => {
+                    setSeaCommandOpen(true)
+                    setTimeout(() => {
+                        setSeaCommandInput("/search ")
+                    }, 200)
+                    // wait 500ms
+                    return new Promise(resolve => setTimeout(resolve, 500))
+                },
+            },
+            {
+                id: "changelog-2",
+                title: t("tour.changelog.v3_7_0.bugFixes.title"),
+                content: t("tour.changelog.v3_7_0.bugFixes.content"),
+                route: "/",
+                ignoreOutsideClick: true,
+            },
+        ]
+    }
+
     return {
         "3.5.0": get3_5_0,
+        "3.7.0": get3_7_0,
     }
 }
 
