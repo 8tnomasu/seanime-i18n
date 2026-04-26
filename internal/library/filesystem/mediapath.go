@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	pathpkg "path"
 	"path/filepath"
 	"seanime/internal/util"
 	"sort"
@@ -25,8 +26,8 @@ func SeparateFilePath(path string, prefixPath string) *SeparatedFilePath {
 	if strings.HasPrefix(strings.ToLower(path), strings.ToLower(prefixPath)) {
 		cleaned = path[len(prefixPath):] // Remove prefix
 	}
-	fp := filepath.Base(filepath.ToSlash(path))
-	parentsPath := filepath.Dir(filepath.ToSlash(cleaned))
+	fp := pathpkg.Base(path)
+	parentsPath := pathpkg.Dir(cleaned)
 	if parentsPath == "." || parentsPath == "/" || parentsPath == ".." {
 		parentsPath = ""
 	}
@@ -49,6 +50,8 @@ func SeparateFilePath(path string, prefixPath string) *SeparatedFilePath {
 //	fmt.Println(fp) // file.mkv
 //	fmt.Println(dirs) // [to]
 func SeparateFilePathS(path string, potentialPrefixes []string) *SeparatedFilePath {
+	path = filepath.ToSlash(path)
+
 	// Sort prefix paths by length in descending order
 	sort.Slice(potentialPrefixes, func(i, j int) bool {
 		return len(potentialPrefixes[i]) > len(potentialPrefixes[j])
@@ -57,6 +60,7 @@ func SeparateFilePathS(path string, potentialPrefixes []string) *SeparatedFilePa
 	// Check each prefix path, and remove the first match from the path
 	prefixPath := ""
 	for _, p := range potentialPrefixes {
+		p = filepath.ToSlash(p)
 		// Normalize the paths for comparison only
 		if strings.HasPrefix(util.NormalizePath(path), util.NormalizePath(p)) {
 			// Remove the prefix from the path
@@ -66,8 +70,8 @@ func SeparateFilePathS(path string, potentialPrefixes []string) *SeparatedFilePa
 		}
 	}
 
-	filename := filepath.ToSlash(filepath.Base(path))
-	parentsPath := filepath.ToSlash(filepath.Dir(filepath.ToSlash(path)))
+	filename := pathpkg.Base(path)
+	parentsPath := pathpkg.Dir(path)
 
 	dirs := make([]string, 0)
 	for _, dir := range strings.Split(parentsPath, "/") {

@@ -298,10 +298,11 @@ type PluginEpisodeCardContextMenuItem = {
     label: string
     id: string
     style: React.CSSProperties
+    type: "library" | "torrentstream" | "debridstream" | string | undefined
     disabled?: boolean
 }
 
-export function PluginEpisodeCardContextMenuItems(props: { episode: Anime_Episode | undefined }) {
+export function PluginEpisodeCardContextMenuItems(props: { episode: Anime_Episode | undefined, type: PluginEpisodeCardContextMenuItem["type"] }) {
     const { t } = useTranslation()
     const [items, setItems] = useState<PluginEpisodeCardContextMenuItem[]>([])
 
@@ -315,8 +316,9 @@ export function PluginEpisodeCardContextMenuItems(props: { episode: Anime_Episod
     // Listen for the action to render the episode card context menu items
     usePluginListenActionRenderEpisodeCardContextMenuItemsEvent((event, extensionId) => {
         setItems(p => {
-            const otherItems = p.filter(i => i.extensionId !== extensionId)
-            const extItems = event.items.map((i: Record<string, any>) => ({ ...i, extensionId } as PluginEpisodeCardContextMenuItem))
+            const otherItems = p.filter(i => i.extensionId !== extensionId && (i.type === props.type || i.type === undefined))
+            const extItems = event.items.filter((i: PluginEpisodeCardContextMenuItem) => i.type === props.type || i.type === undefined)
+                .map((i: Record<string, any>) => ({ ...i, extensionId } as PluginEpisodeCardContextMenuItem))
             return sortItems([...otherItems, ...extItems])
         })
     }, "")
@@ -348,7 +350,7 @@ type PluginEpisodeGridItemMenuItem = {
     onClick: string
     label: string
     id: string
-    type: "library" | "torrentstream" | "debridstream" | "onlinestream" | "undownloaded" | "medialinks" | "mediastream"
+    type: "library" | "torrentstream" | "debridstream" | "onlinestream" | "undownloaded" | "medialinks" | "mediastream" | string
     style: React.CSSProperties
     disabled?: boolean
 }

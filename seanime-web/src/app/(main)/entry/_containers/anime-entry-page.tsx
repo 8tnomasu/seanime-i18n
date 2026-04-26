@@ -3,6 +3,12 @@ import { useGetAnilistAnimeDetails } from "@/api/hooks/anilist.hooks"
 import { useGetAnimeEntry } from "@/api/hooks/anime_entries.hooks"
 import { MediaEntryCharactersSection } from "@/app/(main)/_features/media/_components/media-entry-characters-section"
 import { MediaEntryPageLoadingDisplay } from "@/app/(main)/_features/media/_components/media-entry-page-loading-display"
+import { usePluginAnimeEntryEpisodeTabs } from "@/app/(main)/_features/plugin/plugin-entry-episode-tabs"
+import {
+    PluginAnimeEntryEpisodeTab,
+    PluginAnimeEntryEpisodeTabContent,
+    PluginAnimeEntryTabIcon,
+} from "@/app/(main)/_features/plugin/plugin-entry-episode-tabs"
 import { PluginWebviewSlot } from "@/app/(main)/_features/plugin/webview/plugin-webviews"
 import { useSeaCommandInject } from "@/app/(main)/_features/sea-command/use-inject"
 
@@ -31,7 +37,7 @@ import { IoLibraryOutline } from "react-icons/io5"
 import { PiMonitorPlayDuotone } from "react-icons/pi"
 import { useUnmount } from "react-use"
 
-export const __anime_entryPageViewAtom = atom<"library" | "torrentstream" | "debridstream" | "onlinestream">("library")
+export const __anime_entryPageViewAtom = atom<string>("library")
 
 export function useAnimeEntryPageView() {
     const [currentView, setView] = useAtom(__anime_entryPageViewAtom)
@@ -40,6 +46,7 @@ export function useAnimeEntryPageView() {
     const isTorrentStreamingView = currentView === "torrentstream"
     const isDebridStreamingView = currentView === "debridstream"
     const isOnlineStreamingView = currentView === "onlinestream"
+    const isPluginEpisodeTabView = currentView.startsWith("episodeTab:")
 
     function toggleTorrentStreamingView() {
         setView(p => p === "torrentstream" ? "library" : "torrentstream")
@@ -60,6 +67,7 @@ export function useAnimeEntryPageView() {
         isTorrentStreamingView,
         isDebridStreamingView,
         isOnlineStreamingView,
+        isPluginEpisodeTabView,
         toggleTorrentStreamingView,
         toggleDebridStreamingView,
         toggleOnlineStreamingView,
@@ -82,6 +90,12 @@ export function AnimeEntryPage() {
 
     const { currentView, isLibraryView, setView } = useAnimeEntryPageView()
     const switchedView = React.useRef(false)
+
+    const pluginEpisodeTabs = usePluginAnimeEntryEpisodeTabs({
+        mediaId: Number(mediaId),
+        setView,
+        currentView,
+    })
 
     React.useLayoutEffect(() => {
         if (!animeEntry) return
@@ -221,6 +235,15 @@ export function AnimeEntryPage() {
                     onSelect: () => setTorrentSearchDrawer("download"),
                     shouldShow: () => currentView === "library",
                 },
+                ...pluginEpisodeTabs.tabs.map(tab => ({
+                    id: tab.viewId,
+                    value: tab.viewId,
+                    heading: t("mediaDetail.views.views"),
+                    data: { description: tab.name },
+                    render: () => <div>{tab.name}</div>,
+                    onSelect: () => setView(tab.viewId),
+                    shouldShow: () => currentView !== tab.viewId,
+                })),
             ],
             filter: ({ item, input }) => {
                 if (!input) return true
@@ -230,10 +253,16 @@ export function AnimeEntryPage() {
         })
 
         return () => remove("anime-entry-navigation")
-    }, [currentView, remove, serverStatus, setTorrentSearchDrawer, setView, t])
+    }, [currentView, inject, pluginEpisodeTabs.tabs, remove, serverStatus, setTorrentSearchDrawer, setView, t])
 
     if (animeEntryLoading || animeDetailsLoading) return <MediaEntryPageLoadingDisplay />
     if (!animeEntry) return null
+
+    const bottomSection = <>
+        <PluginWebviewSlot slot="after-anime-entry-episode-list" />
+        <MediaEntryCharactersSection details={animeDetails} />
+        <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
+    </>
 
     return (
         <div data-anime-entry-page data-media={JSON.stringify(animeEntry.media)} data-anime-entry-list-data={JSON.stringify(animeEntry.listData)}>
@@ -285,33 +314,43 @@ export function AnimeEntryPage() {
                             <EpisodeSection
                                 entry={animeEntry}
                                 details={animeDetails}
-                                bottomSection={<>
-                                    <PluginWebviewSlot slot="after-anime-entry-episode-list" />
-                                    <MediaEntryCharactersSection details={animeDetails} />
-                                    <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
-                                </>}
+                                bottomSection={bottomSection}
                             />
                         </PageWrapper>}
 
                         {currentView === "torrentstream" &&
                             <TorrentStreamPage
                                 entry={animeEntry}
-                                bottomSection={<>
-                                    <PluginWebviewSlot slot="after-anime-entry-episode-list" />
-                                    <MediaEntryCharactersSection details={animeDetails} />
-                                    <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
-                                </>}
+                                bottomSection={bottomSection}
                             />}
 
                         {currentView === "debridstream" &&
                             <DebridStreamPage
                                 entry={animeEntry}
-                                bottomSection={<>
-                                    <PluginWebviewSlot slot="after-anime-entry-episode-list" />
-                                    <MediaEntryCharactersSection details={animeDetails} />
-                                    <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
-                                </>}
+                                bottomSection={bottomSection}
                             />}
+
+                        {pluginEpisodeTabs.selectedTab && currentView === pluginEpisodeTabs.selectedTab.viewId && <PageWrapper
+                            data-anime-entry-page-plugin-episode-tab-view
+                            key={pluginEpisodeTabs.selectedTab.viewId}
+                            className="relative 2xl:order-first pb-10"
+                            {...{
+                                initial: { opacity: 0, y: 60 },
+                                animate: { opacity: 1, y: 0 },
+                                exit: { opacity: 0, scale: 0.99 },
+                                transition: {
+                                    duration: 0.35,
+                                },
+                            }}
+                        >
+                            <PluginAnimeEntryEpisodeTabContent
+                                entry={animeEntry}
+                                tab={pluginEpisodeTabs.selectedTab}
+                                episodeCollection={pluginEpisodeTabs.selectedEpisodeCollection}
+                                bottomSection={bottomSection}
+                                onSelectEpisode={pluginEpisodeTabs.selectEpisode}
+                            />
+                        </PageWrapper>}
 
                         {currentView === "onlinestream" && <PageWrapper
                             data-anime-entry-page-online-streaming-view
@@ -342,9 +381,7 @@ export function AnimeEntryPage() {
                                     animeEntryLoading={animeEntryLoading}
                                     hideBackButton
                                 />
-                                <PluginWebviewSlot slot="after-anime-entry-episode-list" />
-                                <MediaEntryCharactersSection details={animeDetails} />
-                                <RelationsRecommendationsSection entry={animeEntry} details={animeDetails} />
+                                {bottomSection}
                             </div>
                         </PageWrapper>}
 
@@ -362,6 +399,7 @@ export function AnimeEntryPage() {
 type EntrySectionTabs = {
     children?: React.ReactNode
     entry: Anime_Entry
+    pluginTabs?: PluginAnimeEntryEpisodeTab[]
 }
 
 export function EntrySectionTabs(props: EntrySectionTabs) {
@@ -370,12 +408,14 @@ export function EntrySectionTabs(props: EntrySectionTabs) {
     const {
         children,
         entry,
+        pluginTabs = [],
         ...rest
     } = props
 
     const serverStatus = useServerStatus()
 
     const {
+        currentView,
         isLibraryView,
         setView,
         isTorrentStreamingView,
@@ -393,7 +433,8 @@ export function EntrySectionTabs(props: EntrySectionTabs) {
     if (
         !serverStatus?.torrentstreamSettings?.enabled &&
         !serverStatus?.debridSettings?.enabled &&
-        !serverStatus?.settings?.library?.enableOnlinestream
+        !serverStatus?.settings?.library?.enableOnlinestream &&
+        pluginTabs.length === 0
     ) return null
 
     return (
@@ -431,6 +472,15 @@ export function EntrySectionTabs(props: EntrySectionTabs) {
                             isCurrent: isOnlineStreamingView,
                             onClick: () => setView("onlinestream"),
                         }] : []),
+                        ...pluginTabs.map(tab => ({
+                            name: tab.name,
+                            icon: <PluginAnimeEntryTabIcon
+                                icon={tab.icon}
+                                className="mr-2 hidden group-data-[current=true]/staticTabs__trigger:block"
+                            />,
+                            isCurrent: currentView === tab.viewId,
+                            onClick: () => setView(tab.viewId),
+                        })),
                     ]}
                 />
             </div>

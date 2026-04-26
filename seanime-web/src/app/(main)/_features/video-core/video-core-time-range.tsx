@@ -261,8 +261,6 @@ export function VideoCoreTimeRange(props: VideoCoreTimeRangeProps) {
         setTimeRangeElement(instance)
     }
 
-    console.warn(chapters)
-
     return (
         <div
             ref={combineRef}

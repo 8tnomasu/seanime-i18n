@@ -24,6 +24,7 @@ type TorrentStreamEpisodeSectionProps = {
     onPlayExternallyEpisodeClick?: (episode: Anime_Episode) => void
     onPlayNextEpisodeOnMount: (episode: Anime_Episode) => void
     bottomSection?: React.ReactNode
+    contextType: "torrentstream" | "debridstream" | string // used for plugin context menu item filtering
 }
 
 export function TorrentStreamEpisodeSection(props: TorrentStreamEpisodeSectionProps) {
@@ -37,6 +38,7 @@ export function TorrentStreamEpisodeSection(props: TorrentStreamEpisodeSectionPr
         onPlayNextEpisodeOnMount,
         bottomSection,
         onPlayExternallyEpisodeClick,
+        contextType,
         ...rest
     } = props
 
@@ -85,6 +87,7 @@ export function TorrentStreamEpisodeSection(props: TorrentStreamEpisodeSectionPr
                         >
                             <EpisodeCard
                                 key={episode.localFile?.path || ""}
+                                contextType={contextType}
                                 episode={episode}
                                 image={episode.episodeMetadata?.image || episode.baseAnime?.bannerImage || episode.baseAnime?.coverImage?.extraLarge}
                                 topTitle={episode.episodeTitle || episode?.baseAnime?.title?.userPreferred}
@@ -171,9 +174,9 @@ export function TorrentStreamEpisodeSection(props: TorrentStreamEpisodeSectionPr
                                         <LuTvMinimalPlay />
                                         {t("player.actions.playExternally")}
                                     </DropdownMenuItem>}
-                                    <PluginEpisodeGridItemMenuItems isDropdownMenu={false} type="torrentstream" episode={episode as Anime_Episode} />
+                                    <PluginEpisodeGridItemMenuItems isDropdownMenu={false} type={contextType} episode={episode as Anime_Episode} />
                                 </DropdownMenu> : (
-                                    <PluginEpisodeGridItemMenuItems isDropdownMenu={true} type="torrentstream" episode={episode as Anime_Episode} />
+                                    <PluginEpisodeGridItemMenuItems isDropdownMenu={true} type={contextType} episode={episode as Anime_Episode} />
                                 )}
 
                             </>}

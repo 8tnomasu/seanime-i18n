@@ -586,6 +586,7 @@
             "streamUrlAddressPlaceholder": "e.g. 0.0.0.0:43211",
             "streamUrlAddressHelp": "Modify the stream URL formatting. Leave empty for default.",
             "cacheDirectoryHelp": "Where the torrents will be downloaded to while streaming. Leave empty to use the default cache directory.",
+            "emptyDirectoryWarning": "Choose an empty directory to avoid losing data.",
             "dropTorrent": "Drop torrent"
         },
         "mediastream": {
@@ -1076,6 +1077,8 @@
         "sorting": "Sorting",
         "genre": "Genre",
         "allGenres": "All genres",
+        "tags": "Tags",
+        "allTags": "All tags",
         "format": "Format",
         "allFormats": "All formats",
         "country": "Country",
@@ -2167,6 +2170,7 @@
     },
     "denshi": {
         "server": {
+            "backgroundServerNotRespondingRecovering": "The background server is not responding. Trying to recover...",
             "connectionLostReconnecting": "The server connection has been lost. Please wait while we attempt to reconnect.",
             "relaunchIfPersists": "If this message persists after multiple tries, please relaunch the application.",
             "restartServer": "Restart server",
@@ -2882,6 +2886,30 @@
             "incoming": "Incoming",
             "outgoing": "Outgoing",
             "searchPlaceholder": "Search WebSocket events..."
+        }
+    },
+    "tour": {
+        "changelog": {
+            "v3_7_0": {
+                "heading": "What's New in 3.7.0?",
+                "intro": "Let's take a look at some of the new features.",
+                "security": {
+                    "title": "Security Improvements",
+                    "content": "3.7.0 includes several security improvements, including secure modes. Check out the documentation for more information."
+                },
+                "tags": {
+                    "title": "Tags",
+                    "content": "The search page now supports searching by tags."
+                },
+                "adultEntries": {
+                    "title": "Adult Entries in Global Search",
+                    "content": "Global search no longer filters out adult entries if you have adult content enabled. (Reminder: Press 's' to open global search)"
+                },
+                "bugFixes": {
+                    "title": "Bug Fixes",
+                    "content": "Several bugs have been fixed in this release, including some related to Seanime Denshi and plugins. Read the full changelog for more details."
+                }
+            }
         }
     },
     "libraryExplorer": {

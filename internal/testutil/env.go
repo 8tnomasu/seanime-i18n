@@ -144,6 +144,15 @@ func (env *TestEnv) NewDatabase(name string) *db.Database {
 		env.t.Fatalf("testutil: could not create database: %v", err)
 	}
 
+	sqlDB, err := database.Gorm().DB()
+	if err != nil {
+		env.t.Fatalf("testutil: could not access database handle: %v", err)
+	}
+
+	env.t.Cleanup(func() {
+		_ = sqlDB.Close()
+	})
+
 	return database
 }
 

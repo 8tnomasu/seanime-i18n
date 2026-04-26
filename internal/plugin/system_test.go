@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"path/filepath"
 	"seanime/internal/extension"
 	"testing"
 
@@ -29,11 +30,18 @@ func newMockAppContext(paths map[string][]string) *mockAppContext {
 }
 
 func TestIsAllowedPath(t *testing.T) {
+	tempDir := t.TempDir()
+	testDir := filepath.Join(tempDir, "test")
+	libraryRoot := filepath.Join(tempDir, "anime")
+	lib1 := filepath.Join(libraryRoot, "lib1")
+	lib2 := filepath.Join(libraryRoot, "lib2")
+	outsideDir := filepath.Join(tempDir, "outside")
+
 	// Create mock context with predefined paths
 	mockCtx := newMockAppContext(map[string][]string{
-		"SEANIME_ANIME_LIBRARY": {"/anime/lib1", "/anime/lib2"},
-		"HOME":                  {"/home/user"},
-		"TEMP":                  {"/tmp"},
+		"SEANIME_ANIME_LIBRARY": {lib1, lib2},
+		"HOME":                  {filepath.Join(tempDir, "home", "user")},
+		"TEMP":                  {filepath.Join(tempDir, "tmp")},
 	})
 
 	tests := []struct {
@@ -74,12 +82,12 @@ func TestIsAllowedPath(t *testing.T) {
 							extension.PluginPermissionSystem,
 						},
 						Allow: extension.PluginAllowlist{
-							ReadPaths: []string{"/test/*.txt"},
+							ReadPaths: []string{filepath.ToSlash(filepath.Join(testDir, "*.txt"))},
 						},
 					},
 				},
 			},
-			path:     "/test/file.txt",
+			path:     filepath.Join(testDir, "file.txt"),
 			mode:     AllowPathRead,
 			expected: true,
 		},
@@ -97,7 +105,7 @@ func TestIsAllowedPath(t *testing.T) {
 					},
 				},
 			},
-			path:     "/anime/lib1/file.txt",
+			path:     filepath.Join(lib1, "file.txt"),
 			mode:     AllowPathRead,
 			expected: true,
 		},
@@ -115,7 +123,7 @@ func TestIsAllowedPath(t *testing.T) {
 					},
 				},
 			},
-			path:     "/anime/lib2/file.txt",
+			path:     filepath.Join(lib2, "file.txt"),
 			mode:     AllowPathRead,
 			expected: true,
 		},
@@ -130,7 +138,7 @@ func TestIsAllowedPath(t *testing.T) {
 					},
 				},
 			},
-			path:     "/test/file.txt",
+			path:     filepath.Join(testDir, "file.txt"),
 			mode:     AllowPathWrite,
 			expected: false,
 		},
@@ -143,12 +151,15 @@ func TestIsAllowedPath(t *testing.T) {
 							extension.PluginPermissionSystem,
 						},
 						Allow: extension.PluginAllowlist{
-							ReadPaths: []string{"$SEANIME_ANIME_LIBRARY/**"},
+							ReadPaths: []string{
+								filepath.ToSlash(filepath.Join(outsideDir, "**")),
+								"$SEANIME_ANIME_LIBRARY/**",
+							},
 						},
 					},
 				},
 			},
-			path:     "/anime/lib1/file.txt",
+			path:     filepath.Join(lib1, "file.txt"),
 			mode:     AllowPathRead,
 			expected: true,
 		},
@@ -161,14 +172,14 @@ func TestIsAllowedPath(t *testing.T) {
 							extension.PluginPermissionSystem,
 						},
 						Allow: extension.PluginAllowlist{
-							ReadPaths: []string{"$SEANIME_ANIME_LIBRARY/**"},
+							ReadPaths: []string{filepath.ToSlash(filepath.Join(outsideDir, "**"))},
 						},
 					},
 				},
 			},
-			path:     "/anime/lib1/file.txt",
+			path:     filepath.Join(lib1, "file.txt"),
 			mode:     AllowPathRead,
-			expected: true,
+			expected: false,
 		},
 	}
 

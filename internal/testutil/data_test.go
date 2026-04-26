@@ -1,9 +1,12 @@
 package testutil
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetConfig(t *testing.T) {
@@ -12,6 +15,13 @@ func TestGetConfig(t *testing.T) {
 }
 
 func TestLoadConfig_IsolatedInstances(t *testing.T) {
+	configDir := t.TempDir()
+	exampleConfig := filepath.Join(ProjectRoot(), "test", "config.example.toml")
+	contents, err := os.ReadFile(exampleConfig)
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(filepath.Join(configDir, "config.toml"), contents, 0o644))
+	t.Setenv("TEST_CONFIG_PATH", configDir)
+
 	first := LoadConfig(t)
 	second := LoadConfig(t)
 

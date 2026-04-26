@@ -58,5 +58,13 @@ func NewTestManager(t *testing.T, db *db.Database) Manager {
 	})
 	require.NoError(t, err)
 
+	if impl, ok := m.(*ManagerImpl); ok && impl.localDb != nil && impl.localDb.gormdb != nil {
+		sqlDB, err := impl.localDb.gormdb.DB()
+		require.NoError(t, err)
+		t.Cleanup(func() {
+			_ = sqlDB.Close()
+		})
+	}
+
 	return m
 }
