@@ -1,15 +1,14 @@
 name: Publish Docker Image
 
 on:
-  push:
-    tags:
-      - "v*-i18n.*"
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Release tag to build from, for example v3.7.0-i18n.1"
+        description: "Release tag to build from, for example v3.7.0-i18n.2"
         required: true
-        default: "v3.7.0-i18n.1"
+        default: "v3.7.0-i18n.2"
 
 permissions:
   contents: read
@@ -27,7 +26,9 @@ jobs:
         id: vars
         shell: bash
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            release_tag="${{ github.event.release.tag_name }}"
+          elif [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             release_tag="${GITHUB_REF_NAME}"
           else
             release_tag="${{ inputs.release_tag }}"

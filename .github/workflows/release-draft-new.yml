@@ -1,10 +1,15 @@
-name: Release Draft
+name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to publish, for example v3.7.0-i18n.2"
+        required: true
+        default: "v3.7.0-i18n.2"
   push:
     tags:
-      - 'v*'
+      - 'v*-i18n.*'
 
 permissions:
   contents: write
@@ -237,20 +242,24 @@ jobs:
 
       - name: Determine version from tag name 🔎
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-          VERSION=${GITHUB_REF/refs\/tags\/v/}
-          echo "Version extracted from tag: $VERSION"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          RELEASE_TAG="${{ inputs.release_tag }}"
+          echo "Version extracted from workflow_dispatch input: ${RELEASE_TAG}"
           elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
-          VERSION=${GITHUB_REF/refs\/tags\//}
-          echo "Version extracted from tag: $VERSION"
+          RELEASE_TAG=${GITHUB_REF/refs\/tags\//}
+          echo "Version extracted from tag: ${RELEASE_TAG}"
           else
-          echo "Warning: No tag associated with this run. Defaulting to version 0.1.0."
-          VERSION="0.1.0"
+          echo "Error: No release tag was provided." >&2
+          exit 1
           fi
+          VERSION=${RELEASE_TAG#v}
+          echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Print version
-        run: echo "Version is ${{ env.VERSION }}"
+        run: |
+          echo "Release tag is ${{ env.RELEASE_TAG }}"
+          echo "Version is ${{ env.VERSION }}"
 
       - name: Download server binaries 📥
         uses: actions/download-artifact@v4
@@ -384,15 +393,33 @@ jobs:
           APP_VERSION: ${{ env.VERSION }}
         run: ./generate_release_notes
 
-      - name: Read release notes 🔍
-        id: read_release_notes
+      - name: Prepare release notes 🔍
         run: |
-          BODY=$(cat whats-new.md)
-          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
-          echo "$BODY" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          candidates=(
+            "RELEASE_NOTES_${RELEASE_TAG}.md"
+            "RELEASE_NOTES_${RELEASE_TAG}_DRAFT.md"
+            "RELEASE_NOTES_${VERSION}.md"
+            "RELEASE_NOTES_${VERSION}_DRAFT.md"
+          )
 
-      - name: Create release draft 🚀🚀🚀
+          release_notes_path=""
+          for candidate in "${candidates[@]}"; do
+            if [[ -f "${candidate}" ]]; then
+              release_notes_path="${candidate}"
+              break
+            fi
+          done
+
+          if [[ -z "${release_notes_path}" ]]; then
+            release_notes_path="whats-new.md"
+            echo "No version-specific release notes found; falling back to generated notes."
+          fi
+
+          echo "Using release notes from ${release_notes_path}"
+          echo "RELEASE_NOTES_PATH=${release_notes_path}" >> $GITHUB_ENV
+          echo "RELEASE_TITLE=Seanime i18n ${RELEASE_TAG}" >> $GITHUB_ENV
+
+      - name: Publish release 🚀🚀🚀
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
@@ -417,14 +444,8 @@ jobs:
             seanime-${{ env.VERSION }}_Linux_arm64.tar.gz
             seanime-${{ env.VERSION }}_Windows_x86_64.zip
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: v${{ env.VERSION }}
-          release_name: v${{ env.VERSION }}
-          draft: true
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_TITLE }}
+          draft: false
           prerelease: false
-          body: |
-            ## What's new?
-
-            ${{ env.RELEASE_BODY }}
-
-            ---
-            [Open an issue](https://github.com/5rahim/seanime/issues/new/choose)
+          body_path: ${{ env.RELEASE_NOTES_PATH }}
