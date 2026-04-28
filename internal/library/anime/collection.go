@@ -87,10 +87,11 @@ type (
 type (
 	// NewLibraryCollectionOptions is a struct that holds the data needed for creating a new LibraryCollection.
 	NewLibraryCollectionOptions struct {
-		AnimeCollection     *anilist.AnimeCollection
-		LocalFiles          []*LocalFile
-		PlatformRef         *util.Ref[platform.Platform]
-		MetadataProviderRef *util.Ref[metadata_provider.Provider]
+		AnimeCollection               *anilist.AnimeCollection
+		LocalFiles                    []*LocalFile
+		PlatformRef                   *util.Ref[platform.Platform]
+		MetadataProviderRef           *util.Ref[metadata_provider.Provider]
+		ContinueWatchingEpisodeNumber map[int]int
 	}
 )
 
@@ -142,6 +143,7 @@ func NewLibraryCollection(ctx context.Context, opts *NewLibraryCollectionOptions
 		opts.AnimeCollection,
 		opts.PlatformRef,
 		opts.MetadataProviderRef,
+		opts.ContinueWatchingEpisodeNumber,
 	)
 
 	lc.UnmatchedLocalFiles = lo.Filter(opts.LocalFiles, func(lf *LocalFile, index int) bool {
@@ -352,6 +354,7 @@ func (lc *LibraryCollection) hydrateContinueWatchingList(
 	animeCollection *anilist.AnimeCollection,
 	platformRef *util.Ref[platform.Platform],
 	metadataProviderRef *util.Ref[metadata_provider.Provider],
+	continueWatchingEpisodeNumber map[int]int,
 ) {
 
 	// Get currently watching list
@@ -413,7 +416,7 @@ func (lc *LibraryCollection) hydrateContinueWatchingList(
 
 	// Get the next episode for each media entry
 	mEpisodes := lop.Map(mEntries, func(mEntry *Entry, index int) *Episode {
-		ep, ok := mEntry.FindNextEpisode()
+		ep, ok := selectContinueWatchingEpisode(mEntry, continueWatchingEpisodeNumber)
 		if ok {
 			return ep
 		}
@@ -424,6 +427,22 @@ func (lc *LibraryCollection) hydrateContinueWatchingList(
 	})
 
 	lc.ContinueWatchingList = mEpisodes
+}
+
+func selectContinueWatchingEpisode(entry *Entry, continueWatchingEpisodeNumber map[int]int) (*Episode, bool) {
+	if entry == nil {
+		return nil, false
+	}
+
+	if continueWatchingEpisodeNumber != nil {
+		if episodeNumber, ok := continueWatchingEpisodeNumber[entry.MediaId]; ok {
+			if ep, found := entry.FindEpisodeByEpisodeNumber(episodeNumber); found {
+				return ep, true
+			}
+		}
+	}
+
+	return entry.FindNextEpisode()
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -20,13 +20,13 @@ const (
 
 type (
 	// WatchHistory is a map of WatchHistoryItem.
-	// The key is the WatchHistoryItem.MediaId.
+	// The key is the WatchHistoryItem.MediaId and the value is the latest local playback record for that media.
 	WatchHistory map[int]*WatchHistoryItem
 
 	// WatchHistoryItem are stored in the file cache.
 	// The history is used to resume playback from the last known position.
 	// Item.MediaId and Item.EpisodeNumber are used to identify the media and episode.
-	// Only one Item per MediaId should exist in the history.
+	// Multiple episodes can exist for the same MediaId.
 	WatchHistoryItem struct {
 		Kind Kind `json:"kind"`
 		// Used for MediastreamKind and ExternalPlayerKind.
@@ -59,6 +59,11 @@ type (
 		Filepath      string  `json:"filepath,omitempty"`
 		Kind          Kind    `json:"kind"`
 	}
+
+	storedWatchHistoryItem struct {
+		key  string
+		item *WatchHistoryItem
+	}
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,20 +81,42 @@ func (m *Manager) GetWatchHistory() WatchHistory {
 	}
 
 	ret := make(WatchHistory)
-	for _, item := range items {
-		ret[item.MediaId] = item
+	latestByMedia := make(map[int]storedWatchHistoryItem)
+	for key, item := range items {
+		if item == nil || item.MediaId == 0 {
+			continue
+		}
+
+		latest, found := latestByMedia[item.MediaId]
+		if !found || getWatchHistoryTimestamp(item).After(getWatchHistoryTimestamp(latest.item)) {
+			latestByMedia[item.MediaId] = storedWatchHistoryItem{key: key, item: item}
+		}
+	}
+
+	for mediaId, stored := range latestByMedia {
+		if item, ok := m.getResumableWatchHistoryItem(stored.key, stored.item); ok {
+			ret[mediaId] = item
+		}
 	}
 
 	return ret
 }
 
-func (m *Manager) GetWatchHistoryItem(mediaId int) *WatchHistoryItemResponse {
+func (m *Manager) GetWatchHistoryItem(mediaId int, episodeNumbers ...int) *WatchHistoryItemResponse {
 	defer util.HandlePanicInModuleThen("continuity/GetWatchHistoryItem", func() {})
 
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	i, found := m.getWatchHistory(mediaId)
+	var (
+		i     *WatchHistoryItem
+		found bool
+	)
+	if len(episodeNumbers) > 0 {
+		i, found = m.getWatchHistory(mediaId, episodeNumbers[0])
+	} else {
+		i, found = m.getWatchHistory(mediaId)
+	}
 	return &WatchHistoryItemResponse{
 		Item:  i,
 		Found: found,
@@ -103,10 +130,15 @@ func (m *Manager) UpdateWatchHistoryItem(opts *UpdateWatchHistoryItemOptions) (e
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	added := false
+	if err := m.migrateLegacyWatchHistoryItem(opts.MediaId); err != nil {
+		return err
+	}
 
-	// Get the current history
-	i, found := m.getWatchHistory(opts.MediaId)
+	added := false
+	key := watchHistoryStorageKey(opts.MediaId, opts.EpisodeNumber)
+
+	var i *WatchHistoryItem
+	found, _ := m.fileCacher.Get(*m.watchHistoryFileCacheBucket, key, &i)
 	if !found {
 		added = true
 		i = &WatchHistoryItem{
@@ -121,6 +153,7 @@ func (m *Manager) UpdateWatchHistoryItem(opts *UpdateWatchHistoryItemOptions) (e
 		}
 	} else {
 		i.Kind = opts.Kind
+		i.Filepath = opts.Filepath
 		i.EpisodeNumber = opts.EpisodeNumber
 		i.CurrentTime = opts.CurrentTime
 		i.Duration = opts.Duration
@@ -128,7 +161,7 @@ func (m *Manager) UpdateWatchHistoryItem(opts *UpdateWatchHistoryItemOptions) (e
 	}
 
 	// Save the i
-	err = m.fileCacher.Set(*m.watchHistoryFileCacheBucket, strconv.Itoa(opts.MediaId), i)
+	err = m.fileCacher.Set(*m.watchHistoryFileCacheBucket, key, i)
 	if err != nil {
 		return fmt.Errorf("continuity: Failed to save watch history item: %w", err)
 	}
@@ -151,7 +184,7 @@ func (m *Manager) DeleteWatchHistoryItem(mediaId int) (err error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	err = m.fileCacher.Delete(*m.watchHistoryFileCacheBucket, strconv.Itoa(mediaId))
+	err = m.deleteWatchHistoryItemsForMedia(mediaId)
 	if err != nil {
 		return fmt.Errorf("continuity: Failed to delete watch history item: %w", err)
 	}
@@ -213,8 +246,8 @@ func (m *Manager) GetExternalPlayerEpisodeWatchHistoryItem(path string, isStream
 			return
 		}
 
-		i, found := m.getWatchHistory(mediaId)
-		if !found || i.EpisodeNumber != episode {
+		i, found := m.getWatchHistory(mediaId, episode)
+		if !found {
 			m.logger.Trace().
 				Interface("item", i).
 				Msg("continuity: No watch history item found or episode number does not match")
@@ -275,8 +308,8 @@ func (m *Manager) GetExternalPlayerEpisodeWatchHistoryItem(path string, isStream
 			return
 		}
 
-		i, found := m.getWatchHistory(lf.MediaId)
-		if !found || i.EpisodeNumber != lf.GetEpisodeNumber() {
+		i, found := m.getWatchHistory(lf.MediaId, lf.GetEpisodeNumber())
+		if !found {
 			m.logger.Trace().
 				Interface("item", i).
 				Msg("continuity: No watch history item found or episode number does not match")
@@ -315,8 +348,15 @@ func (m *Manager) UpdateExternalPlayerEpisodeWatchHistoryItem(currentTime, durat
 		return
 	}
 
-	// Get the current history
-	i, found := m.getWatchHistory(opts.MediaId)
+	if err := m.migrateLegacyWatchHistoryItem(opts.MediaId); err != nil {
+		m.logger.Error().Err(err).Int("mediaId", opts.MediaId).Msg("continuity: Failed to migrate legacy watch history item")
+		return
+	}
+
+	key := watchHistoryStorageKey(opts.MediaId, opts.EpisodeNumber)
+
+	var i *WatchHistoryItem
+	found, _ := m.fileCacher.Get(*m.watchHistoryFileCacheBucket, key, &i)
 	if !found {
 		added = true
 		i = &WatchHistoryItem{
@@ -331,6 +371,7 @@ func (m *Manager) UpdateExternalPlayerEpisodeWatchHistoryItem(currentTime, durat
 		}
 	} else {
 		i.Kind = ExternalPlayerKind
+		i.Filepath = opts.Filepath
 		i.EpisodeNumber = opts.EpisodeNumber
 		i.CurrentTime = currentTime
 		i.Duration = duration
@@ -338,7 +379,7 @@ func (m *Manager) UpdateExternalPlayerEpisodeWatchHistoryItem(currentTime, durat
 	}
 
 	// Save the i
-	_ = m.fileCacher.Set(*m.watchHistoryFileCacheBucket, strconv.Itoa(opts.MediaId), i)
+	_ = m.fileCacher.Set(*m.watchHistoryFileCacheBucket, key, i)
 
 	// If the item was added, check if we need to remove the oldest item
 	if added {
@@ -350,11 +391,19 @@ func (m *Manager) UpdateExternalPlayerEpisodeWatchHistoryItem(currentTime, durat
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (m *Manager) getWatchHistory(mediaId int) (ret *WatchHistoryItem, exists bool) {
+func (m *Manager) getWatchHistory(mediaId int, episodeNumbers ...int) (ret *WatchHistoryItem, exists bool) {
 	defer util.HandlePanicInModuleThen("continuity/getWatchHistory", func() {
 		ret = nil
 		exists = false
 	})
+
+	if len(episodeNumbers) > 0 {
+		stored, found := m.getExactStoredWatchHistoryItem(mediaId, episodeNumbers[0])
+		if !found {
+			return nil, false
+		}
+		return m.getResumableWatchHistoryItem(stored.key, stored.item)
+	}
 
 	reqEvent := &WatchHistoryItemRequestedEvent{
 		MediaId:          mediaId,
@@ -367,25 +416,12 @@ func (m *Manager) getWatchHistory(mediaId int) (ret *WatchHistoryItem, exists bo
 		return reqEvent.WatchHistoryItem, reqEvent.WatchHistoryItem != nil
 	}
 
-	exists, _ = m.fileCacher.Get(*m.watchHistoryFileCacheBucket, strconv.Itoa(mediaId), &ret)
-
-	if exists && ret != nil && ret.Duration > 0 {
-		// If the item completion ratio is equal or above IgnoreRatioThreshold, don't return anything
-		ratio := ret.CurrentTime / ret.Duration
-		if ratio >= IgnoreRatioThreshold {
-			// Delete the item
-			go func() {
-				defer util.HandlePanicInModuleThen("continuity/getWatchHistory", func() {})
-				_ = m.fileCacher.Delete(*m.watchHistoryFileCacheBucket, strconv.Itoa(mediaId))
-			}()
-			return nil, false
-		}
-		if ratio < 0.05 {
-			return nil, false
-		}
+	stored, found := m.getLatestStoredWatchHistoryItem(mediaId)
+	if !found {
+		return nil, false
 	}
 
-	return
+	return m.getResumableWatchHistoryItem(stored.key, stored.item)
 }
 
 // removes the oldest WatchHistoryItem from the file cache.
@@ -416,3 +452,147 @@ func (m *Manager) trimWatchHistoryItems() error {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func watchHistoryStorageKey(mediaId int, episodeNumber int) string {
+	return fmt.Sprintf("%d:%d", mediaId, episodeNumber)
+}
+
+func watchHistoryLegacyStorageKey(mediaId int) string {
+	return strconv.Itoa(mediaId)
+}
+
+func getWatchHistoryTimestamp(item *WatchHistoryItem) time.Time {
+	if item == nil {
+		return time.Time{}
+	}
+	if !item.TimeUpdated.IsZero() {
+		return item.TimeUpdated
+	}
+	return item.TimeAdded
+}
+
+func isWatchHistoryItemCompleted(item *WatchHistoryItem) bool {
+	if item == nil || item.Duration <= 0 {
+		return false
+	}
+	return (item.CurrentTime / item.Duration) >= IgnoreRatioThreshold
+}
+
+func (m *Manager) getResumableWatchHistoryItem(_ string, item *WatchHistoryItem) (*WatchHistoryItem, bool) {
+	if item == nil {
+		return nil, false
+	}
+	if isWatchHistoryItemCompleted(item) {
+		return nil, false
+	}
+	return item, true
+}
+
+func (m *Manager) getStoredWatchHistoryItems(mediaId int) []storedWatchHistoryItem {
+	items, err := filecache.GetAll[*WatchHistoryItem](m.fileCacher, *m.watchHistoryFileCacheBucket)
+	if err != nil {
+		m.logger.Error().Err(err).Int("mediaId", mediaId).Msg("continuity: Failed to get stored watch history items")
+		return nil
+	}
+
+	ret := make([]storedWatchHistoryItem, 0)
+	for key, item := range items {
+		if item == nil {
+			continue
+		}
+		if mediaId != 0 && item.MediaId != mediaId {
+			continue
+		}
+		ret = append(ret, storedWatchHistoryItem{
+			key:  key,
+			item: item,
+		})
+	}
+
+	return ret
+}
+
+func (m *Manager) getLatestStoredWatchHistoryItem(mediaId int) (*storedWatchHistoryItem, bool) {
+	items := m.getStoredWatchHistoryItems(mediaId)
+	if len(items) == 0 {
+		return nil, false
+	}
+
+	latest := items[0]
+	for _, item := range items[1:] {
+		if getWatchHistoryTimestamp(item.item).After(getWatchHistoryTimestamp(latest.item)) {
+			latest = item
+		}
+	}
+
+	return &latest, true
+}
+
+func (m *Manager) getExactStoredWatchHistoryItem(mediaId int, episodeNumber int) (*storedWatchHistoryItem, bool) {
+	items := m.getStoredWatchHistoryItems(mediaId)
+	if len(items) == 0 {
+		return nil, false
+	}
+
+	var (
+		latest storedWatchHistoryItem
+		found  bool
+	)
+	for _, item := range items {
+		if item.item.EpisodeNumber != episodeNumber {
+			continue
+		}
+		if !found || getWatchHistoryTimestamp(item.item).After(getWatchHistoryTimestamp(latest.item)) {
+			latest = item
+			found = true
+		}
+	}
+
+	if !found {
+		return nil, false
+	}
+
+	return &latest, true
+}
+
+func (m *Manager) deleteWatchHistoryItemsForMedia(mediaId int) error {
+	items := m.getStoredWatchHistoryItems(mediaId)
+	for _, item := range items {
+		if err := m.fileCacher.Delete(*m.watchHistoryFileCacheBucket, item.key); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *Manager) migrateLegacyWatchHistoryItem(mediaId int) error {
+	legacyKey := watchHistoryLegacyStorageKey(mediaId)
+	var legacyItem *WatchHistoryItem
+	found, err := m.fileCacher.Get(*m.watchHistoryFileCacheBucket, legacyKey, &legacyItem)
+	if err != nil {
+		return fmt.Errorf("continuity: Failed to read legacy watch history item: %w", err)
+	}
+	if !found || legacyItem == nil {
+		return nil
+	}
+
+	newKey := watchHistoryStorageKey(mediaId, legacyItem.EpisodeNumber)
+	if newKey != legacyKey {
+		var existing *WatchHistoryItem
+		exists, err := m.fileCacher.Get(*m.watchHistoryFileCacheBucket, newKey, &existing)
+		if err != nil {
+			return fmt.Errorf("continuity: Failed to read migrated watch history item: %w", err)
+		}
+		if !exists {
+			if err := m.fileCacher.Set(*m.watchHistoryFileCacheBucket, newKey, legacyItem); err != nil {
+				return fmt.Errorf("continuity: Failed to migrate legacy watch history item: %w", err)
+			}
+		}
+	}
+
+	if err := m.fileCacher.Delete(*m.watchHistoryFileCacheBucket, legacyKey); err != nil {
+		return fmt.Errorf("continuity: Failed to remove legacy watch history item: %w", err)
+	}
+
+	return nil
+}

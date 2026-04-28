@@ -15,16 +15,18 @@ export function useUpdateContinuityWatchHistoryItem() {
         mutationKey: [API_ENDPOINTS.CONTINUITY.UpdateContinuityWatchHistoryItem.key],
         onSuccess: async () => {
             await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.CONTINUITY.GetContinuityWatchHistory.key] })
+            await qc.invalidateQueries({ queryKey: [API_ENDPOINTS.ANIME_COLLECTION.GetLibraryCollection.key] })
         },
     })
 }
 
-export function useGetContinuityWatchHistoryItem(mediaId: Nullish<number | string>) {
+export function useGetContinuityWatchHistoryItem(mediaId: Nullish<number | string>, episodeNumber?: Nullish<number>) {
     const serverStatus = useServerStatus()
+    const query = episodeNumber ? `?episode=${episodeNumber}` : ""
     return useServerQuery<Continuity_WatchHistoryItemResponse, GetContinuityWatchHistoryItem_Variables>({
-        endpoint: API_ENDPOINTS.CONTINUITY.GetContinuityWatchHistoryItem.endpoint.replace("{id}", String(mediaId)),
+        endpoint: `${API_ENDPOINTS.CONTINUITY.GetContinuityWatchHistoryItem.endpoint.replace("{id}", String(mediaId))}${query}`,
         method: API_ENDPOINTS.CONTINUITY.GetContinuityWatchHistoryItem.methods[0],
-        queryKey: [API_ENDPOINTS.CONTINUITY.GetContinuityWatchHistoryItem.key, String(mediaId)],
+        queryKey: [API_ENDPOINTS.CONTINUITY.GetContinuityWatchHistoryItem.key, String(mediaId), episodeNumber ?? 0],
         enabled: serverStatus?.settings?.library?.enableWatchContinuity && !!mediaId,
     })
 }
@@ -38,21 +40,21 @@ export function useGetContinuityWatchHistory() {
     })
 }
 
-export function getEpisodePercentageComplete(history: Nullish<Continuity_WatchHistory>, mediaId: number, progressNumber: number) {
+export function getEpisodePercentageComplete(history: Nullish<Continuity_WatchHistory>, mediaId: number, episodeNumber: number) {
     if (!history) return 0
     const item = history[mediaId]
     if (!item || !item.currentTime || !item.duration) return 0
-    if (item.episodeNumber !== progressNumber) return 0
+    if (item.episodeNumber !== episodeNumber) return 0
     const percent = Math.round((item.currentTime / item.duration) * 100)
     if (percent > 90 || percent < 5) return 0
     return percent
 }
 
-export function getEpisodeMinutesRemaining(history: Nullish<Continuity_WatchHistory>, mediaId: number, progressNumber: number) {
+export function getEpisodeMinutesRemaining(history: Nullish<Continuity_WatchHistory>, mediaId: number, episodeNumber: number) {
     if (!history) return 0
     const item = history[mediaId]
     if (!item || !item.currentTime || !item.duration) return 0
-    if (item.episodeNumber !== progressNumber) return 0
+    if (item.episodeNumber !== episodeNumber) return 0
     return Math.round((item.duration - item.currentTime) / 60)
 }
 
@@ -99,18 +101,18 @@ export function useHandleContinuityWithMediaPlayer(playerRef: React.RefObject<HT
     return { handleUpdateWatchHistory }
 }
 
-export function useHandleCurrentMediaContinuity(mediaId: Nullish<number | string>) {
+export function useHandleCurrentMediaContinuity(mediaId: Nullish<number | string>, episodeNumber: Nullish<number>) {
     const serverStatus = useServerStatus()
 
-    const { data: watchHistory, isLoading: watchHistoryLoading } = useGetContinuityWatchHistoryItem(mediaId)
+    const { data: watchHistory, isLoading: watchHistoryLoading } = useGetContinuityWatchHistoryItem(mediaId, episodeNumber)
 
     const waitForWatchHistory = watchHistoryLoading && serverStatus?.settings?.library?.enableWatchContinuity
 
-    function getEpisodeContinuitySeekTo(episodeNumber: Nullish<number>, playerCurrentTime: Nullish<number>, playerDuration: Nullish<number>) {
+    function getEpisodeContinuitySeekTo(playerCurrentTime: Nullish<number>, playerDuration: Nullish<number>) {
         if (!serverStatus?.settings?.library?.enableWatchContinuity || !mediaId || !watchHistory || !playerDuration || !episodeNumber) return 0
         const item = watchHistory?.item
         if (!item || !item.currentTime || !item.duration || item.episodeNumber !== episodeNumber) return 0
-        if (!(item.currentTime > 0 && item.currentTime < playerDuration) || (item.currentTime / item.duration) > 90) return 0
+        if (!(item.currentTime > 0 && item.currentTime < playerDuration) || (item.currentTime / item.duration) > 0.9) return 0
         logger("CONTINUITY").info("Found last watched time", {
             currentTime: item.currentTime,
             duration: item.duration,

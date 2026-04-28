@@ -67,6 +67,52 @@ func TestNewLibraryCollectionContinueWatchingList(t *testing.T) {
 	require.Empty(t, libraryCollection.UnknownGroups)
 }
 
+func TestNewLibraryCollectionContinueWatchingListPrefersLatestLocalResumeEpisode(t *testing.T) {
+	h := newAnimeTestWrapper(t)
+
+	localFiles := anime.NewTestLocalFiles(
+		anime.TestLocalFileGroup{
+			LibraryPath:      "/Anime",
+			FilePathTemplate: "/Anime/Sousou no Frieren/[SubsPlease] Sousou no Frieren - %ep.mkv",
+			MediaID:          154587,
+			Episodes: []anime.TestLocalFileEpisode{
+				{Episode: 1, AniDBEpisode: "1", Type: anime.LocalFileTypeMain},
+				{Episode: 2, AniDBEpisode: "2", Type: anime.LocalFileTypeMain},
+				{Episode: 3, AniDBEpisode: "3", Type: anime.LocalFileTypeMain},
+				{Episode: 4, AniDBEpisode: "4", Type: anime.LocalFileTypeMain},
+				{Episode: 5, AniDBEpisode: "5", Type: anime.LocalFileTypeMain},
+			},
+		},
+	)
+
+	patchAnimeCollectionEntry(t, h.animeCollection, 154587, anilist.AnimeCollectionEntryPatch{
+		Status:   new(anilist.MediaListStatusCurrent),
+		Progress: new(3),
+	})
+	patchCollectionEntryEpisodeCount(t, h.animeCollection, 154587, 5)
+	h.setEpisodeMetadata(t, 154587, []int{1, 2, 3, 4, 5}, nil)
+
+	t.Run("prefers newer local episode even when AniList progress is older", func(t *testing.T) {
+		libraryCollection := h.newLibraryCollectionWithContinueWatchingEpisodeNumbers(t, localFiles, map[int]int{
+			154587: 4,
+		})
+
+		require.Len(t, libraryCollection.ContinueWatchingList, 1)
+		require.Equal(t, 154587, libraryCollection.ContinueWatchingList[0].BaseAnime.ID)
+		require.Equal(t, 4, libraryCollection.ContinueWatchingList[0].EpisodeNumber)
+	})
+
+	t.Run("can point back to an older episode when it was watched last", func(t *testing.T) {
+		libraryCollection := h.newLibraryCollectionWithContinueWatchingEpisodeNumbers(t, localFiles, map[int]int{
+			154587: 3,
+		})
+
+		require.Len(t, libraryCollection.ContinueWatchingList, 1)
+		require.Equal(t, 154587, libraryCollection.ContinueWatchingList[0].BaseAnime.ID)
+		require.Equal(t, 3, libraryCollection.ContinueWatchingList[0].EpisodeNumber)
+	})
+}
+
 func TestNewLibraryCollectionMergesRepeatingAndHydratesStats(t *testing.T) {
 	h := newAnimeTestWrapper(t)
 

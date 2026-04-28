@@ -47,7 +47,7 @@ When a tag like `v3.7.0-i18n.3` is pushed:
 - The release title is set to `Seanime i18n v3.7.0-i18n.3`.
 - The workflow uploads release assets with the full i18n version suffix preserved.
 
-Expected server assets include:
+Expected release assets include:
 
 ```text
 seanime-3.7.0-i18n.3_Linux_x86_64.tar.gz

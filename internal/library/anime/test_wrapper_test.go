@@ -150,6 +150,24 @@ func (h *animeTestWrapper) newLibraryCollection(t *testing.T, localFiles []*anim
 	return libraryCollection
 }
 
+func (h *animeTestWrapper) newLibraryCollectionWithContinueWatchingEpisodeNumbers(
+	t *testing.T,
+	localFiles []*anime.LocalFile,
+	continueWatchingEpisodeNumber map[int]int,
+) *anime.LibraryCollection {
+	t.Helper()
+
+	libraryCollection, err := anime.NewLibraryCollection(t.Context(), &anime.NewLibraryCollectionOptions{
+		AnimeCollection:               h.animeCollection,
+		LocalFiles:                    localFiles,
+		PlatformRef:                   h.platformRef,
+		MetadataProviderRef:           h.metadataProviderRef,
+		ContinueWatchingEpisodeNumber: continueWatchingEpisodeNumber,
+	})
+	require.NoError(t, err)
+	return libraryCollection
+}
+
 func (h *animeTestWrapper) newEntryDownloadInfo(t *testing.T, mediaID int, localFiles []*anime.LocalFile, progress int, status anilist.MediaListStatus) *anime.EntryDownloadInfo {
 	t.Helper()
 

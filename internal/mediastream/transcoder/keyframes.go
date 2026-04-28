@@ -2,6 +2,8 @@ package transcoder
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"path/filepath"
 	"seanime/internal/mediastream/videofile"
 	"seanime/internal/util"
@@ -104,14 +106,23 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 	// We instruct ffprobe to return the timestamp and flags of each frame.
 	// Although it's possible to request ffprobe to return only i-frames (keyframes) using the -skip_frame nokey option, this approach is highly inefficient.
 	// The inefficiency arises because when this option is used, ffmpeg processes every single frame, which significantly slows down the operation.
+	probeBin := ffprobePath
+	if probeBin == "" {
+		probeBin = "ffprobe"
+	}
+
 	cmd := util.NewCmd(
-		"ffprobe",
+		probeBin,
 		"-loglevel", "error",
 		"-select_streams", "v:0",
 		"-show_entries", "packet=pts_time,flags",
 		"-of", "csv=print_section=0",
 		path,
 	)
+
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
@@ -119,6 +130,40 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 	err = cmd.Start()
 	if err != nil {
 		return err
+	}
+
+	readyReleased := false
+	releaseReady := func() {
+		if readyReleased {
+			return
+		}
+		kf.info.ready.Done()
+		readyReleased = true
+	}
+	defer func() {
+		if !kf.IsDone {
+			releaseReady()
+		}
+	}()
+
+	waitOrErr := func(cause error) error {
+		if waitErr := cmd.Wait(); waitErr != nil {
+			if stderr.Len() > 0 {
+				return fmt.Errorf("%w: %s", cause, strings.TrimSpace(stderr.String()))
+			}
+			return fmt.Errorf("%w: %v", cause, waitErr)
+		}
+		if stderr.Len() > 0 {
+			return fmt.Errorf("%w: %s", cause, strings.TrimSpace(stderr.String()))
+		}
+		return cause
+	}
+
+	killAndWait := func(cause error) error {
+		if cmd.Process != nil {
+			_ = cmd.Process.Kill()
+		}
+		return waitOrErr(cause)
 	}
 
 	scanner := bufio.NewScanner(stdout)
@@ -132,12 +177,15 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 			continue
 		}
 
-		x := strings.Split(frame, ",")
+		x := strings.SplitN(frame, ",", 2)
+		if len(x) < 2 {
+			continue
+		}
 		pts, flags := x[0], x[1]
 
 		// if no video track
 		if pts == "N/A" {
-			break
+			continue
 		}
 
 		// Only take keyframes
@@ -147,7 +195,7 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 
 		fpts, err := strconv.ParseFloat(pts, 64)
 		if err != nil {
-			return err
+			return killAndWait(err)
 		}
 
 		// Previously, the aim was to save only those keyframes that had a minimum gap of 3 seconds between them.
@@ -170,7 +218,7 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 		if len(ret) == max {
 			kf.add(ret)
 			if done == 0 {
-				kf.info.ready.Done()
+				releaseReady()
 			} else if done >= 500 {
 				max = 500
 			}
@@ -178,6 +226,17 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 			// clear the array without reallocing it
 			ret = ret[:0]
 		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return killAndWait(err)
+	}
+
+	if err := cmd.Wait(); err != nil {
+		if stderr.Len() > 0 {
+			return fmt.Errorf("ffprobe keyframe analysis failed: %w: %s", err, strings.TrimSpace(stderr.String()))
+		}
+		return fmt.Errorf("ffprobe keyframe analysis failed: %w", err)
 	}
 
 	// If there is less than 2 (i.e. equals 0 or 1 (it happens for audio files with poster))
@@ -190,9 +249,7 @@ func getKeyframes(ffprobePath string, path string, kf *Keyframe, hash string, lo
 	}
 
 	kf.add(ret)
-	if done == 0 {
-		kf.info.ready.Done()
-	}
+	releaseReady()
 	kf.IsDone = true
 	return nil
 }

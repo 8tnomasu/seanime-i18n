@@ -898,7 +898,7 @@ export function VideoCore(props: VideoCoreProps) {
         waitForWatchHistory,
         shouldWaitForWatchHistory,
         getEpisodeContinuitySeekTo,
-    } = useHandleCurrentMediaContinuity(state?.playbackInfo?.media?.id)
+    } = useHandleCurrentMediaContinuity(state?.playbackInfo?.media?.id, state?.playbackInfo?.episode?.episodeNumber)
 
     React.useEffect(() => {
         if (watchHistory) {
@@ -1381,8 +1381,8 @@ export function VideoCore(props: VideoCoreProps) {
 
             // Restore previous position if available
             if (!state.playbackInfo.disableRestoreFromContinuity && !state.playbackInfo.initialState) {
-                if (state.playbackInfo?.episode?.progressNumber && watchHistory?.found && watchHistory.item?.episodeNumber === state.playbackInfo?.episode?.progressNumber) {
-                    const lastWatchedTime = getEpisodeContinuitySeekTo(state.playbackInfo?.episode?.progressNumber,
+                if (state.playbackInfo?.episode?.episodeNumber && watchHistory?.found && watchHistory.item?.episodeNumber === state.playbackInfo?.episode?.episodeNumber) {
+                    const lastWatchedTime = getEpisodeContinuitySeekTo(
                         videoRef.current?.currentTime,
                         videoRef.current?.duration)
                     log.info("Watch continuity: Fetched last watched time", { lastWatchedTime })
