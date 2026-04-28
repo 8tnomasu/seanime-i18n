@@ -2,6 +2,8 @@ package cassette
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"path/filepath"
 	"seanime/internal/mediastream/videofile"
 	"seanime/internal/util"
@@ -151,6 +153,9 @@ func extractKeyframes(
 		path,
 	)
 
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
@@ -164,6 +169,32 @@ func extractKeyframes(
 	batchSize := 100
 	flushed := int32(0)
 	var readyDone atomic.Bool
+	defer func() {
+		if !readyDone.Load() {
+			readyDone.Store(true)
+			ki.ready.Done()
+		}
+	}()
+
+	waitOrErr := func(cause error) error {
+		if waitErr := cmd.Wait(); waitErr != nil {
+			if stderr.Len() > 0 {
+				return fmt.Errorf("%w: %s", cause, strings.TrimSpace(stderr.String()))
+			}
+			return fmt.Errorf("%w: %v", cause, waitErr)
+		}
+		if stderr.Len() > 0 {
+			return fmt.Errorf("%w: %s", cause, strings.TrimSpace(stderr.String()))
+		}
+		return cause
+	}
+
+	killAndWait := func(cause error) error {
+		if cmd.Process != nil {
+			_ = cmd.Process.Kill()
+		}
+		return waitOrErr(cause)
+	}
 
 	flush := func(final bool) {
 		if len(buf) == 0 && !final {
@@ -194,19 +225,30 @@ func extractKeyframes(
 		}
 		pts, flags := parts[0], parts[1]
 		if pts == "N/A" {
-			break
+			continue
 		}
 		if len(flags) == 0 || flags[0] != 'K' {
 			continue
 		}
 		fpts, err := strconv.ParseFloat(pts, 64)
 		if err != nil {
-			return err
+			return killAndWait(err)
 		}
 		buf = append(buf, fpts)
 		if len(buf) >= batchSize {
 			flush(false)
 		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return killAndWait(err)
+	}
+
+	if err := cmd.Wait(); err != nil {
+		if stderr.Len() > 0 {
+			return fmt.Errorf("ffprobe keyframe analysis failed: %w: %s", err, strings.TrimSpace(stderr.String()))
+		}
+		return fmt.Errorf("ffprobe keyframe analysis failed: %w", err)
 	}
 
 	// Handle files with <=1 keyframe

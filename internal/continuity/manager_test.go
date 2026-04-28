@@ -5,7 +5,6 @@ import (
 	"seanime/internal/library/anime"
 	"seanime/internal/testutil"
 	"seanime/internal/util/filecache"
-	"strconv"
 	"testing"
 	"time"
 
@@ -18,7 +17,7 @@ func TestTrimWatchHistoryItemsRemovesOldestItem(t *testing.T) {
 	baseTime := time.Now().Add(-time.Hour)
 
 	for mediaID := 1; mediaID <= MaxWatchHistoryItems+1; mediaID++ {
-		err := cacher.Set(*manager.watchHistoryFileCacheBucket, strconv.Itoa(mediaID), &WatchHistoryItem{
+		err := cacher.Set(*manager.watchHistoryFileCacheBucket, watchHistoryStorageKey(mediaID, 1), &WatchHistoryItem{
 			MediaId:       mediaID,
 			EpisodeNumber: 1,
 			CurrentTime:   10,
@@ -33,19 +32,19 @@ func TestTrimWatchHistoryItemsRemovesOldestItem(t *testing.T) {
 
 	items := getAllHistoryItems(t, cacher, manager)
 	require.Len(t, items, MaxWatchHistoryItems)
-	require.NotContains(t, items, "1")
-	require.Contains(t, items, strconv.Itoa(MaxWatchHistoryItems+1))
+	require.NotContains(t, items, watchHistoryStorageKey(1, 1))
+	require.Contains(t, items, watchHistoryStorageKey(MaxWatchHistoryItems+1, 1))
 }
 
 func TestUpdateWatchHistoryItemCreatesAndUpdatesExistingItem(t *testing.T) {
 	manager, cacher := newHistoryTestManager(t)
 	originalTime := time.Now().Add(-2 * time.Hour)
 
-	err := cacher.Set(*manager.watchHistoryFileCacheBucket, "42", &WatchHistoryItem{
+	err := cacher.Set(*manager.watchHistoryFileCacheBucket, watchHistoryStorageKey(42, 2), &WatchHistoryItem{
 		Kind:          MediastreamKind,
 		Filepath:      "/tmp/original.mkv",
 		MediaId:       42,
-		EpisodeNumber: 1,
+		EpisodeNumber: 2,
 		CurrentTime:   20,
 		Duration:      100,
 		TimeAdded:     originalTime,
@@ -63,7 +62,7 @@ func TestUpdateWatchHistoryItemCreatesAndUpdatesExistingItem(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	response := manager.GetWatchHistoryItem(42)
+	response := manager.GetWatchHistoryItem(42, 2)
 	require.True(t, response.Found)
 	require.NotNil(t, response.Item)
 	require.Equal(t, OnlinestreamKind, response.Item.Kind)
@@ -72,7 +71,46 @@ func TestUpdateWatchHistoryItemCreatesAndUpdatesExistingItem(t *testing.T) {
 	require.Equal(t, 120.0, response.Item.Duration)
 	require.True(t, response.Item.TimeAdded.Equal(originalTime))
 	require.True(t, response.Item.TimeUpdated.After(originalTime))
-	require.Equal(t, "/tmp/original.mkv", response.Item.Filepath)
+	require.Equal(t, "/tmp/updated.mkv", response.Item.Filepath)
+}
+
+func TestWatchHistoryKeepsSeparateEpisodeResumePerMedia(t *testing.T) {
+	manager, cacher := newHistoryTestManager(t)
+	baseTime := time.Now().Add(-time.Hour)
+
+	seedWatchHistoryItem(t, cacher, manager, &WatchHistoryItem{
+		MediaId:       42,
+		EpisodeNumber: 3,
+		CurrentTime:   5,
+		Duration:      1500,
+		TimeAdded:     baseTime,
+		TimeUpdated:   baseTime,
+	})
+	seedWatchHistoryItem(t, cacher, manager, &WatchHistoryItem{
+		MediaId:       42,
+		EpisodeNumber: 4,
+		CurrentTime:   900,
+		Duration:      1500,
+		TimeAdded:     baseTime.Add(time.Minute),
+		TimeUpdated:   baseTime.Add(time.Minute),
+	})
+
+	latest := manager.GetWatchHistoryItem(42)
+	require.True(t, latest.Found)
+	require.NotNil(t, latest.Item)
+	require.Equal(t, 4, latest.Item.EpisodeNumber)
+
+	episodeThree := manager.GetWatchHistoryItem(42, 3)
+	require.True(t, episodeThree.Found)
+	require.NotNil(t, episodeThree.Item)
+	require.Equal(t, 3, episodeThree.Item.EpisodeNumber)
+	require.Equal(t, 5.0, episodeThree.Item.CurrentTime)
+
+	episodeFour := manager.GetWatchHistoryItem(42, 4)
+	require.True(t, episodeFour.Found)
+	require.NotNil(t, episodeFour.Item)
+	require.Equal(t, 4, episodeFour.Item.EpisodeNumber)
+	require.Equal(t, 900.0, episodeFour.Item.CurrentTime)
 }
 
 func TestGetWatchHistoryItemAppliesCompletionThresholds(t *testing.T) {
@@ -90,11 +128,19 @@ func TestGetWatchHistoryItemAppliesCompletionThresholds(t *testing.T) {
 		require.NotNil(t, response.Item)
 	})
 
-	t.Run("hides nearly finished item and deletes it", func(t *testing.T) {
+	t.Run("hides nearly finished item without surfacing older resume entries", func(t *testing.T) {
 		manager, cacher := newHistoryTestManager(t)
 		seedWatchHistoryItem(t, cacher, manager, &WatchHistoryItem{
 			MediaId:       11,
 			EpisodeNumber: 1,
+			CurrentTime:   20,
+			Duration:      100,
+			TimeAdded:     time.Now().Add(-time.Hour),
+			TimeUpdated:   time.Now().Add(-time.Hour),
+		})
+		seedWatchHistoryItem(t, cacher, manager, &WatchHistoryItem{
+			MediaId:       11,
+			EpisodeNumber: 2,
 			CurrentTime:   90,
 			Duration:      100,
 		})
@@ -103,30 +149,14 @@ func TestGetWatchHistoryItemAppliesCompletionThresholds(t *testing.T) {
 		require.False(t, response.Found)
 		require.Nil(t, response.Item)
 
-		require.Eventually(t, func() bool {
-			items := getAllHistoryItems(t, cacher, manager)
-			_, found := items["11"]
-			return !found
-		}, time.Second, 10*time.Millisecond)
-	})
+		history := manager.GetWatchHistory()
+		_, found := history[11]
+		require.False(t, found)
 
-	t.Run("hides barely started item without deleting it", func(t *testing.T) {
-		manager, cacher := newHistoryTestManager(t)
-		seedWatchHistoryItem(t, cacher, manager, &WatchHistoryItem{
-			MediaId:       12,
-			EpisodeNumber: 1,
-			CurrentTime:   4,
-			Duration:      100,
-		})
-
-		response := manager.GetWatchHistoryItem(12)
-		require.False(t, response.Found)
-		require.Nil(t, response.Item)
-
-		items := getAllHistoryItems(t, cacher, manager)
-		item, found := items["12"]
-		require.True(t, found)
-		require.Equal(t, 4.0, item.CurrentTime)
+		olderEpisode := manager.GetWatchHistoryItem(11, 1)
+		require.True(t, olderEpisode.Found)
+		require.NotNil(t, olderEpisode.Item)
+		require.Equal(t, 1, olderEpisode.Item.EpisodeNumber)
 	})
 }
 
@@ -138,13 +168,20 @@ func TestDeleteWatchHistoryItemRemovesStoredEntry(t *testing.T) {
 		CurrentTime:   20,
 		Duration:      100,
 	})
+	seedWatchHistoryItem(t, cacher, manager, &WatchHistoryItem{
+		MediaId:       20,
+		EpisodeNumber: 2,
+		CurrentTime:   30,
+		Duration:      100,
+	})
 
 	require.NoError(t, manager.DeleteWatchHistoryItem(20))
 
 	response := manager.GetWatchHistoryItem(20)
 	require.False(t, response.Found)
 	require.Nil(t, response.Item)
-	require.NotContains(t, getAllHistoryItems(t, cacher, manager), "20")
+	require.NotContains(t, getAllHistoryItems(t, cacher, manager), watchHistoryStorageKey(20, 1))
+	require.NotContains(t, getAllHistoryItems(t, cacher, manager), watchHistoryStorageKey(20, 2))
 }
 
 func TestUpdateExternalPlayerEpisodeWatchHistoryItem(t *testing.T) {
@@ -171,7 +208,7 @@ func TestUpdateExternalPlayerEpisodeWatchHistoryItem(t *testing.T) {
 
 		manager.UpdateExternalPlayerEpisodeWatchHistoryItem(40, 100)
 
-		response := manager.GetWatchHistoryItem(31)
+		response := manager.GetWatchHistoryItem(31, 5)
 		require.True(t, response.Found)
 		require.NotNil(t, response.Item)
 		require.Equal(t, ExternalPlayerKind, response.Item.Kind)
@@ -186,7 +223,7 @@ func TestUpdateExternalPlayerEpisodeWatchHistoryItem(t *testing.T) {
 		})
 		manager.UpdateExternalPlayerEpisodeWatchHistoryItem(55, 120)
 
-		updated := manager.GetWatchHistoryItem(31)
+		updated := manager.GetWatchHistoryItem(31, 6)
 		require.True(t, updated.Found)
 		require.Equal(t, 6, updated.Item.EpisodeNumber)
 		require.Equal(t, 55.0, updated.Item.CurrentTime)
@@ -282,7 +319,7 @@ func seedWatchHistoryItem(t *testing.T, cacher *filecache.Cacher, manager *Manag
 		item.TimeUpdated = item.TimeAdded
 	}
 
-	err := cacher.Set(*manager.watchHistoryFileCacheBucket, strconv.Itoa(item.MediaId), item)
+	err := cacher.Set(*manager.watchHistoryFileCacheBucket, watchHistoryStorageKey(item.MediaId, item.EpisodeNumber), item)
 	require.NoError(t, err)
 }
 

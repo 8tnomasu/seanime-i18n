@@ -115,10 +115,11 @@ func (h *Handler) HandleGetNakamaAnimeLibrary(c echo.Context) error {
 	})
 
 	libraryCollection, err := anime.NewLibraryCollection(c.Request().Context(), &anime.NewLibraryCollectionOptions{
-		AnimeCollection:     animeCollection,
-		PlatformRef:         h.App.AnilistPlatformRef,
-		LocalFiles:          lfs,
-		MetadataProviderRef: h.App.MetadataProviderRef,
+		AnimeCollection:               animeCollection,
+		PlatformRef:                   h.App.AnilistPlatformRef,
+		LocalFiles:                    lfs,
+		MetadataProviderRef:           h.App.MetadataProviderRef,
+		ContinueWatchingEpisodeNumber: h.getContinueWatchingEpisodeNumbers(),
 	})
 	if err != nil {
 		return h.RespondWithError(c, err)

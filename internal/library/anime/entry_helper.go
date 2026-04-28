@@ -31,6 +31,24 @@ func (e *Entry) FindNextEpisode() (*Episode, bool) {
 	return ep, true
 }
 
+// FindEpisodeByEpisodeNumber returns the downloaded main episode matching the exact episode number.
+func (e *Entry) FindEpisodeByEpisodeNumber(episodeNumber int) (*Episode, bool) {
+	if e == nil || e.Episodes == nil {
+		return nil, false
+	}
+
+	for _, ep := range e.Episodes {
+		if ep == nil || !ep.IsMain() {
+			continue
+		}
+		if ep.GetEpisodeNumber() == episodeNumber {
+			return ep, true
+		}
+	}
+
+	return nil, false
+}
+
 // FindLatestEpisode returns the *main* episode with the highest episode number.
 // Returns false if there are no episodes.
 func (e *Entry) FindLatestEpisode() (*Episode, bool) {

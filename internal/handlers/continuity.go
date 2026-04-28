@@ -46,11 +46,23 @@ func (h *Handler) HandleGetContinuityWatchHistoryItem(c echo.Context) error {
 		return h.RespondWithError(c, err)
 	}
 
+	episodeParam := c.QueryParam("episode")
+
 	if !h.App.ContinuityManager.GetSettings().WatchContinuityEnabled {
 		return h.RespondWithData(c, &continuity.WatchHistoryItemResponse{
 			Item:  nil,
 			Found: false,
 		})
+	}
+
+	if episodeParam != "" {
+		episodeNumber, err := strconv.Atoi(episodeParam)
+		if err != nil {
+			return h.RespondWithError(c, err)
+		}
+
+		resp := h.App.ContinuityManager.GetWatchHistoryItem(id, episodeNumber)
+		return h.RespondWithData(c, resp)
 	}
 
 	resp := h.App.ContinuityManager.GetWatchHistoryItem(id)
