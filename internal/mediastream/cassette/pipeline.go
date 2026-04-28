@@ -27,6 +27,12 @@ const (
 	AudioKind
 )
 
+const (
+	seekDetectionThresholdSegments = int32(20)
+	seekHeadKillDistanceSegments   = int32(12)
+	maxHeadReuseDistanceSeconds    = 30.0
+)
+
 func (k PipelineKind) String() string {
 	if k == VideoKind {
 		return "video"
@@ -163,10 +169,11 @@ func (p *Pipeline) reclaimExistingSegments() {
 }
 
 // GetIndex generates an hls variant playlist for this pipeline's segments
-func (p *Pipeline) GetIndex(token string) (string, error) {
+func (p *Pipeline) GetIndex(playback string, token string) (string, error) {
 	return GenerateVariantPlaylist(
 		p.session.Keyframes,
 		float64(p.session.Info.Duration),
+		playback,
 		token,
 	), nil
 }
@@ -181,10 +188,16 @@ func (p *Pipeline) GetSegment(ctx context.Context, seg int32) (string, error) {
 	// Record for velocity tracking
 	p.velocity.Record(seg)
 
+	seekDetected := p.velocity.DetectSeek(seekDetectionThresholdSegments)
+
 	// if the user jumped far, kill all distant heads
 	// immediately so we don't waste resources
-	if p.velocity.DetectSeek(50) {
-		p.killDistantHeads(seg)
+	if seekDetected {
+		p.logger.Debug().
+			Str("pipeline", p.label).
+			Int32("target_segment", seg).
+			Msg("cassette: seek detected, rebuilding nearby transcoder heads")
+		p.killDistantHeads(seg, seekHeadKillDistanceSegments)
 	}
 
 	if p.segments.IsReady(seg) {
@@ -198,8 +211,7 @@ func (p *Pipeline) GetSegment(ctx context.Context, seg int32) (string, error) {
 	scheduled := p.isScheduled(seg)
 	p.headsMu.RUnlock()
 
-	// todo: improve
-	if distance > 60 || !scheduled {
+	if shouldSpawnHeadForSegmentRequest(seekDetected, distance, scheduled) {
 		if err := p.runHead(seg); err != nil {
 			return "", err
 		}
@@ -260,14 +272,14 @@ func (p *Pipeline) killHeadLocked(id int) {
 }
 
 // killDistantHeads kills distant heads on seek
-func (p *Pipeline) killDistantHeads(target int32) {
+func (p *Pipeline) killDistantHeads(target int32, maxDistance int32) {
 	p.headsMu.Lock()
 	defer p.headsMu.Unlock()
 	for i, h := range p.heads {
 		if h.segment == -1 {
 			continue
 		}
-		if abs32(h.segment-target) > 50 {
+		if abs32(h.segment-target) > maxDistance {
 			p.logger.Trace().Int("eid", i).Int32("at", h.segment).Int32("target", target).
 				Msg("cassette: killing distant head after seek")
 			p.killHeadLocked(i)
@@ -470,6 +482,8 @@ func (p *Pipeline) runHead(start int32) error {
 
 	p.logger.Trace().Str("pipeline", p.label).Int("eid", encoderID).
 		Int32("start", start).Int32("end", end).
+		Float64("seek_ref", startRef).
+		Str("out_pattern", outPath).
 		Msgf("cassette: spawning ffmpeg")
 
 	cmd := util.NewCmdCtx(context.Background(), p.settings.FfmpegPath, args...)
@@ -605,4 +619,11 @@ func toSegmentStr(times []float64) string {
 		parts[i] = fmt.Sprintf("%.6f", t)
 	}
 	return strings.Join(parts, ",")
+}
+
+func shouldSpawnHeadForSegmentRequest(seekDetected bool, distance float64, scheduled bool) bool {
+	if seekDetected {
+		return true
+	}
+	return distance > maxHeadReuseDistanceSeconds || !scheduled
 }

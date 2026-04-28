@@ -231,20 +231,6 @@ type AudioTranscodeDecision struct {
 // - If the source has ≤ 2 channels: encode to AAC stereo @ 128k
 // - If the source has > 2 channels: encode to AAC preserving layout @ 384k
 func DecideAudioTranscode(audio *videofile.Audio) AudioTranscodeDecision {
-	// just copy aac
-	if audio.Codec == "aac" {
-		channels := "2"
-		if audio.Channels > 2 {
-			channels = fmt.Sprintf("%d", audio.Channels)
-		}
-		return AudioTranscodeDecision{
-			Copy:     true,
-			Codec:    "copy",
-			Channels: channels,
-		}
-	}
-
-	// everything else needs re-encoding to AAC
 	channels := "2"
 	bitrate := "128k"
 	if audio.Channels > 2 {

@@ -22,3 +22,20 @@ ps -eo pid,ppid,stat,etime,cmd | awk '$3 ~ /Z/ { print }'
 ```
 
 No `[ffprobe] <defunct>` process should remain.
+
+## Mediastream transcoding checks
+
+For browser HLS transcoding playback:
+
+- Continue Watching should follow the latest meaningful local playback record.
+- Episode resume points should remain independent per episode.
+- Transcode HLS requests should stay isolated to the active playback session.
+- Long-distance seeks should start a fresh transcoder head near the requested segment instead of waiting on an old distant head.
+
+Useful runtime checks:
+
+```bash
+docker logs --tail=300 seanime
+docker logs -f seanime
+ps -eo pid,ppid,stat,etime,cmd | grep -E "ffprobe|ffmpeg|seanime" | grep -v grep
+```

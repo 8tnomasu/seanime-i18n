@@ -81,14 +81,14 @@ func (s *Session) WaitReady() error {
 // master / index / segment accessors
 
 // GetMaster returns the hls master playlist
-func (s *Session) GetMaster(token string) string {
-	return GenerateMasterPlaylist(s.Info, s.Ladder, token)
+func (s *Session) GetMaster(playback string, token string) string {
+	return GenerateMasterPlaylist(s.Info, s.Ladder, playback, token)
 }
 
 // GetVideoIndex returns the hls variant playlist for a quality
-func (s *Session) GetVideoIndex(q Quality, token string) (string, error) {
+func (s *Session) GetVideoIndex(q Quality, playback string, token string) (string, error) {
 	p := s.getVideoPipeline(q)
-	return p.GetIndex(token)
+	return p.GetIndex(playback, token)
 }
 
 // GetVideoSegment returns the path to a video segment, blocking until ready
@@ -115,9 +115,9 @@ func (s *Session) GetVideoSegment(ctx context.Context, q Quality, seg int32) (st
 }
 
 // GetAudioIndex returns the hls variant playlist for an audio track
-func (s *Session) GetAudioIndex(audio int32, token string) (string, error) {
+func (s *Session) GetAudioIndex(audio int32, playback string, token string) (string, error) {
 	p := s.getAudioPipeline(audio)
-	return p.GetIndex(token)
+	return p.GetIndex(playback, token)
 }
 
 // GetAudioSegment returns the path to an audio segment
@@ -265,27 +265,21 @@ func (s *Session) getAudioPipeline(idx int32) *Pipeline {
 		decision = DecideAudioTranscode(srcAudio)
 	}
 
-	if decision.Copy {
-		s.logger.Debug().Int32("audio", idx).Str("codec", "copy").
-			Msg("cassette: audio is HLS-compatible, transmuxing (no re-encode)")
-	} else {
-		s.logger.Debug().Int32("audio", idx).
-			Str("codec", decision.Codec).
-			Str("bitrate", decision.Bitrate).
-			Str("channels", decision.Channels).
-			Msg("cassette: audio needs re-encode")
-	}
+	s.logger.Debug().Int32("audio", idx).
+		Str("codec", decision.Codec).
+		Str("bitrate", decision.Bitrate).
+		Str("channels", decision.Channels).
+		Msg("cassette: normalizing audio for browser HLS playback")
 
 	buildArgs := func(_ string) []string {
 		args := []string{
 			"-map", fmt.Sprintf("0:a:%d", idx),
 			"-c:a", decision.Codec,
+			"-af", "aresample=async=1:first_pts=0",
+			"-ac", decision.Channels,
 		}
-		if !decision.Copy {
-			args = append(args, "-ac", decision.Channels)
-			if decision.Bitrate != "" {
-				args = append(args, "-b:a", decision.Bitrate)
-			}
+		if decision.Bitrate != "" {
+			args = append(args, "-b:a", decision.Bitrate)
 		}
 		return args
 	}

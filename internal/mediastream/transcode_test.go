@@ -1,13 +1,17 @@
 package mediastream
 
 import (
+	"errors"
 	"io"
+	"net/http"
+	"net/http/httptest"
 	"path/filepath"
 	"seanime/internal/database/models"
 	"seanime/internal/events"
 	"seanime/internal/mediastream/cassette"
 	"testing"
 
+	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 	"github.com/samber/mo"
 	"github.com/stretchr/testify/require"
@@ -95,4 +99,29 @@ func TestShutdownTranscodeStreamStopsCurrentPlaybackWhenPlaybackIDMissing(t *tes
 	currentTranscoder, ok := repo.transcoder.Get()
 	require.True(t, ok)
 	require.NotSame(t, transcoder, currentTranscoder)
+}
+
+func TestServeEchoTranscodeStreamRejectsStalePlaybackHash(t *testing.T) {
+	repo, _ := newShutdownTestRepository(t)
+	repo.playbackManager.currentMediaContainer = mo.Some(&MediaContainer{
+		Filepath:   filepath.Join(t.TempDir(), "episode-2.mkv"),
+		Hash:       "current-hash",
+		StreamType: StreamTypeTranscode,
+	})
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/mediastream/transcode/master.m3u8?playback=old-hash", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/api/v1/mediastream/transcode/*")
+	c.SetParamNames("*")
+	c.SetParamValues("master.m3u8")
+
+	err := repo.ServeEchoTranscodeStream(c, "client-1")
+	require.Error(t, err)
+
+	var httpErr *echo.HTTPError
+	require.True(t, errors.As(err, &httpErr))
+	require.Equal(t, http.StatusGone, httpErr.Code)
+	require.Equal(t, "no-cache, no-store, must-revalidate", rec.Header().Get("Cache-Control"))
 }

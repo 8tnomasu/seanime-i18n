@@ -2,6 +2,7 @@ package cassette
 
 import (
 	"fmt"
+	"net/url"
 	"seanime/internal/mediastream/videofile"
 	"strings"
 )
@@ -9,23 +10,20 @@ import (
 // playlist generation
 
 // GenerateMasterPlaylist builds the hls master playlist using the quality ladder
-func GenerateMasterPlaylist(info *videofile.MediaInfo, ladder []QualityLadderEntry, token string) string {
+func GenerateMasterPlaylist(info *videofile.MediaInfo, ladder []QualityLadderEntry, playback string, token string) string {
 	var b strings.Builder
 	b.WriteString("#EXTM3U\n")
 
 	if info.Video == nil {
 		// just list audio tracks if audio only
-		writeAudioTracks(&b, info, token)
+		writeAudioTracks(&b, info, playback, token)
 		return b.String()
 	}
 
 	// The codec advertized for transcoded variants. Original uses the source's actual codec when known.
 	transcodedCodec := "avc1.640028" // h264 High L4.0 safe default
 
-	tokenSuffix := ""
-	if token != "" {
-		tokenSuffix = "?token=" + token
-	}
+	tokenSuffix := buildPlaylistQuerySuffix(playback, token)
 
 	for _, entry := range ladder {
 		b.WriteString("#EXT-X-STREAM-INF:")
@@ -55,16 +53,13 @@ func GenerateMasterPlaylist(info *videofile.MediaInfo, ladder []QualityLadderEnt
 		fmt.Fprintf(&b, "./%s/index.m3u8%s\n", entry.Quality, tokenSuffix)
 	}
 
-	writeAudioTracks(&b, info, token)
+	writeAudioTracks(&b, info, playback, token)
 	return b.String()
 }
 
 // writeAudioTracks appends audio track entries to the playlist
-func writeAudioTracks(b *strings.Builder, info *videofile.MediaInfo, token string) {
-	tokenSuffix := ""
-	if token != "" {
-		tokenSuffix = "?token=" + token
-	}
+func writeAudioTracks(b *strings.Builder, info *videofile.MediaInfo, playback string, token string) {
+	tokenSuffix := buildPlaylistQuerySuffix(playback, token)
 	for _, audio := range info.Audios {
 		b.WriteString("#EXT-X-MEDIA:TYPE=AUDIO,")
 		b.WriteString("GROUP-ID=\"audio\",")
@@ -93,11 +88,8 @@ func writeAudioTracks(b *strings.Builder, info *videofile.MediaInfo, token strin
 }
 
 // GenerateVariantPlaylist builds a variant playlist listing every segment
-func GenerateVariantPlaylist(ki *KeyframeIndex, duration float64, token string) string {
-	tokenSuffix := ""
-	if token != "" {
-		tokenSuffix = "?token=" + token
-	}
+func GenerateVariantPlaylist(ki *KeyframeIndex, duration float64, playback string, token string) string {
+	tokenSuffix := buildPlaylistQuerySuffix(playback, token)
 	var b strings.Builder
 
 	b.WriteString("#EXTM3U\n")
@@ -122,4 +114,19 @@ func GenerateVariantPlaylist(ki *KeyframeIndex, duration float64, token string) 
 	}
 
 	return b.String()
+}
+
+func buildPlaylistQuerySuffix(playback string, token string) string {
+	values := url.Values{}
+	if playback != "" {
+		values.Set("playback", playback)
+	}
+	if token != "" {
+		values.Set("token", token)
+	}
+	if len(values) == 0 {
+		return ""
+	}
+
+	return "?" + values.Encode()
 }
