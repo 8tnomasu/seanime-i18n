@@ -26,6 +26,8 @@ This fork is not affiliated with or endorsed by the upstream Seanime project.
 - Release workflow adjustments for i18n versioned assets
 - Docker publish workflow alignment with release publication
 
+For maintainer-facing details about fork-specific changes, see [`docs/fork-deltas.md`](docs/fork-deltas.md) and [`docs/upstream-sync.md`](docs/upstream-sync.md).
+
 ## Status / Disclaimer
 
 - This is an unofficial fork of Seanime.

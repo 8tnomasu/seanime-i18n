@@ -49,6 +49,8 @@ Release notes should clearly separate:
 
 This fork may include behavior changes that are not present in upstream Seanime, so release notes should make those differences explicit.
 
+When a release includes fork-specific runtime or updater changes, update `docs/fork-deltas.md` if the change introduces or changes long-term fork behavior.
+
 ## Release workflow behavior
 
 When a tag like `v3.7.0-i18n.3` is pushed:

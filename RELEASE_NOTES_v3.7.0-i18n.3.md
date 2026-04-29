@@ -39,6 +39,10 @@ This patch release focuses on playback stability, resume consistency, and releas
 - The in-app update checker and Denshi desktop updater now use `8tnomasu/seanime-i18n` GitHub Releases instead of upstream Seanime releases.
 - Version comparison supports fork tags such as `v3.7.0-i18n.3`.
 
+## Maintainer documentation
+
+This release adds maintainer-facing fork delta documentation for future upstream syncs. `docs/fork-deltas.md` records fork-specific behavior, implementation notes, validation, and upstream sync decisions. `docs/upstream-sync.md` describes how to compare upstream changes and decide whether to keep, adapt, or retire fork patches.
+
 ## Notes
 
 - This is an unofficial i18n fork release.
