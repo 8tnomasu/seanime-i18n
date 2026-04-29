@@ -32,6 +32,13 @@ This patch release focuses on playback stability, resume consistency, and releas
 
 - Release workflow automation improvements from the previous patch remain preserved.
 
+## Fork and updater source
+
+- README and docs now clarify that `seanime-i18n` is an unofficial fork of Seanime rather than a localization-only mirror.
+- This fork includes i18n, Traditional Chinese localization, Docker packaging, playback fixes, continuity fixes, updater source changes, and release workflow adjustments.
+- The in-app update checker and Denshi desktop updater now use `8tnomasu/seanime-i18n` GitHub Releases instead of upstream Seanime releases.
+- Version comparison supports fork tags such as `v3.7.0-i18n.3`.
+
 ## Notes
 
 - This is an unofficial i18n fork release.
