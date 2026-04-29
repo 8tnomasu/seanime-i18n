@@ -235,8 +235,8 @@
             "app": {
                 "title": "App",
                 "description": "General app settings",
-                "checkForUpdates": "Check for updates",
-                "latestVersion": "You are running the latest version",
+                "checkForUpdates": "Check for seanime-i18n updates",
+                "latestVersion": "You are running the latest seanime-i18n version",
                 "openDataDirectory": "Open Data directory",
                 "recordIssue": "Record an issue"
             },
@@ -539,19 +539,18 @@
             "useFallbackMetadataProvider": "Use fallback metadata provider",
             "useFallbackMetadataProviderHelp": "If enabled, Seanime will use an alternative source to fetch episode metadata.",
             "doNotCheckForUpdates": "Do not check for updates",
-            "doNotCheckForUpdatesHelp": "If enabled, Seanime will not check for new releases.",
+            "doNotCheckForUpdatesHelp": "If enabled, seanime-i18n will not check for new fork releases.",
             "doNotFetchUpdateNotes": "Do not fetch update notes",
-            "doNotFetchUpdateNotesHelp": "If enabled, new releases won't be displayed. Seanime Denshi may still auto-update in the background.",
+            "doNotFetchUpdateNotesHelp": "If enabled, new seanime-i18n release notes won't be displayed. Seanime Denshi may still auto-update in the background.",
             "doNotFetchUpdateNotesMoreHelp": "You cannot disable auto-updates for Seanime Denshi.",
-            "updateChannelExperimental": "Update Channel (Experimental)",
-            "updateChannelHelp": "Also applies to Seanime Denshi auto-updates.",
+            "updateChannelExperimental": "Update source",
+            "updateChannelHelp": "Seanime and Seanime Denshi check GitHub Releases from 8tnomasu/seanime-i18n.",
             "updateChannels": {
-                "github": "GitHub (Default)",
+                "github": "seanime-i18n GitHub Releases (Default)",
                 "seanime": "Seanime",
                 "seanimeCanary": "Seanime (Canary)"
             },
-            "usingSeanimeReleaseChannel": "You are currently using a release channel hosted on Seanime.",
-            "usingSeanimeCanaryReleaseChannel": "You are currently using the canary release channel hosted on Seanime. This channel may receive unstable updates without much testing."
+        "usingForkReleaseChannel": "Update checks use GitHub Releases from 8tnomasu/seanime-i18n."
         },
         "localAccount": {
             "autoSyncFromAniList": "Auto sync from AniList",
@@ -2203,9 +2202,9 @@
             "installNow": "Install now",
             "installedRestartApp": "Update installed. Restart the app.",
             "installing": "Installing...",
-            "newUpdateAvailable": "A new update is available!",
+            "newUpdateAvailable": "A new seanime-i18n update is available!",
             "notAvailableForDesktop": "This update is not yet available for desktop clients. Wait a few minutes or check the GitHub page for more information.",
-            "seeOnGitHub": "See on GitHub"
+            "seeOnGitHub": "View fork release on GitHub"
         }
     },
     "downloads": {
@@ -2800,12 +2799,12 @@
         "desktopApplicationDescription": "The desktop app can download and install this update for you.",
         "downloadAndInstall": "Download and install",
         "downloadNewReleaseTitle": "Download new release",
-        "installDescription": "Seanime will download and install the latest release.",
+        "installDescription": "seanime-i18n will download and install the latest fork release.",
         "installModalTitle": "Install update",
         "menuAvailable": "Update available",
         "missingOptions": "Please select a release asset and a destination.",
-        "newUpdateAvailable": "A new update is available",
-        "seeOnGitHub": "See on GitHub",
+        "newUpdateAvailable": "A new seanime-i18n update is available",
+        "seeOnGitHub": "View fork release on GitHub",
         "selectDestination": "Select destination",
         "updateNow": "Update now"
     },

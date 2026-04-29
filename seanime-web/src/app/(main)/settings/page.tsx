@@ -75,6 +75,11 @@ const tabContentClass = cn(
     "space-y-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-300",
 )
 
+function normalizeUpdateChannel(_channel?: string | null) {
+    // This fork only exposes the fork-owned GitHub release channel in the UI.
+    return "github"
+}
+
 
 export default function Page() {
     const { t } = useTranslation()
@@ -344,7 +349,7 @@ export default function Page() {
                                         useFallbackMetadataProvider: data.useFallbackMetadataProvider ?? false,
                                         scannerUseLegacyMatching: data.scannerUseLegacyMatching ?? false,
                                         scannerConfig: data.scannerConfig ?? "",
-                                        updateChannel: data.updateChannel || "github",
+                                        updateChannel: normalizeUpdateChannel(data.updateChannel),
                                     },
                                     nakama: {
                                         enabled: data.nakamaEnabled ?? false,
@@ -424,12 +429,12 @@ export default function Page() {
                                     onSuccess: () => {
                                         formRef.current?.reset(formRef.current.getValues())
 
-                                        // Sync updateChannel to Denshi
+                                        // Sync the normalized fork update source to Denshi
                                         if (__isElectronDesktop__ && window.electron?.denshiSettings) {
                                             window.electron.denshiSettings.get().then((denshiSettings) => {
                                                 window.electron!.denshiSettings.set({
                                                     ...denshiSettings,
-                                                    updateChannel: data.updateChannel || "github",
+                                                    updateChannel: normalizeUpdateChannel(data.updateChannel),
                                                 })
                                             })
                                         }
@@ -522,7 +527,7 @@ export default function Page() {
                                 vcTranslateTargetLanguage: status?.settings?.mediaPlayer?.vcTranslateTargetLanguage ?? "",
                                 scannerUseLegacyMatching: status?.settings?.library?.scannerUseLegacyMatching ?? false,
                                 scannerConfig: status?.settings?.library?.scannerConfig ?? "",
-                                updateChannel: status?.settings?.library?.updateChannel || "github",
+                                updateChannel: normalizeUpdateChannel(status?.settings?.library?.updateChannel),
                             }}
                             stackClass="space-y-0 relative"
                         >

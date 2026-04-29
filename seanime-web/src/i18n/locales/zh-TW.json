@@ -235,8 +235,8 @@
             "app": {
                 "title": "應用程式",
                 "description": "一般應用程式設定",
-                "checkForUpdates": "檢查更新",
-                "latestVersion": "目前已是最新版本",
+                "checkForUpdates": "檢查 seanime-i18n 更新",
+                "latestVersion": "目前已是最新的 seanime-i18n 版本",
                 "openDataDirectory": "開啟資料目錄",
                 "recordIssue": "記錄問題"
             },
@@ -539,19 +539,18 @@
             "useFallbackMetadataProvider": "使用備援中繼資料來源",
             "useFallbackMetadataProviderHelp": "啟用後，Seanime 會改用其他來源抓取集數中繼資料。",
             "doNotCheckForUpdates": "不要檢查更新",
-            "doNotCheckForUpdatesHelp": "啟用後，Seanime 不會檢查是否有新版本。",
+            "doNotCheckForUpdatesHelp": "啟用後，seanime-i18n 不會檢查新的 fork 版本。",
             "doNotFetchUpdateNotes": "不要取得更新說明",
-            "doNotFetchUpdateNotesHelp": "啟用後，不會顯示新版本資訊。Seanime Denshi 仍可能在背景自動更新。",
+            "doNotFetchUpdateNotesHelp": "啟用後，不會顯示新的 seanime-i18n 版本說明。Seanime Denshi 仍可能在背景自動更新。",
             "doNotFetchUpdateNotesMoreHelp": "你無法停用 Seanime Denshi 的自動更新。",
-            "updateChannelExperimental": "更新頻道（實驗性）",
-            "updateChannelHelp": "也會套用到 Seanime Denshi 的自動更新。",
+            "updateChannelExperimental": "更新來源",
+            "updateChannelHelp": "Seanime 與 Seanime Denshi 的更新檢查會使用 8tnomasu/seanime-i18n 的 GitHub Releases。",
             "updateChannels": {
-                "github": "GitHub（預設）",
+                "github": "seanime-i18n GitHub Releases（預設）",
                 "seanime": "Seanime",
                 "seanimeCanary": "Seanime（Canary）"
             },
-            "usingSeanimeReleaseChannel": "你目前使用的是由 Seanime 託管的發佈頻道。",
-            "usingSeanimeCanaryReleaseChannel": "你目前使用的是由 Seanime 託管的 Canary 發佈頻道。這個頻道可能會在缺乏充分測試的情況下收到不穩定更新。"
+        "usingForkReleaseChannel": "更新檢查會使用 8tnomasu/seanime-i18n 的 GitHub Releases。"
         },
         "localAccount": {
             "autoSyncFromAniList": "從 AniList 自動同步",
@@ -2203,9 +2202,9 @@
             "installNow": "立即安裝",
             "installedRestartApp": "更新已安裝。請重新啟動應用程式。",
             "installing": "安裝中...",
-            "newUpdateAvailable": "有新的更新可用！",
+            "newUpdateAvailable": "有新的 seanime-i18n 更新可用！",
             "notAvailableForDesktop": "此更新尚未提供給桌面用戶端。請稍等幾分鐘，或查看 GitHub 頁面取得更多資訊。",
-            "seeOnGitHub": "在 GitHub 查看"
+            "seeOnGitHub": "在 GitHub 查看 fork 發佈頁"
         }
     },
     "downloads": {
@@ -2800,12 +2799,12 @@
         "desktopApplicationDescription": "桌面版應用程式可以為你下載並安裝這次更新。",
         "downloadAndInstall": "下載並安裝",
         "downloadNewReleaseTitle": "下載新版本",
-        "installDescription": "Seanime 會下載並安裝最新版本。",
+        "installDescription": "seanime-i18n 會下載並安裝最新的 fork 發佈版本。",
         "installModalTitle": "安裝更新",
         "menuAvailable": "有可用更新",
         "missingOptions": "請選擇版本檔案與下載目的地。",
-        "newUpdateAvailable": "有新的更新可用",
-        "seeOnGitHub": "在 GitHub 上查看",
+        "newUpdateAvailable": "有新的 seanime-i18n 更新可用",
+        "seeOnGitHub": "在 GitHub 查看 fork 發佈頁",
         "selectDestination": "選擇目的地",
         "updateNow": "立即更新"
     },

@@ -16,6 +16,14 @@ Example:
 v3.7.0-i18n.3
 ```
 
+## Recommended release flow
+
+1. Merge the release preparation PR into `main`.
+2. Prepare version-specific release notes.
+3. Create and push a tag such as `v3.7.0-i18n.3`.
+4. The release workflow publishes the GitHub Release automatically.
+5. After the release is published, the Docker publish workflow starts automatically.
+
 ## Release notes
 
 The release workflow looks for version-specific release notes in this order:
@@ -27,25 +35,28 @@ RELEASE_NOTES_X.Y.Z-i18n.N.md
 RELEASE_NOTES_X.Y.Z-i18n.N_DRAFT.md
 ```
 
-If none of the files above exist, the workflow falls back to the generated `whats-new.md`.
+If none of the files above exist, the workflow falls back to generated notes.
 
-For i18n fork releases, a version-specific release notes file is recommended so the published release uses fork-specific notes instead of upstream auto-generated notes.
+## Release notes policy
 
-## Recommended release flow
+Release notes should clearly separate:
 
-1. Merge the release preparation PR into `main`.
-2. Prepare a version-specific release notes file.
-3. Create and push a tag such as `v3.7.0-i18n.3`.
-4. The release workflow publishes the GitHub Release automatically.
-5. After the release is published, the Docker publish workflow starts automatically.
+- upstream merge changes
+- i18n / localization changes
+- fork-specific runtime fixes
+- Docker / release workflow changes
+- updater source changes
+
+This fork may include behavior changes that are not present in upstream Seanime, so release notes should make those differences explicit.
 
 ## Release workflow behavior
 
 When a tag like `v3.7.0-i18n.3` is pushed:
 
-- The release workflow publishes a non-draft release.
-- The release title is set to `Seanime i18n v3.7.0-i18n.3`.
-- The workflow uploads release assets with the full i18n version suffix preserved.
+- the release workflow publishes a non-draft release
+- the release title is set to `Seanime i18n v3.7.0-i18n.3`
+- release notes use the version-specific file when available
+- release assets preserve the full i18n version suffix
 
 Expected release assets include:
 
@@ -83,4 +94,14 @@ ghcr.io/8tnomasu/seanime-i18n:vX.Y.Z-i18n.N
 ghcr.io/8tnomasu/seanime-i18n:latest
 ```
 
-For production deployments, use a fixed version tag instead of `latest`.
+## Updater source
+
+Web UI and updater release checks in this fork should use GitHub Releases from:
+
+- `8tnomasu/seanime-i18n`
+
+They should not use upstream Seanime releases for fork-specific runtime or Docker fixes.
+
+## Documentation expectations
+
+If a release includes runtime bugfixes, updater source changes, Docker packaging changes, or playback fixes, update the relevant README / docs in the same PR.

@@ -99,7 +99,7 @@ type LibrarySettings struct {
 	// v3.5+
 	ScannerUseLegacyMatching bool   `gorm:"column:scanner_use_legacy_matching" json:"scannerUseLegacyMatching"`
 	ScannerConfig            string `gorm:"column:scanner_config" json:"scannerConfig"`
-	UpdateChannel            string `gorm:"column:update_channel" json:"updateChannel"` // "github", "seanime", "seanime_nightly"
+	UpdateChannel            string `gorm:"column:update_channel" json:"updateChannel"` // Normalized to "github" for this fork. Legacy upstream values are treated as aliases.
 	// v3.6.0+
 }
 

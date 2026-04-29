@@ -1,41 +1,38 @@
 ## Summary
 
 - Briefly describe what this PR changes.
-- If relevant, mention the affected locale groups or shared i18n areas.
+- If relevant, mention whether this is an upstream sync, i18n change, runtime fix, Docker / release workflow change, or updater source change.
 
 ## Scope Checklist
 
-- [ ] This PR targets the Seanime i18n fork, not the original Seanime repository.
-- [ ] This PR is limited to translation work, i18n keys, documentation, or a small i18n structure improvement.
-- [ ] This PR does not change unrelated core logic, playback logic, torrent/debrid logic, backend logic, or API behavior.
+- [ ] This PR targets `8tnomasu/seanime-i18n`, not upstream Seanime.
+- [ ] Fork-specific behavior changes are explained clearly.
+- [ ] If this PR changes playback / mediastream behavior, manual verification steps are included.
+- [ ] If this PR changes Docker or release workflow behavior, release / publish impact is explained.
+- [ ] If this PR changes updater or release source behavior, the affected repository / release feed is explained.
 
 ## Changed Areas Checklist
 
-- [ ] `en-US.json`
-- [ ] `zh-TW.json`
-- [ ] `labels.ts`
-- [ ] React components using `useTranslation()`
-- [ ] hooks / utilities / toasts using `i18n.t(...)`
+- [ ] i18n / locale files
+- [ ] frontend UI
+- [ ] backend runtime / handler logic
+- [ ] playback / mediastream
+- [ ] Docker / GHCR
+- [ ] release workflow
+- [ ] updater source
 - [ ] documentation
-
-## Locale Checklist
-
-- [ ] New keys were added to `en-US.json` first.
-- [ ] Matching keys were added to `zh-TW.json`.
-- [ ] `en-US` and `zh-TW` keys remain in sync.
-- [ ] Placeholders / interpolation keys were preserved.
-- [ ] No translated strings were hard-coded inside components.
 
 ## Validation Checklist
 
-- [ ] `.\node_modules\.bin\tsc.cmd --noEmit`
-- [ ] `.\node_modules\.bin\tsgo.cmd`
-- [ ] `.\node_modules\.bin\rsbuild.cmd build`
-- [ ] No generated files are included.
-- [ ] No build artifacts are included.
+- [ ] Relevant Go tests
+- [ ] `npm run build` when frontend changed
+- [ ] `npx tsc --noEmit` when frontend changed
+- [ ] i18n key parity checked when locale keys changed
+- [ ] No generated files are included
+- [ ] No build artifacts are included
 
 ## Notes
 
 - Anything reviewers should pay special attention to
 - Known limitations
-- Follow-up translation work, if any
+- Manual verification steps

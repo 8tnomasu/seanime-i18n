@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -26,6 +27,87 @@ func IsValidBasicSemver(version string) bool {
 	return true
 }
 
+var forkReleaseVersionPattern = regexp.MustCompile(`^v?(\d+)\.(\d+)\.(\d+)(?:-i18n\.(\d+))?$`)
+
+type forkReleaseVersion struct {
+	major int
+	minor int
+	patch int
+	i18n  int
+}
+
+func parseForkReleaseVersion(version string) (forkReleaseVersion, bool) {
+	matches := forkReleaseVersionPattern.FindStringSubmatch(strings.TrimSpace(version))
+	if matches == nil {
+		return forkReleaseVersion{}, false
+	}
+
+	major, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return forkReleaseVersion{}, false
+	}
+	minor, err := strconv.Atoi(matches[2])
+	if err != nil {
+		return forkReleaseVersion{}, false
+	}
+	patch, err := strconv.Atoi(matches[3])
+	if err != nil {
+		return forkReleaseVersion{}, false
+	}
+
+	i18n := 0
+	if matches[4] != "" {
+		i18n, err = strconv.Atoi(matches[4])
+		if err != nil {
+			return forkReleaseVersion{}, false
+		}
+	}
+
+	return forkReleaseVersion{
+		major: major,
+		minor: minor,
+		patch: patch,
+		i18n:  i18n,
+	}, true
+}
+
+func compareForkReleaseVersions(current string, other string) (comp int, shouldUpdate bool, ok bool) {
+	currV, ok := parseForkReleaseVersion(current)
+	if !ok {
+		return 0, false, false
+	}
+
+	otherV, ok := parseForkReleaseVersion(other)
+	if !ok {
+		return 0, false, false
+	}
+
+	switch {
+	case currV.major != otherV.major:
+		if currV.major < otherV.major {
+			return -3, true, true
+		}
+		return 3, false, true
+	case currV.minor != otherV.minor:
+		if currV.minor < otherV.minor {
+			return -2, true, true
+		}
+		return 2, false, true
+	case currV.patch != otherV.patch:
+		if currV.patch < otherV.patch {
+			return -1, true, true
+		}
+		return 1, false, true
+	case currV.i18n != otherV.i18n:
+		if currV.i18n < otherV.i18n {
+			return -1, true, true
+		}
+		return 1, false, true
+	default:
+		return 0, false, true
+	}
+}
+
 // CompareVersion compares two versions and returns the difference between them.
 //
 //	 3: Current version is newer by major version.
@@ -35,6 +117,9 @@ func IsValidBasicSemver(version string) bool {
 //		-2: Current version is older by minor version.
 //		-1: Current version is older by patch version.
 func CompareVersion(current string, b string) (comp int, shouldUpdate bool) {
+	if comp, shouldUpdate, ok := compareForkReleaseVersions(current, b); ok {
+		return comp, shouldUpdate
+	}
 
 	currV, err := semver.NewVersion(current)
 	if err != nil {
@@ -81,7 +166,7 @@ func VersionIsOlderThan(version string, compare string) bool {
 	return comp < 0 && shouldUpdate
 }
 
-var allowedGitHubOwners = []string{"5rahim"}
+var allowedGitHubOwners = []string{"8tnomasu"}
 
 // validateReleaseUrl checks that the URL points to a GitHub release asset
 // from an allowed owner.
@@ -97,7 +182,7 @@ func ValidateReleaseUrl(rawURL string) error {
 
 	switch parsed.Host {
 	case "github.com":
-		// e.g. https://github.com/5rahim/seanime/releases/download/v1.0.0/file.zip
+		// e.g. https://github.com/8tnomasu/seanime-i18n/releases/download/v3.7.0-i18n.3/file.zip
 		parts := strings.Split(strings.TrimPrefix(parsed.Path, "/"), "/")
 		if len(parts) < 6 || parts[2] != "releases" || parts[3] != "download" {
 			return fmt.Errorf("URL must point to a GitHub release asset")
@@ -109,9 +194,6 @@ func ValidateReleaseUrl(rawURL string) error {
 			}
 		}
 		return fmt.Errorf("repository owner %q is not allowed", owner)
-
-	case "seanime.app":
-		return nil
 
 	default:
 		return fmt.Errorf("host %q is not allowed", parsed.Host)

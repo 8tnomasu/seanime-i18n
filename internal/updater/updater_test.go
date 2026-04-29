@@ -9,35 +9,34 @@ import (
 
 func TestUpdater_GetLatestUpdateShouldFallback(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
-	websiteUrl = fixture.deadAPIURL
 
-	u := fixture.newUpdater("2.0.2", nil)
-	// update channel is "github"
+	u := fixture.newUpdater("3.7.0-i18n.2", nil)
+	u.UpdateChannel = "seanime"
 
 	update, err := u.GetLatestUpdate()
 	require.NoError(t, err)
 	require.NotNilf(t, update, "update should contain the latest release")
 	assert.Equal(t, fixture.release.TagName, update.Release.TagName)
-	assert.Equal(t, MajorRelease, update.Type)
+	assert.Equal(t, PatchRelease, update.Type)
 }
 
 func TestUpdater_GetLatestUpdateSeanime(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
 
-	u := fixture.newUpdater("2.0.2", nil)
-	u.UpdateChannel = "seanime"
+	u := fixture.newUpdater("3.7.0-i18n.2", nil)
+	u.UpdateChannel = "github"
 
 	update, err := u.GetLatestUpdate()
 	require.NoError(t, err)
 	require.NotNilf(t, update, "update should contain the latest release")
 	assert.Equal(t, fixture.release.TagName, update.Release.TagName)
-	assert.Equal(t, MajorRelease, update.Type)
+	assert.Equal(t, PatchRelease, update.Type)
 }
 
 func TestUpdater_GetLatestUpdate(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
 	u := fixture.newUpdater(fixture.release.Version, nil)
-	u.UpdateChannel = "seanime"
+	u.UpdateChannel = "github"
 
 	update, err := u.GetLatestUpdate()
 	require.NoError(t, err)
