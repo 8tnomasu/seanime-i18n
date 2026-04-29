@@ -7,12 +7,17 @@ import (
 
 const (
 	Version              = "3.7.0"
+	ReleaseVersion       = "3.7.0-i18n.3"
 	VersionName          = "Minamo"
 	GcTime               = time.Minute * 30
 	ConfigFileName       = "config.toml"
 	MalClientId          = "51cb4294feb400f3ddc66a30f9b9a00f"
 	DiscordApplicationId = "1224777421941899285"
 	AnilistApiUrl        = "https://graphql.anilist.co"
+	ReleaseGitHubOwner   = "8tnomasu"
+	ReleaseGitHubRepo    = "seanime-i18n"
+	ReleaseGitHubLatest  = "https://api.github.com/repos/8tnomasu/seanime-i18n/releases/latest"
+	ReleaseChangelogURL  = "https://raw.githubusercontent.com/8tnomasu/seanime-i18n/main/CHANGELOG.md"
 )
 
 const (

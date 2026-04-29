@@ -1,125 +1,89 @@
 # Seanime i18n
 
-Seanime 的非官方多語系 fork，初期以繁體中文（zh-TW）作為主要維護語言。
-
 [English](./README.md)
 
----
+`seanime-i18n` 是由 [8tnomasu/seanime-i18n](https://github.com/8tnomasu/seanime-i18n) 維護的 Seanime 非官方 fork。
 
-## 專案定位
+## 關於此 fork
 
-本專案是 Seanime 的非官方 fork，並非官方版本。
-原始專案： https://github.com/5rahim/seanime
+本專案是 Seanime 的非官方 fork。
 
-本 fork 由個人獨立維護，目標是為 Seanime 建立一套可長期維護的 i18n / 多語系架構。
+本 fork 最初目標是加入 i18n 架構與繁體中文介面，但目前也包含 Docker / GHCR 發布流程、瀏覽器轉碼播放修正、播放進度 / Continue Watching 修正、更新來源調整，以及 release workflow 調整。
 
----
+因此，本專案不再只是單純的「中文化版本」，而是帶有額外維護修正的 i18n fork。
 
-## 重要聲明
+本 fork 並非 upstream Seanime 官方版本，也不代表 upstream 專案立場。
 
-Seanime 不提供、不託管、不散布任何媒體內容。
-使用者需自行確認其媒體來源符合所在地法律。
+## Fork 專屬變更
 
-本 fork 不改變原專案對媒體來源與法律責任的立場，
-也不移除任何授權、版權或法律聲明。
+- 新增 i18n 架構與繁體中文介面
+- 提供 GHCR Docker image
+- Docker image 內建 FFmpeg / FFprobe，用於瀏覽器轉碼播放
+- 修正 mediastream 轉碼播放穩定性問題
+- 改善長距離 seek / 轉碼 loading 行為
+- 修正 Continue Watching / 繼續觀看的播放進度選擇邏輯
+- 每集獨立保存 resume progress
+- 修正 ffprobe 子行程回收，避免 `<defunct>` zombie process
+- Web UI / updater 的更新檢查改為使用本 fork 的 GitHub Releases
+- 調整 release workflow，使 i18n 版本資產與 Docker publish 流程一致
+- Docker publish 改為在 GitHub Release 發布後觸發
 
----
+## 狀態與聲明
 
-## 這個 Fork 做了什麼
-
-* 建立前端 i18n 架構
-* 保留 `en-US` 作為預設與 fallback 語言
-* 新增繁體中文（zh-TW）語系
-* 提供語言偏好設定
-
-目前已接入 i18n 的主要區域：
-
-* App shell / 導覽
-* 設定頁
-* 媒體庫 / 列表頁
-* 動畫 / 漫畫詳情頁
-* 播放器 UI
-* 下載 / Torrent / Debrid UI
-* 整合功能 / 離線同步
-* 共用 dialogs / toasts / error states
-
----
+- 這是 Seanime 的非官方 fork。
+- 本專案由 fork 維護者獨立管理。
+- 本 fork 的行為可能與 upstream Seanime 不同。
+- 本 fork 的更新檢查應以 [8tnomasu/seanime-i18n releases](https://github.com/8tnomasu/seanime-i18n/releases) 為準，而不是 upstream Seanime releases。
+- Seanime 不提供、不託管、不散布任何媒體內容。
+- 使用者需自行確認其媒體來源符合所在地法律。
+- 本 fork 不移除原專案的授權、版權與法律聲明。
 
 ## 支援語言
 
-| 語言代碼  | 語言       | 狀態            |
-| ----- | -------- | ------------- |
-| en-US | English  | 預設 / fallback |
-| zh-TW | 繁體中文（台灣） | 主要維護語言        |
-
----
+| 語言代碼 | 語言 | 狀態 |
+| --- | --- | --- |
+| `en-US` | English | 預設 / fallback |
+| `zh-TW` | 繁體中文（台灣） | 主要維護語言 |
 
 ## 使用方式
 
-1. Clone 本 fork
-2. 依照原始 Seanime 專案的 build 流程啟動（參考 `DEVELOPMENT_AND_BUILD.md`）
-3. 啟動後於設定中切換語言
+- Clone 本 fork。
+- 依照原始 Seanime 的開發 / 建置說明執行，參考 [DEVELOPMENT_AND_BUILD.md](./DEVELOPMENT_AND_BUILD.md)。
+- 啟動後可在設定頁切換語言。
+- Docker 部署請參考 [docs/docker.md](./docs/docker.md)。
+- release 流程請參考 [docs/release.md](./docs/release.md)。
 
-原專案請參考：
-https://github.com/5rahim/seanime
+## Docker 部署
 
----
+本 fork 會將 Docker image 發佈到 GHCR：
 
-## 開發與翻譯
-
-語系相關檔案：
-
-```
-seanime-web/src/i18n/
-seanime-web/src/i18n/locales/en-US.json
-seanime-web/src/i18n/locales/zh-TW.json
-seanime-web/src/i18n/labels.ts
+```yaml
+image: ghcr.io/8tnomasu/seanime-i18n:v3.7.0-i18n.2
 ```
 
-規則：
+正式部署建議使用固定版本 tag，不建議直接使用 `latest`。
 
-* `en-US` 為預設與 fallback 語言
-* `zh-TW` 為繁體中文語系
-* React 使用 `useTranslation()`
-* hook / toast / 非 React 使用 `i18n.t(...)`
-* 新增 key 時需同步更新 en-US 與 zh-TW
+官方 image 的 runtime 內建 FFmpeg 與 FFprobe，可直接用於瀏覽器轉碼播放。
 
-詳細說明見 `docs/i18n.md`
+## i18n 說明
 
----
+主要 i18n 檔案位於：
 
-## 翻譯原則
+- `seanime-web/src/i18n/`
+- `seanime-web/src/i18n/locales/en-US.json`
+- `seanime-web/src/i18n/locales/zh-TW.json`
+- `seanime-web/src/i18n/labels.ts`
 
-* 使用台灣慣用繁體中文
+更多本地化說明請參考 [docs/i18n.md](./docs/i18n.md)。
 
-* 不使用簡體中文
+## Upstream
 
-* 技術名稱（如 Seanime、AniList、Torrent、Debrid、MPV、FFmpeg）保留英文
+本 fork 基於 5rahim 的 Seanime。
 
-* 不翻譯：
-
-  * 作品標題
-  * 檔名、路徑
-  * hash / token
-  * provider 名稱
-  * 外部 API 回傳內容
-
-* 不在 component 中硬寫中文，所有 UI 文案應透過 i18n key 管理
-
----
+Upstream repository: [5rahim/seanime](https://github.com/5rahim/seanime)
 
 ## 授權
 
-本 fork 遵循原專案 GPL-3.0 授權。
-保留所有原始授權與版權聲明。
-
-詳見 `LICENSE`
-
----
-
-## 與原專案關係
-
-本 fork 為獨立維護專案。
-
-目前沒有計畫將 i18n 變更回 upstream。
-未來可能視情況同步原專案更新。
+- 本 fork 仍遵循原專案的 GPL-3.0 授權。
+- 原始授權與版權聲明必須保留。
+- 詳見 [LICENSE](./LICENSE)。

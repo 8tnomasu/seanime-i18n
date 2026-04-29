@@ -1,27 +1,32 @@
 package updater
 
 import (
-	"cmp"
 	"errors"
 	"fmt"
 	"io"
 	"net/url"
 	"runtime"
+	"seanime/internal/constants"
 	"strings"
 
 	"github.com/goccy/go-json"
 )
 
-// We fetch the latest release from the website first, if it fails we fallback to GitHub API
-// This allows updates even if Seanime is removed from GitHub
+const UpdateChannelGitHub = "github"
+
 var (
-	websiteUrl           = "https://seanime.app/api/release"
-	fallbackGithubUrl    = "https://api.github.com/repos/5rahim/seanime/releases/latest"
-	githubCheckUrl       = "https://seanime.app/api/github-status"
-	seanimeStableUrl     = "https://seanime.app/api/updates/stable/stable_server.json"
-	seanimeNightlyUrl    = "https://seanime.app/api/updates/nightly/nightly_server.json"
+	fallbackGithubUrl    = constants.ReleaseGitHubLatest
 	ErrInsecureUpdateURL = errors.New("update URL must use https")
 )
+
+func NormalizeUpdateChannel(channel string) string {
+	switch strings.TrimSpace(channel) {
+	case "", UpdateChannelGitHub, "seanime", "seanime_nightly":
+		return UpdateChannelGitHub
+	default:
+		return UpdateChannelGitHub
+	}
+}
 
 func validateUpdateURL(rawURL string) error {
 	parsed, err := url.Parse(rawURL)
@@ -80,10 +85,6 @@ type (
 		Body       string `json:"body"`
 	}
 
-	DocsResponse struct {
-		Release Release `json:"release"`
-	}
-
 	Release struct {
 		Url         string         `json:"url"`
 		HtmlUrl     string         `json:"html_url"`
@@ -138,40 +139,14 @@ func (u *Updater) GetReleaseName(version string) string {
 }
 
 func (u *Updater) fetchLatestRelease(channel string) (*Release, error) {
-	var release *Release
-
-	switch channel {
-	case "seanime_nightly":
-		apiRelease, err := u.fetchLatestReleaseFromApi(seanimeNightlyUrl)
-		if err != nil {
-			return nil, err
-		}
-		release = apiRelease
-	case "seanime":
-		apiRelease, err := u.fetchLatestReleaseFromApi(seanimeStableUrl)
-		if err != nil {
-			return nil, err
-		}
-		release = apiRelease
-	case "github":
-		fallthrough
-	default:
-		apiRelease, err := u.fetchLatestReleaseFromApi(websiteUrl)
-		if err != nil {
-			if u.logger != nil {
-				u.logger.Warn().Err(err).Msg("updater: Failed to fetch from GitHub, falling back to Seanime")
-			}
-			ghRelease, ghErr := u.fetchLatestReleaseFromGitHub()
-			if ghErr != nil {
-				return nil, err // Return original error if fallback also fails
-			}
-			release = ghRelease
-		} else {
-			release = apiRelease
-		}
+	if normalized := NormalizeUpdateChannel(channel); normalized != channel && u.logger != nil {
+		u.logger.Debug().
+			Str("requestedChannel", channel).
+			Str("normalizedChannel", normalized).
+			Msg("updater: Normalized update channel to fork GitHub releases")
 	}
 
-	return release, nil
+	return u.fetchLatestReleaseFromGitHub()
 }
 
 func (u *Updater) fetchLatestReleaseFromGitHub() (*Release, error) {
@@ -184,6 +159,14 @@ func (u *Updater) fetchLatestReleaseFromGitHub() (*Release, error) {
 		return nil, err
 	}
 	defer response.Body.Close()
+
+	statusCode := response.StatusCode
+	if statusCode == 429 {
+		return nil, errors.New("rate limited, try again later")
+	}
+	if !((statusCode >= 200) && (statusCode <= 299)) {
+		return nil, fmt.Errorf("http error code: %d", statusCode)
+	}
 
 	byteArr, readErr := io.ReadAll(response.Body)
 	if readErr != nil {
@@ -227,89 +210,4 @@ func (u *Updater) fetchLatestReleaseFromGitHub() (*Release, error) {
 	}
 
 	return release, nil
-}
-
-// returns true if github is ok OR url is unreachable
-// returns false if github is down and fallback should be used
-func (u *Updater) fetchGithubStatus() (string, bool) {
-	type GithubStatus struct {
-		Status      string `json:"status"`
-		Fallback    string `json:"fallback"`
-		Description string `json:"description"`
-	}
-
-	if err := validateUpdateURL(githubCheckUrl); err != nil {
-		return "", true
-	}
-
-	response, err := u.client.Get(githubCheckUrl)
-	if err != nil {
-		return "", true // unreachable = ok
-	}
-	defer response.Body.Close()
-
-	statusCode := response.StatusCode
-
-	if !((statusCode >= 200) && (statusCode <= 299)) {
-		return "", true // unreachable = ok
-	}
-
-	byteArr, readErr := io.ReadAll(response.Body)
-	if readErr != nil {
-		return "", true // unreachable = ok
-	}
-
-	var res GithubStatus
-	err = json.Unmarshal(byteArr, &res)
-	if err != nil {
-		return "", true // unreachable = ok
-	}
-
-	// url is reachable, status is "down"
-	if res.Status == "down" {
-		u.logger.Warn().Str("reason", res.Description).Msgf("app: Changing update channel to %s", res.Fallback)
-		return cmp.Or(res.Fallback, "seanime"), false
-	}
-
-	return "", true
-}
-
-func (u *Updater) fetchLatestReleaseFromApi(releaseUrl string) (*Release, error) {
-	if err := validateUpdateURL(releaseUrl); err != nil {
-		return nil, err
-	}
-
-	response, err := u.client.Get(releaseUrl)
-	if err != nil {
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	statusCode := response.StatusCode
-
-	if statusCode == 429 {
-		return nil, errors.New("rate limited, try again later")
-	}
-
-	if !((statusCode >= 200) && (statusCode <= 299)) {
-		return nil, fmt.Errorf("http error code: %d\n", statusCode)
-	}
-
-	byteArr, readErr := io.ReadAll(response.Body)
-	if readErr != nil {
-		return nil, fmt.Errorf("error reading response: %w", readErr)
-	}
-
-	var res DocsResponse
-	err = json.Unmarshal(byteArr, &res)
-	if err != nil {
-		return nil, err
-	}
-
-	res.Release.Version = strings.TrimPrefix(res.Release.TagName, "v")
-	if err := validateReleaseDownloadURLs(&res.Release); err != nil {
-		return nil, err
-	}
-
-	return &res.Release, nil
 }

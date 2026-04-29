@@ -43,7 +43,7 @@ func New(currVersion string, logger *zerolog.Logger, wsEventManager events.WSEve
 		CurrentVersion:      currVersion,
 		hasCheckedForUpdate: false,
 		checkForUpdate:      true,
-		UpdateChannel:       "github",
+		UpdateChannel:       UpdateChannelGitHub,
 
 		logger: logger,
 		client: &http.Client{
@@ -57,6 +57,14 @@ func New(currVersion string, logger *zerolog.Logger, wsEventManager events.WSEve
 	}
 
 	return ret
+}
+
+func (u *Updater) SetUpdateChannel(channel string) {
+	normalized := NormalizeUpdateChannel(channel)
+	if u.UpdateChannel != normalized {
+		u.hasCheckedForUpdate = false
+	}
+	u.UpdateChannel = normalized
 }
 
 func (u *Updater) GetLatestUpdate() (*Update, error) {
@@ -120,18 +128,14 @@ func (u *Updater) GetLatestRelease(channel string) (*Release, error) {
 		return u.LatestRelease, nil
 	}
 
-	fallbackChannel, ok := u.fetchGithubStatus()
-	// if github is down, use fallback channel
-	if !ok {
-		u.UpdateChannel = fallbackChannel
-		channel = fallbackChannel
-	}
+	channel = NormalizeUpdateChannel(channel)
 
 	release, err := u.fetchLatestRelease(channel)
 	if err != nil {
 		return nil, err
 	}
 
+	u.UpdateChannel = channel
 	u.hasCheckedForUpdate = true
 	u.LatestRelease = release
 	return release, nil

@@ -323,19 +323,9 @@ export function ServerSettings(props: ServerSettingsProps) {
                     help={__isElectronDesktop__ ? t("settings.server.updateChannelHelp") : ""}
                     options={[
                         { label: t("settings.server.updateChannels.github"), value: "github" },
-                        { label: t("settings.server.updateChannels.seanime"), value: "seanime" },
-                        { label: t("settings.server.updateChannels.seanimeCanary"), value: "seanime_nightly" },
                     ]}
                 />
-                {serverStatus?.settings?.library?.updateChannel === "seanime" && (
-                    <Alert intent="info" description={t("settings.server.usingSeanimeReleaseChannel")} />
-                )}
-                {serverStatus?.settings?.library?.updateChannel === "seanime_nightly" && (
-                    <Alert
-                        intent="warning"
-                        description={t("settings.server.usingSeanimeCanaryReleaseChannel")}
-                    />
-                )}
+                <Alert intent="info" description={t("settings.server.usingForkReleaseChannel")} />
             </SettingsCard>
 
             {/*<Accordion*/}

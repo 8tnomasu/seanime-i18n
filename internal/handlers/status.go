@@ -11,6 +11,7 @@ import (
 	"seanime/internal/core"
 	"seanime/internal/database/models"
 	"seanime/internal/report"
+	"seanime/internal/updater"
 	"seanime/internal/user"
 	"seanime/internal/util"
 	"seanime/internal/util/result"
@@ -94,6 +95,15 @@ func (h *Handler) NewStatus(c echo.Context) *Status {
 	if settings, _ = h.App.Database.GetSettings(); settings != nil {
 		if settings.ID == 0 || settings.Library == nil || settings.Torrent == nil || settings.MediaPlayer == nil {
 			settings = nil
+		} else if settings.Library != nil {
+			normalizedChannel := updater.NormalizeUpdateChannel(settings.Library.UpdateChannel)
+			if normalizedChannel != settings.Library.UpdateChannel {
+				settingsCopy := *settings
+				libraryCopy := *settings.Library
+				libraryCopy.UpdateChannel = normalizedChannel
+				settingsCopy.Library = &libraryCopy
+				settings = &settingsCopy
+			}
 		}
 	}
 

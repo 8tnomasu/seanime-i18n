@@ -4,12 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"net/http"
+	"seanime/internal/constants"
 	"seanime/internal/updater"
+	"seanime/internal/util"
 	"seanime/internal/util/result"
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/lo"
 )
@@ -108,7 +109,7 @@ func (h *Handler) HandleGetChangelog(c echo.Context) error {
 		return h.RespondWithData(c, cached)
 	}
 
-	changelogBody, err := http.Get("https://raw.githubusercontent.com/5rahim/seanime/main/CHANGELOG.md")
+	changelogBody, err := http.Get(constants.ReleaseChangelogURL)
 	if err != nil {
 		return h.RespondWithData(c, []*changelogItem{})
 	}
@@ -156,34 +157,14 @@ func (h *Handler) HandleGetChangelog(c echo.Context) error {
 	// e.g. get changelog after 2.7.0
 	if after != "" {
 		changelog = lo.Filter(changelog, func(item *changelogItem, index int) bool {
-			afterVersion, err := semver.NewVersion(after)
-			if err != nil {
-				return false
-			}
-
-			version, err := semver.NewVersion(item.Version)
-			if err != nil {
-				return false
-			}
-
-			return version.GreaterThan(afterVersion)
+			return util.VersionIsOlderThan(after, item.Version)
 		})
 	}
 
 	// e.g. get changelog before 2.7.0
 	if before != "" {
 		changelog = lo.Filter(changelog, func(item *changelogItem, index int) bool {
-			beforeVersion, err := semver.NewVersion(before)
-			if err != nil {
-				return false
-			}
-
-			version, err := semver.NewVersion(item.Version)
-			if err != nil {
-				return false
-			}
-
-			return version.LessThan(beforeVersion)
+			return util.VersionIsOlderThan(item.Version, before)
 		})
 	}
 

@@ -2,50 +2,37 @@
 
 Thank you for contributing to this repository.
 
-## Project Position
+## Project position
 
-- This repository is an unofficial i18n fork of Seanime.
+- This repository is an unofficial Seanime fork.
+- It started as an i18n / Traditional Chinese localization fork.
+- It now also includes fork-specific runtime, playback, Docker, updater, and release workflow fixes.
 - It is maintained independently and is not affiliated with, endorsed by, or maintained by the original Seanime project.
-- This fork is maintained for Seanime i18n work only.
-- There is currently no plan to submit these changes upstream to the original Seanime repository.
 
 Original project: [5rahim/seanime](https://github.com/5rahim/seanime)
 
-## In Scope
+## What to explain in a PR
 
-Contributions are welcome when they stay within the fork's i18n-focused scope:
+If a PR includes fork-specific runtime changes, explain them clearly in the PR body.
 
-- translation improvements
-- missing or incorrect i18n keys
-- locale consistency fixes
-- documentation updates related to i18n or translation workflow
-- small and reviewable i18n structure improvements
+This is especially important for:
 
-Examples of acceptable work:
+- playback / mediastream changes
+- Docker or release workflow changes
+- updater or release source changes
+- continuity / resume behavior changes
 
-- fixing missing `t(...)` usage in user-facing UI
-- improving `en-US.json` / `zh-TW.json` coverage
-- updating `labels.ts` for shared display labels
-- tightening translation guidelines or contributor documentation
+## Validation expectations
 
-## Out of Scope
+When relevant, include:
 
-This fork does not accept non-i18n feature work.
+- build / typecheck results
+- Go test results for touched packages
+- i18n key parity notes
+- manual playback verification steps if playback / mediastream changed
+- release / publish impact if Docker or workflow files changed
 
-Do not submit changes for:
-
-- core application features unrelated to i18n
-- player / playback engine logic
-- torrent / debrid / download logic
-- backend / server / API behavior
-- route changes unrelated to translation wiring
-- unrelated refactors
-- generated files
-- build artifacts
-
-If a change materially alters application behavior outside user-facing i18n display, it is likely out of scope.
-
-## Translation Workflow
+## Translation workflow
 
 When adding or updating user-facing strings:
 
@@ -60,44 +47,9 @@ Required rules:
 - Do not add a key to `zh-TW` without also adding it to `en-US`.
 - Do not translate file names, paths, hashes, tokens, provider names, or external API content.
 
-## Usage Rules
+## Branch and upstream policy
 
-- React components should use `useTranslation()`.
-- Hooks, utilities, toasts, and other non-React modules should use `i18n.t(...)`.
-- Shared display labels should use `seanime-web/src/i18n/labels.ts` when appropriate instead of duplicating mapping logic.
-- AniList genre and tag translation must stay display-only and must not change raw AniList values used for filters, queries, or cache.
-
-## Branch and Upstream Policy
-
-- Create branches from this fork's `main` branch.
-- Open pull requests against this fork, not the original Seanime repository.
-- Contributors should not rebase onto upstream.
+- Create branches from this fork's `main`.
+- Open pull requests against this fork, not the upstream Seanime repository.
+- Do not submit PRs to upstream on behalf of this fork unless explicitly coordinated.
 - Upstream sync is handled manually by the maintainer.
-
-## Validation
-
-For UI or locale changes, contributors should run the relevant checks when possible:
-
-- `.\node_modules\.bin\tsc.cmd --noEmit`
-- `.\node_modules\.bin\tsgo.cmd`
-- `.\node_modules\.bin\rsbuild.cmd build`
-
-Before submitting, make sure:
-
-- locale keys are synchronized between `en-US` and `zh-TW`
-- no hard-coded translated strings were introduced
-- no unrelated files are included
-- no generated files or build artifacts are included
-
-## Pull Request Expectations
-
-Keep pull requests small, focused, and easy to review.
-
-Good pull requests for this fork usually:
-
-- touch a limited and clearly defined i18n area
-- explain what locale keys were added or updated
-- mention validation results
-- avoid mixing translation work with unrelated cleanup
-
-Pull requests that violate scope may be declined.

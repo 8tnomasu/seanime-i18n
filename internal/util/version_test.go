@@ -135,6 +135,34 @@ func TestCompareVersion(t *testing.T) {
 			expectedOutput: -1,
 			shouldUpdate:   true,
 		},
+		{
+			name:           "Fork patch release increments within same upstream version",
+			currVersion:    "3.7.0-i18n.2",
+			otherVersion:   "3.7.0-i18n.3",
+			expectedOutput: -1,
+			shouldUpdate:   true,
+		},
+		{
+			name:           "Fork release compares numeric i18n suffix",
+			currVersion:    "3.7.0-i18n.10",
+			otherVersion:   "3.7.0-i18n.3",
+			expectedOutput: 1,
+			shouldUpdate:   false,
+		},
+		{
+			name:           "Fork release compares upstream version before i18n suffix",
+			currVersion:    "3.7.0-i18n.9",
+			otherVersion:   "3.7.1-i18n.1",
+			expectedOutput: -1,
+			shouldUpdate:   true,
+		},
+		{
+			name:           "Fork release is newer than plain upstream base release of same version",
+			currVersion:    "3.7.0",
+			otherVersion:   "3.7.0-i18n.1",
+			expectedOutput: -1,
+			shouldUpdate:   true,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -277,16 +305,12 @@ func TestValidateReleaseUrl(t *testing.T) {
 		expectedOutput bool
 	}{
 		{
-			url:            "https://github.com/5rahim/seanime/releases/download/v3.5.1/seanime-denshi-3.5.1_MacOS_arm64.dmg",
+			url:            "https://github.com/8tnomasu/seanime-i18n/releases/download/v3.7.0-i18n.3/seanime-3.7.0-i18n.3_Linux_x86_64.tar.gz",
 			expectedOutput: true,
 		},
 		{
 			url:            "https://github.com/rando/seanime/releases/download/v3.5.1/seanime-denshi-3.5.1_MacOS_arm64.dmg",
 			expectedOutput: false,
-		},
-		{
-			url:            "https://seanime.app/api/updates/stable/seanime-denshi-3.5.1_MacOS_arm64.dmg",
-			expectedOutput: true,
 		},
 		{
 			url:            "http://example.com/badstuff.dmg",

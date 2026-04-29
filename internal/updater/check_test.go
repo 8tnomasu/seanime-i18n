@@ -15,15 +15,13 @@ func TestUpdater_getReleaseName(t *testing.T) {
 
 	updater := Updater{}
 
-	t.Log(updater.GetReleaseName(constants.Version))
+	t.Log(updater.GetReleaseName(constants.ReleaseVersion))
 }
 
 func TestUpdater_FetchLatestRelease(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
 
-	websiteUrl = fixture.deadAPIURL
-
-	updater := fixture.newUpdater(constants.Version, events.NewMockWSEventManager(util.NewLogger()))
+	updater := fixture.newUpdater(constants.ReleaseVersion, events.NewMockWSEventManager(util.NewLogger()))
 	release, err := updater.fetchLatestRelease("github")
 	require.NoError(t, err)
 	require.NotNil(t, release)
@@ -31,21 +29,21 @@ func TestUpdater_FetchLatestRelease(t *testing.T) {
 	assert.Len(t, release.Assets, len(fixture.release.Assets))
 }
 
-func TestUpdater_FetchLatestReleaseFromApi(t *testing.T) {
+func TestUpdater_FetchLatestReleaseFromLegacyChannelAlias(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
 
-	updater := fixture.newUpdater(constants.Version, events.NewMockWSEventManager(util.NewLogger()))
-	release, err := updater.fetchLatestReleaseFromApi(seanimeStableUrl)
+	updater := fixture.newUpdater(constants.ReleaseVersion, events.NewMockWSEventManager(util.NewLogger()))
+	release, err := updater.fetchLatestRelease("seanime_nightly")
 	require.NoError(t, err)
 	require.NotNil(t, release)
-	assert.Equal(t, "v3.5.2", release.TagName)
-	assert.Len(t, release.Assets, 2)
+	assert.Equal(t, fixture.release.TagName, release.TagName)
+	assert.Len(t, release.Assets, len(fixture.release.Assets))
 }
 
 func TestUpdater_FetchLatestReleaseFromGitHub(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
 
-	updater := fixture.newUpdater(constants.Version, events.NewMockWSEventManager(util.NewLogger()))
+	updater := fixture.newUpdater(constants.ReleaseVersion, events.NewMockWSEventManager(util.NewLogger()))
 	release, err := updater.fetchLatestReleaseFromGitHub()
 	require.NoError(t, err)
 	require.NotNil(t, release)
@@ -100,6 +98,16 @@ func TestUpdater_CompareVersion(t *testing.T) {
 			latestVersion: "0.2.1",
 			shouldUpdate:  false,
 		},
+		{
+			currVersion:   "3.7.0-i18n.2",
+			latestVersion: "3.7.0-i18n.3",
+			shouldUpdate:  true,
+		},
+		{
+			currVersion:   "3.7.0-i18n.3",
+			latestVersion: "3.7.0-i18n.2",
+			shouldUpdate:  false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -115,7 +123,7 @@ func TestUpdater_CompareVersion(t *testing.T) {
 func TestUpdater(t *testing.T) {
 	fixture := newUpdaterTestFixture(t)
 
-	u := fixture.newUpdater("2.0.2", events.NewMockWSEventManager(util.NewLogger()))
+	u := fixture.newUpdater("3.7.0-i18n.2", events.NewMockWSEventManager(util.NewLogger()))
 
 	rl, err := u.GetLatestRelease("github")
 	require.NoError(t, err)
@@ -128,13 +136,15 @@ func TestUpdater(t *testing.T) {
 
 	assert.True(t, isOlder)
 	assert.True(t, shouldUpdate)
-	assert.Equal(t, -3, updateTypeI)
+	assert.Equal(t, -1, updateTypeI)
 }
 
-func TestUpdater_FetchLatestReleaseFromApiRejectsInsecureURL(t *testing.T) {
-	updater := New(constants.Version, util.NewLogger(), events.NewMockWSEventManager(util.NewLogger()))
-	_, err := updater.fetchLatestReleaseFromApi("http://example.com/release.json")
-	require.ErrorIs(t, err, ErrInsecureUpdateURL)
+func TestNormalizeUpdateChannel(t *testing.T) {
+	assert.Equal(t, UpdateChannelGitHub, NormalizeUpdateChannel(""))
+	assert.Equal(t, UpdateChannelGitHub, NormalizeUpdateChannel("github"))
+	assert.Equal(t, UpdateChannelGitHub, NormalizeUpdateChannel("seanime"))
+	assert.Equal(t, UpdateChannelGitHub, NormalizeUpdateChannel("seanime_nightly"))
+	assert.Equal(t, UpdateChannelGitHub, NormalizeUpdateChannel("custom"))
 }
 
 func TestUpdater_FetchLatestReleaseFromGitHubRejectsInsecureURL(t *testing.T) {
@@ -144,7 +154,7 @@ func TestUpdater_FetchLatestReleaseFromGitHubRejectsInsecureURL(t *testing.T) {
 		fallbackGithubUrl = oldFallbackGithubURL
 	})
 
-	updater := New(constants.Version, util.NewLogger(), events.NewMockWSEventManager(util.NewLogger()))
+	updater := New(constants.ReleaseVersion, util.NewLogger(), events.NewMockWSEventManager(util.NewLogger()))
 	_, err := updater.fetchLatestReleaseFromGitHub()
 	require.ErrorIs(t, err, ErrInsecureUpdateURL)
 }
