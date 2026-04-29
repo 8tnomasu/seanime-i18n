@@ -28,6 +28,8 @@
 - 調整 release workflow，使 i18n 版本資產與 Docker publish 流程一致
 - Docker publish 改為在 GitHub Release 發布後觸發
 
+維護者若要了解 fork 專屬差異與 upstream 同步決策，請參考 [`docs/fork-deltas.md`](docs/fork-deltas.md) 與 [`docs/upstream-sync.md`](docs/upstream-sync.md)。
+
 ## 狀態與聲明
 
 - 這是 Seanime 的非官方 fork。
