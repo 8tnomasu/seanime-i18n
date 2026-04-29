@@ -63,6 +63,19 @@ function uuidv4(): string {
     )
 }
 
+function appendQueryParam(url: string, key: string, value: string): string {
+    const separator = url.includes("?") ? "&" : "?"
+    return `${url}${separator}${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+}
+
+function appendQuerySuffix(url: string, suffix: string): string {
+    if (!suffix) return url
+    if (suffix.startsWith("?") && url.includes("?")) {
+        return `${url}&${suffix.slice(1)}`
+    }
+    return `${url}${suffix}`
+}
+
 function MediastreamPage() {
     const { t } = useTranslation()
     const serverStatus = useServerStatus()
@@ -192,11 +205,14 @@ function MediastreamPage() {
 
         if (mediaContainer.streamUrl) {
             let _newUrl = `${getServerBaseUrl()}${mediaContainer.streamUrl}`
+            if (mediaContainer.streamType === "transcode" && mediaContainer.hash) {
+                _newUrl = appendQueryParam(_newUrl, "playback", mediaContainer.hash)
+            }
             // Append HMAC token for direct play URLs
             if (mediaContainer.streamType === "direct" && directToken) {
-                _newUrl += directToken
+                _newUrl = appendQuerySuffix(_newUrl, directToken)
             } else if (mediaContainer.streamType === "transcode" && transcodeToken) {
-                _newUrl += transcodeToken
+                _newUrl = appendQuerySuffix(_newUrl, transcodeToken)
             }
             log.info("Setting stream URL", _newUrl)
             changeUrl(_newUrl)
@@ -204,7 +220,7 @@ function MediastreamPage() {
             changeUrl(null)
         }
 
-    }, [mediaContainer, isMediaContainerPending, mediastreamSettings, isCodecSupported, directToken])
+    }, [mediaContainer, isMediaContainerPending, mediastreamSettings, isCodecSupported, directToken, transcodeToken, changeUrl, t])
 
 
     // handle fatal errors

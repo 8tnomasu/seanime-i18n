@@ -2,6 +2,7 @@ package mediastream
 
 import (
 	"errors"
+	"net/http"
 	"seanime/internal/events"
 	"seanime/internal/mediastream/cassette"
 	"strconv"
@@ -16,6 +17,9 @@ import (
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func (r *Repository) ServeEchoTranscodeStream(c echo.Context, clientId string) error {
+	c.Response().Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.Response().Header().Set("Pragma", "no-cache")
+	c.Response().Header().Set("Expires", "0")
 
 	if !r.IsInitialized() {
 		r.wsEventManager.SendEvent(events.MediastreamShutdownStream, "Module not initialized")
@@ -35,9 +39,27 @@ func (r *Repository) ServeEchoTranscodeStream(c echo.Context, clientId string) e
 	}
 
 	token := c.QueryParam("token")
+	playback := c.QueryParam("playback")
+
+	r.logger.Trace().
+		Str("client_id", clientId).
+		Str("request_path", path).
+		Str("requested_playback", playback).
+		Str("current_playback", mediaContainer.Hash).
+		Msg("mediastream: transcode asset request")
+
+	if playback != "" && playback != mediaContainer.Hash {
+		r.logger.Warn().
+			Str("client_id", clientId).
+			Str("requested_playback", playback).
+			Str("current_playback", mediaContainer.Hash).
+			Str("path", path).
+			Msg("mediastream: Ignoring stale transcode asset request")
+		return echo.NewHTTPError(http.StatusGone, "stale mediastream playback request")
+	}
 
 	if path == "master.m3u8" {
-		ret, err := r.transcoder.MustGet().GetMaster(mediaContainer.Filepath, mediaContainer.Hash, mediaContainer.MediaInfo, clientId, token)
+		ret, err := r.transcoder.MustGet().GetMaster(mediaContainer.Filepath, mediaContainer.Hash, mediaContainer.MediaInfo, clientId, playback, token)
 		if err != nil {
 			return err
 		}
@@ -58,7 +80,7 @@ func (r *Repository) ServeEchoTranscodeStream(c echo.Context, clientId string) e
 			return err
 		}
 
-		ret, err := r.transcoder.MustGet().GetVideoIndex(mediaContainer.Filepath, mediaContainer.Hash, mediaContainer.MediaInfo, quality, clientId, token)
+		ret, err := r.transcoder.MustGet().GetVideoIndex(mediaContainer.Filepath, mediaContainer.Hash, mediaContainer.MediaInfo, quality, clientId, playback, token)
 		if err != nil {
 			return err
 		}
@@ -79,7 +101,7 @@ func (r *Repository) ServeEchoTranscodeStream(c echo.Context, clientId string) e
 			return err
 		}
 
-		ret, err := r.transcoder.MustGet().GetAudioIndex(mediaContainer.Filepath, mediaContainer.Hash, mediaContainer.MediaInfo, int32(audio), clientId, token)
+		ret, err := r.transcoder.MustGet().GetAudioIndex(mediaContainer.Filepath, mediaContainer.Hash, mediaContainer.MediaInfo, int32(audio), clientId, playback, token)
 		if err != nil {
 			return err
 		}

@@ -194,6 +194,7 @@ func (c *Cassette) GetMaster(
 	filePath, hash string,
 	mediaInfo *videofile.MediaInfo,
 	client string,
+	playback string,
 	token string,
 ) (string, error) {
 	start := time.Now()
@@ -206,7 +207,7 @@ func (c *Cassette) GetMaster(
 		Quality: nil, Audio: -1, Head: -1,
 	})
 	c.logger.Trace().Dur("elapsed", time.Since(start)).Msg("cassette: GetMaster")
-	return s.GetMaster(token), nil
+	return s.GetMaster(playback, token), nil
 }
 
 // GetVideoIndex returns the hls variant playlist for video quality.
@@ -216,13 +217,14 @@ func (c *Cassette) GetVideoIndex(
 	mediaInfo *videofile.MediaInfo,
 	quality Quality,
 	client string,
+	playback string,
 	token string,
 ) (string, error) {
 	s, err := c.getSession(filePath, hash, mediaInfo)
 	if err != nil {
 		return "", err
 	}
-	return s.GetVideoIndex(quality, token)
+	return s.GetVideoIndex(quality, playback, token)
 }
 
 // GetAudioIndex returns the hls variant playlist for an audio track.
@@ -231,13 +233,14 @@ func (c *Cassette) GetAudioIndex(
 	mediaInfo *videofile.MediaInfo,
 	audio int32,
 	client string,
+	playback string,
 	token string,
 ) (string, error) {
 	s, err := c.getSession(filePath, hash, mediaInfo)
 	if err != nil {
 		return "", err
 	}
-	return s.GetAudioIndex(audio, token)
+	return s.GetAudioIndex(audio, playback, token)
 }
 
 // GetVideoSegment returns the path to a transcoded video segment file.
