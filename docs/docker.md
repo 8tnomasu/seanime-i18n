@@ -7,7 +7,7 @@ This fork publishes Docker images for `seanime-i18n` on GHCR.
 For stable deployments, use a fixed version tag:
 
 ```yaml
-image: ghcr.io/8tnomasu/seanime-i18n:v3.7.0-i18n.2
+image: ghcr.io/8tnomasu/seanime-i18n:v3.7.1-i18n.1
 ```
 
 Using `latest` is supported, but fixed version tags are recommended for production and homelab deployments.
@@ -69,9 +69,9 @@ you can keep the same container-side paths and swap the image without moving med
 
 The Docker image is built from release binaries published by this fork.
 
-- release tag example: `v3.7.0-i18n.2`
-- linux amd64 asset example: `seanime-3.7.0-i18n.2_Linux_x86_64.tar.gz`
-- linux arm64 asset example: `seanime-3.7.0-i18n.2_Linux_arm64.tar.gz`
+- release tag example: `v3.7.1-i18n.1`
+- linux amd64 asset example: `seanime-3.7.1-i18n.1_Linux_x86_64.tar.gz`
+- linux arm64 asset example: `seanime-3.7.1-i18n.1_Linux_arm64.tar.gz`
 
 ## Update checks
 

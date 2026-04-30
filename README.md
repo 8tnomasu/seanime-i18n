@@ -58,7 +58,7 @@ For maintainer-facing details about fork-specific changes, see [`docs/fork-delta
 This fork publishes Docker images to GHCR:
 
 ```yaml
-image: ghcr.io/8tnomasu/seanime-i18n:v3.7.0-i18n.2
+image: ghcr.io/8tnomasu/seanime-i18n:v3.7.1-i18n.1
 ```
 
 For production deployments, prefer a fixed version tag instead of `latest`.

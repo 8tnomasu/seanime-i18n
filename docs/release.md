@@ -13,14 +13,14 @@ vX.Y.Z-i18n.N
 Example:
 
 ```text
-v3.7.0-i18n.3
+v3.7.1-i18n.1
 ```
 
 ## Recommended release flow
 
 1. Merge the release preparation PR into `main`.
 2. Prepare version-specific release notes.
-3. Create and push a tag such as `v3.7.0-i18n.3`.
+3. Create and push a tag such as `v3.7.1-i18n.1`.
 4. The release workflow publishes the GitHub Release automatically.
 5. After the release is published, the release workflow triggers Docker publish automatically.
 
@@ -53,21 +53,21 @@ When a release includes fork-specific runtime or updater changes, update `docs/f
 
 ## Release workflow behavior
 
-When a tag like `v3.7.0-i18n.3` is pushed:
+When a tag like `v3.7.1-i18n.1` is pushed:
 
 - the release workflow publishes a non-draft release
-- the release title is set to `Seanime i18n v3.7.0-i18n.3`
+- the release title is set to `Seanime i18n v3.7.1-i18n.1`
 - release notes use the version-specific file when available
 - release assets preserve the full i18n version suffix
 
 Expected release assets include:
 
 ```text
-seanime-3.7.0-i18n.3_Linux_x86_64.tar.gz
-seanime-3.7.0-i18n.3_Linux_arm64.tar.gz
-seanime-3.7.0-i18n.3_MacOS_x86_64.tar.gz
-seanime-3.7.0-i18n.3_MacOS_arm64.tar.gz
-seanime-3.7.0-i18n.3_Windows_x86_64.zip
+seanime-3.7.1-i18n.1_Linux_x86_64.tar.gz
+seanime-3.7.1-i18n.1_Linux_arm64.tar.gz
+seanime-3.7.1-i18n.1_MacOS_x86_64.tar.gz
+seanime-3.7.1-i18n.1_MacOS_arm64.tar.gz
+seanime-3.7.1-i18n.1_Windows_x86_64.zip
 ```
 
 Update metadata assets include:
@@ -91,8 +91,8 @@ Because releases created by GitHub Actions with `GITHUB_TOKEN` may not trigger d
 It waits for these release assets before building the image:
 
 ```text
-seanime-3.7.0-i18n.3_Linux_x86_64.tar.gz
-seanime-3.7.0-i18n.3_Linux_arm64.tar.gz
+seanime-3.7.1-i18n.1_Linux_x86_64.tar.gz
+seanime-3.7.1-i18n.1_Linux_arm64.tar.gz
 ```
 
 It publishes:
@@ -107,7 +107,7 @@ For an existing release that already has assets, maintainers can manually trigge
 ```bash
 gh workflow run docker-publish.yml \
   --repo 8tnomasu/seanime-i18n \
-  -f version=v3.7.0-i18n.3
+  -f version=v3.7.1-i18n.1
 ```
 
 ## Updater source

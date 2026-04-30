@@ -60,7 +60,7 @@
 本 fork 會將 Docker image 發佈到 GHCR：
 
 ```yaml
-image: ghcr.io/8tnomasu/seanime-i18n:v3.7.0-i18n.2
+image: ghcr.io/8tnomasu/seanime-i18n:v3.7.1-i18n.1
 ```
 
 正式部署建議使用固定版本 tag，不建議直接使用 `latest`。
