@@ -22,7 +22,7 @@ v3.7.0-i18n.3
 2. Prepare version-specific release notes.
 3. Create and push a tag such as `v3.7.0-i18n.3`.
 4. The release workflow publishes the GitHub Release automatically.
-5. After the release is published, the Docker publish workflow starts automatically.
+5. After the release is published, the release workflow triggers Docker publish automatically.
 
 ## Release notes
 
@@ -80,7 +80,13 @@ latest-mac.yml
 
 ## Docker publish behavior
 
-The Docker publish workflow runs when a GitHub Release is published.
+The Docker publish workflow supports multiple trigger paths:
+
+- `release.published`
+- `repository_dispatch`
+- `workflow_dispatch`
+
+Because releases created by GitHub Actions with `GITHUB_TOKEN` may not trigger downstream workflows reliably, this fork does not rely on `release.published` as the only Docker publish trigger. The release workflow sends a `repository_dispatch` event after the release and assets are published.
 
 It waits for these release assets before building the image:
 
@@ -94,6 +100,14 @@ It publishes:
 ```text
 ghcr.io/8tnomasu/seanime-i18n:vX.Y.Z-i18n.N
 ghcr.io/8tnomasu/seanime-i18n:latest
+```
+
+For an existing release that already has assets, maintainers can manually trigger Docker publish with:
+
+```bash
+gh workflow run docker-publish.yml \
+  --repo 8tnomasu/seanime-i18n \
+  -f version=v3.7.0-i18n.3
 ```
 
 ## Updater source

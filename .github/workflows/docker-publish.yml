@@ -5,10 +5,12 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      release_tag:
-        description: "Release tag to build from, for example v3.7.0-i18n.2"
+      version:
+        description: "Release tag to publish, for example v3.7.0-i18n.3"
         required: true
-        default: "v3.7.0-i18n.2"
+        type: string
+  repository_dispatch:
+    types: [seanime-i18n-docker-publish]
 
 permissions:
   contents: read
@@ -28,10 +30,18 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "release" ]]; then
             release_tag="${{ github.event.release.tag_name }}"
-          elif [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            release_tag="${GITHUB_REF_NAME}"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            release_tag="${{ inputs.version }}"
+          elif [[ "${{ github.event_name }}" == "repository_dispatch" ]]; then
+            release_tag="${{ github.event.client_payload.version }}"
           else
-            release_tag="${{ inputs.release_tag }}"
+            echo "Unsupported event: ${{ github.event_name }}" >&2
+            exit 1
+          fi
+
+          if [[ -z "${release_tag}" ]]; then
+            echo "release tag is empty" >&2
+            exit 1
           fi
 
           release_version="${release_tag#v}"

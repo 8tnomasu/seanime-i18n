@@ -141,17 +141,18 @@ Introduced before `v3.7.0-i18n.2`; revised in the release workflow automation fo
 
 ### Problem
 
-Fork tags use `vX.Y.Z-i18n.N`, so asset names and Docker publish expectations must preserve the full suffix. The fork also needs release notes lookup and direct publication behavior that match its release flow.
+Fork tags use `vX.Y.Z-i18n.N`, so asset names and Docker publish expectations must preserve the full suffix. The fork also needs release notes lookup and direct publication behavior that match its release flow. Releases created by GitHub Actions also need an explicit downstream trigger because `GITHUB_TOKEN` release publication may not start another workflow via `release.published`.
 
 ### Fork behavior
 
-Release assets keep the full `-i18n.N` suffix, release notes can come from version-specific files, and Docker publish waits for matching fork asset names after release publication.
+Release assets keep the full `-i18n.N` suffix, release notes can come from version-specific files, and Docker publish waits for matching fork asset names after release publication. The release workflow dispatches Docker publish explicitly, while Docker publish also keeps release and manual fallback triggers.
 
 ### Implementation summary
 
 - preserve `vX.Y.Z-i18n.N` in asset names
 - publish releases with `name:` instead of the invalid `release_name`
-- trigger Docker publish on `release.published`
+- trigger Docker publish with `repository_dispatch` after release publication
+- keep `release.published` and `workflow_dispatch` as additional supported triggers
 - look up version-specific release notes before falling back to generated notes
 
 ### Main files
