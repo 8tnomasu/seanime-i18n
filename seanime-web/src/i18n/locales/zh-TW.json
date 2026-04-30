@@ -1870,6 +1870,7 @@
         },
         "screenshot": {
             "failed": "截圖失敗",
+            "saved": "截圖已儲存",
             "savedToClipboard": "截圖已儲存到剪貼簿",
             "taking": "正在截圖..."
         },
@@ -2773,6 +2774,22 @@
         "common": {
             "componentTypeNotFound": "找不到元件類型：{{type}}",
             "unknown": "未知"
+        },
+        "debug": {
+            "clear": "清除",
+            "close": "關閉",
+            "copy": "複製",
+            "empty": "沒有記錄",
+            "levels": {
+                "all": "全部",
+                "debug": "除錯",
+                "error": "錯誤",
+                "info": "資訊",
+                "log": "記錄",
+                "warn": "警告"
+            },
+            "openLogs": "除錯記錄",
+            "searchPlaceholder": "搜尋記錄..."
         }
     },
     "scanLog": {

@@ -1870,6 +1870,7 @@
         },
         "screenshot": {
             "failed": "Screenshot failed",
+            "saved": "Screenshot saved",
             "savedToClipboard": "Screenshot saved to clipboard",
             "taking": "Taking screenshot..."
         },
@@ -2773,6 +2774,22 @@
         "common": {
             "componentTypeNotFound": "Component type not found: {{type}}",
             "unknown": "Unknown"
+        },
+        "debug": {
+            "clear": "Clear",
+            "close": "Close",
+            "copy": "Copy",
+            "empty": "No logs",
+            "levels": {
+                "all": "All",
+                "debug": "Debug",
+                "error": "Error",
+                "info": "Info",
+                "log": "Log",
+                "warn": "Warn"
+            },
+            "openLogs": "Debug logs",
+            "searchPlaceholder": "Search logs..."
         }
     },
     "scanLog": {

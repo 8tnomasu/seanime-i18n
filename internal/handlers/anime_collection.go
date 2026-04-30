@@ -8,8 +8,6 @@ import (
 	"seanime/internal/library/anime"
 	"seanime/internal/torrentstream"
 	"seanime/internal/util"
-	"seanime/internal/util/result"
-	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -223,8 +221,6 @@ func (h *Handler) HandleGetLibraryCollection(c echo.Context) error {
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-var animeScheduleCache = result.NewCache[int, []*anime.ScheduleItem]()
-
 // HandleGetAnimeCollectionSchedule
 //
 //	@summary returns anime collection schedule
@@ -235,10 +231,10 @@ func (h *Handler) HandleGetAnimeCollectionSchedule(c echo.Context) error {
 
 	// Invalidate the cache when the Anilist collection is refreshed
 	h.App.AddOnRefreshAnilistCollectionFunc("HandleGetAnimeCollectionSchedule", func() {
-		animeScheduleCache.Clear()
+		anime.ClearScheduleCache()
 	})
 
-	if ret, ok := animeScheduleCache.Get(1); ok {
+	if ret, ok := anime.GetScheduleCache(); ok {
 		return h.RespondWithData(c, ret)
 	}
 
@@ -254,7 +250,7 @@ func (h *Handler) HandleGetAnimeCollectionSchedule(c echo.Context) error {
 
 	ret := anime.GetScheduleItems(animeSchedule, animeCollection)
 
-	animeScheduleCache.SetT(1, ret, 1*time.Hour)
+	anime.SetScheduleCache(ret)
 
 	return h.RespondWithData(c, ret)
 }
