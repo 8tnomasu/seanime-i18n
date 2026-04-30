@@ -449,3 +449,12 @@ jobs:
           draft: false
           prerelease: false
           body_path: ${{ env.RELEASE_NOTES_PATH }}
+
+      - name: Trigger Docker publish via repository dispatch
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/${{ github.repository }}/dispatches \
+            -f event_type=seanime-i18n-docker-publish \
+            -F client_payload[version]=${{ env.RELEASE_TAG }}
