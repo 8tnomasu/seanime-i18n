@@ -18,9 +18,24 @@ export function useVideoCoreScreenshot() {
 
     const screenshotTimeout = React.useRef<NodeJS.Timeout | null>(null)
 
-    async function saveToClipboard(blob: Blob, isAnime4K: boolean = false) {
-        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
-        showOverlayFeedback({ message: t("player.screenshot.savedToClipboard"), type: "message" })
+    async function saveScreenshot(blob: Blob, isAnime4K: boolean = false) {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        document.body.appendChild(a)
+        a.style.display = "none"
+        a.href = url
+        a.download = `seanime_screenshot_${new Date().getTime()}${isAnime4K ? "_anime4k" : ""}.png`
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+
+        try {
+            await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
+            showOverlayFeedback({ message: t("player.screenshot.savedToClipboard"), type: "message" })
+        }
+        catch (e) {
+            showOverlayFeedback({ message: t("player.screenshot.saved"), type: "message" })
+        }
     }
 
     async function addSubtitles(canvas: HTMLCanvasElement): Promise<void> {
@@ -121,7 +136,7 @@ export function useVideoCoreScreenshot() {
             }
 
             if (blob) {
-                await saveToClipboard(blob, isAnime4K)
+                await saveScreenshot(blob, isAnime4K)
             }
 
         }

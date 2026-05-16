@@ -4,6 +4,7 @@ import { useDeleteAutoSelectProfile, useGetAutoSelectProfile, useSaveAutoSelectP
 import { Button, IconButton } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Combobox } from "@/components/ui/combobox"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { Modal } from "@/components/ui/modal"
 import { NumberInput } from "@/components/ui/number-input"
 import { Select } from "@/components/ui/select"
@@ -157,6 +158,7 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
     const { mutate: deleteProfile, isPending: deleting } = useDeleteAutoSelectProfile()
 
     const [formData, setFormData] = useAtom(formDataAtom)
+    const [shouldRender, setShouldRender] = React.useState(false)
 
     React.useEffect(() => {
         if (profile) {
@@ -199,6 +201,9 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
                 draft.minSeeders = profile.minSeeders || 0
                 draft.minSize = profile.minSize || ""
                 draft.maxSize = profile.maxSize || ""
+            })
+            React.startTransition(() => {
+                setShouldRender(true)
             })
         }
     }, [profile, setFormData])
@@ -244,6 +249,8 @@ function AutoSelectProfileForm(props: AutoSelectProfileFormProps) {
             },
         })
     }
+
+    if (!shouldRender) return <LoadingSpinner />
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
