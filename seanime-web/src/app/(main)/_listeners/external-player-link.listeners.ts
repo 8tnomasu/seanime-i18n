@@ -16,6 +16,7 @@ type ExternalPlayerLinkEventProps = {
     mediaId: number
     episodeNumber: number
     mediaTitle?: string
+    subtitleUrls?: string[]
 }
 
 export function useExternalPlayerLinkListener() {
@@ -42,6 +43,7 @@ export function useExternalPlayerLinkListener() {
             link.setEpisodeNumber(data.episodeNumber)
             link.setMediaTitle(data.mediaTitle)
             link.setUrl(data.url)
+            link.setSubtitleUrls(data.subtitleUrls ?? [])
             openTab(link.getFullUrl())
             setCurrentExternalPlayerLink(link.getFullUrl())
 

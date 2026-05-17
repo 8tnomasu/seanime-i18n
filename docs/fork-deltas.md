@@ -11,6 +11,13 @@ Baseline for the initial audit:
 - Upstream baseline: `v3.7.0`
 - Fork baseline: `main` at `0293faa2` when this document was created
 
+Latest upstream sync review:
+
+- Reviewed during sync to upstream `v3.8.2`
+- Fork release preparation target: `v3.8.2-i18n.1`
+- No active fork delta was retired during the `v3.8.2` sync
+- Re-reviewed areas included updater source, Denshi release feed, i18n key parity, Docker fixed tags, FFmpeg / FFprobe runtime support, mediastream safeguards, and playback continuity fixes
+
 ## FD-0001: i18n infrastructure and Traditional Chinese localization
 
 ### Category

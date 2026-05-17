@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { getGenreLabel } from "@/i18n/labels"
 import { useRouter } from "@/lib/navigation"
 import { getAssetUrl } from "@/lib/server/assets"
+import { useContinueWatchingSpoilers } from "@/lib/theme/anime-spoilers"
 import { ThemeLibraryScreenBannerType, ThemeMediaPageBannerSize, ThemeMediaPageBannerType, useThemeSettings } from "@/lib/theme/theme-hooks"
 import { __isDesktop__ } from "@/types/constants"
 import { atom, useAtomValue } from "jotai"
@@ -255,6 +256,7 @@ interface EpisodeCardSidebarProps {
 
 function EpisodeCardSidebar({ episode, isTransitioning }: EpisodeCardSidebarProps) {
     const ts = useThemeSettings()
+    const spoilerActive = useContinueWatchingSpoilers(ts)
     const router = useRouter()
     const serverStatus = useServerStatus()
     const { setPlayNext } = usePlayNext()
@@ -306,6 +308,9 @@ function EpisodeCardSidebar({ episode, isTransitioning }: EpisodeCardSidebarProp
                         episode={episode}
                         image={episode.episodeMetadata?.image || episode.baseAnime?.bannerImage || episode.baseAnime?.coverImage?.extraLarge}
                         topTitle={episode.episodeTitle || episode?.baseAnime?.title?.userPreferred}
+                        spoilerSafeTopTitle={episode?.baseAnime?.title?.userPreferred}
+                        spoilerMode="replace"
+                        spoilerActive={spoilerActive}
                         title={episode.displayTitle}
                         isInvalid={episode.isInvalid}
                         progressTotal={episode.baseAnime?.episodes}

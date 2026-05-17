@@ -2,15 +2,17 @@
 
 This fork publishes Docker images for `seanime-i18n` on GHCR.
 
-## Recommended image
+## Current release-preparation tag
 
-For stable deployments, use a fixed version tag:
+The Docker image tag prepared for the upstream `v3.8.2` sync is:
 
 ```yaml
-image: ghcr.io/8tnomasu/seanime-i18n:v3.7.1-i18n.1
+image: ghcr.io/8tnomasu/seanime-i18n:v3.8.2-i18n.1
 ```
 
 Using `latest` is supported, but fixed version tags are recommended for production and homelab deployments.
+
+During the PR stage for `v3.8.2-i18n.1`, the tag above is the intended release target. It will not exist until the release stage publishes the GitHub Release and Docker image.
 
 ## Container layout
 
@@ -69,9 +71,9 @@ you can keep the same container-side paths and swap the image without moving med
 
 The Docker image is built from release binaries published by this fork.
 
-- release tag example: `v3.7.1-i18n.1`
-- linux amd64 asset example: `seanime-3.7.1-i18n.1_Linux_x86_64.tar.gz`
-- linux arm64 asset example: `seanime-3.7.1-i18n.1_Linux_arm64.tar.gz`
+- release tag example: `v3.8.2-i18n.1`
+- linux amd64 asset example: `seanime-3.8.2-i18n.1_Linux_x86_64.tar.gz`
+- linux arm64 asset example: `seanime-3.8.2-i18n.1_Linux_arm64.tar.gz`
 
 ## Update checks
 
@@ -79,4 +81,4 @@ Web UI and updater release checks in this fork should follow:
 
 - GitHub repository: `8tnomasu/seanime-i18n`
 
-They should not follow upstream Seanime releases for this fork's runtime / Docker / playback fixes.
+They should not follow upstream Seanime releases for this fork's runtime, Docker, playback, or localization fixes.

@@ -27,6 +27,6 @@ Every non-trivial fork-specific runtime, Docker, updater, release, or data behav
 - Fork-specific behavior is easier to preserve or retire intentionally.
 - Release notes remain user-facing, while fork deltas remain maintainer-facing.
 
-## 繁中摘要
+## Maintainer note
 
-本 fork 已經包含中文化以外的 runtime、Docker、updater、release workflow 等修正，因此必須用 fork delta 文件記錄與 upstream 的差異，避免未來同步 upstream 時誤刪 fork 行為。
+Whenever an upstream sync touches fork-owned runtime, Docker, updater, release, or continuity behavior, update the fork delta inventory in the same branch so the next maintainer can see what must be preserved or can be retired.

@@ -235,12 +235,14 @@ export function ExternalPlayerLinkSettings() {
             />
 
             <SettingsCard>
-                <TextInput
-                    label={t("settings.fields.customScheme")}
-                    placeholder={t("settings.externalPlayerLink.customSchemePlaceholder")}
-                    value={externalPlayerLink}
-                    onValueChange={setExternalPlayerLink}
-                />
+                <div data-settings-external-player-link-scheme>
+                    <TextInput
+                        label={t("settings.fields.customScheme")}
+                        placeholder={t("settings.externalPlayerLink.customSchemePlaceholder")}
+                        value={externalPlayerLink}
+                        onValueChange={setExternalPlayerLink}
+                    />
+                </div>
             </SettingsCard>
 
             <SettingsCard>

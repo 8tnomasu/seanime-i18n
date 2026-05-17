@@ -14,6 +14,7 @@ import { PluginWebviewSlot } from "@/app/(main)/_features/plugin/webview/plugin-
 import { SeaLink } from "@/components/shared/sea-link"
 import { IconButton } from "@/components/ui/button"
 import { cn } from "@/components/ui/core/styling"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip } from "@/components/ui/tooltip"
 import { getCustomSourceExtensionId, getCustomSourceMediaSiteUrl, isCustomSource } from "@/lib/server/utils"
 import { ThemeMediaPageInfoBoxSize, useThemeSettings } from "@/lib/theme/theme-hooks"
@@ -25,10 +26,10 @@ import { SiAnilist } from "react-icons/si"
 import { PluginMangaPageButtons } from "../../_features/plugin/actions/plugin-actions"
 
 
-export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL_MangaDetailsById_Media | undefined }) {
+export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL_MangaDetailsById_Media | undefined, detailsLoading?: boolean }) {
     const { t } = useTranslation()
 
-    const { entry, details } = props
+    const { entry, details, detailsLoading } = props
     const ts = useThemeSettings()
 
     if (!entry?.media) return null
@@ -41,9 +42,10 @@ export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL
                     ts.mediaPageBannerInfoBoxSize === ThemeMediaPageInfoBoxSize.Fluid && "justify-center lg:justify-start lg:max-w-[65vw]",
                 )}
             >
-                <MediaEntryAudienceScore meanScore={entry.media?.meanScore} badgeClass="bg-transparent" />
+                <MediaEntryAudienceScore meanScore={entry.media?.meanScore} badgeClass="bg-transparent border-transparent px-0" />
 
-                <MediaEntryGenresList genres={details?.genres} type="manga" />
+                {(detailsLoading && !details) ? <Skeleton className="h-6 w-52 rounded-full opacity-60" /> :
+                    <MediaEntryGenresList genres={details?.genres} type="manga" />}
             </div>
 
             <AnimeEntryRankings rankings={details?.rankings} />
@@ -72,6 +74,34 @@ export function MetaSection(props: { entry: Manga_Entry | undefined, details: AL
                     listData={entry.listData}
                     media={entry.media}
                     type="manga"
+                    after={<div className="w-full flex flex-wrap gap-4 items-center" data-manga-meta-section-buttons-container>
+
+                        {isCustomSource(entry.mediaId) && (
+                            <Tooltip
+                                trigger={<div>
+                                    <SeaLink href={`/custom-sources?provider=${getCustomSourceExtensionId(entry.media)}`}>
+                                        <IconButton size="sm" intent="gray-link" className="px-0" icon={<BiExtension className="text-lg" />} />
+                                    </SeaLink>
+                                </div>}
+                            >
+                                Custom source
+                            </Tooltip>
+                        )}
+
+                        {!isCustomSource(entry.mediaId) && <SeaLink href={`https://anilist.co/manga/${entry.mediaId}`} target="_blank">
+                            <IconButton size="sm" intent="gray-link" className="px-0" icon={<SiAnilist className="text-lg" />} />
+                        </SeaLink>}
+
+                        {isCustomSource(entry.mediaId) && !!getCustomSourceMediaSiteUrl(entry.media) && <Tooltip
+                            trigger={<div>
+                                <SeaLink href={getCustomSourceMediaSiteUrl(entry.media)!} target="_blank">
+                                    <IconButton size="sm" intent="gray-link" className="px-0" icon={<LuExternalLink className="text-lg" />} />
+                                </SeaLink>
+                            </div>}
+                        >
+                            Open in website
+                        </Tooltip>}
+                    </div>}
                 >
                     {ts.mediaPageBannerInfoBoxSize === ThemeMediaPageInfoBoxSize.Fluid && <Details />}
                 </MediaPageHeaderEntryDetails>

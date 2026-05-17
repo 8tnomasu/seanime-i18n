@@ -8,27 +8,32 @@ Unofficial Seanime fork maintained at [8tnomasu/seanime-i18n](https://github.com
 
 This repository is an unofficial fork of Seanime.
 
-It started as an i18n / Traditional Chinese localization fork, but it now also includes fork-specific Docker packaging, mediastream playback fixes, playback continuity fixes, updater source changes, and release workflow improvements.
+It started as an i18n and Traditional Chinese localization fork, and it now also carries fork-specific Docker packaging, mediastream playback fixes, playback continuity fixes, updater source changes, and release workflow adjustments.
+
+This maintenance branch prepares the fork sync from upstream Seanime `v3.7.1` to `v3.8.2`, with the fork release target `v3.8.2-i18n.1`.
 
 This fork is not affiliated with or endorsed by the upstream Seanime project.
 
-## Fork-specific changes
+## Current sync / release preparation
+
+- Upstream base: `v3.8.2`
+- Fork release target: `v3.8.2-i18n.1`
+- This preparation stage does not create the release tag, GitHub Release, or Docker image yet
+
+## Fork-specific behavior
 
 - i18n infrastructure and Traditional Chinese localization
-- GHCR Docker image packaging
-- Docker image includes FFmpeg / FFprobe for browser transcoding playback
-- Mediastream transcoding stability fixes
-- Long-distance seek / transcoding loading improvements
-- Playback continuity / Continue Watching behavior fixes
-- Per-episode resume progress preservation
-- ffprobe child process cleanup to avoid zombie / defunct processes
-- Web UI / updater release checks use this fork's GitHub Releases
-- Release workflow adjustments for i18n versioned assets
-- Docker publish workflow alignment with release publication
+- `zh-TW` remains the primary maintained locale, with `en-US` kept as fallback
+- Web UI and updater release checks stay on `8tnomasu/seanime-i18n`
+- Denshi desktop updater feed stays on the fork release channel
+- Fork version comparison continues to support tags such as `v3.8.2-i18n.1`
+- GHCR Docker packaging stays fork-owned
+- Docker runtime continues to include FFmpeg and FFprobe for browser transcoding playback
+- Mediastream, transcoding, and playback continuity fixes remain preserved
 
 For maintainer-facing details about fork-specific changes, see [`docs/fork-deltas.md`](docs/fork-deltas.md) and [`docs/upstream-sync.md`](docs/upstream-sync.md).
 
-## Status / Disclaimer
+## Status / disclaimer
 
 - This is an unofficial fork of Seanime.
 - This project is maintained independently.
@@ -55,15 +60,17 @@ For maintainer-facing details about fork-specific changes, see [`docs/fork-delta
 
 ## Docker deployment
 
-This fork publishes Docker images to GHCR:
+This fork publishes Docker images to GHCR. The fixed tag prepared for this sync is:
 
 ```yaml
-image: ghcr.io/8tnomasu/seanime-i18n:v3.7.1-i18n.1
+image: ghcr.io/8tnomasu/seanime-i18n:v3.8.2-i18n.1
 ```
 
 For production deployments, prefer a fixed version tag instead of `latest`.
 
 The official image includes FFmpeg and FFprobe in the runtime image for browser transcoding playback.
+
+Note: during this release-preparation PR, the tag above is the intended release tag and may not be available on GHCR until the release stage is completed.
 
 ## i18n notes
 

@@ -17,6 +17,7 @@ import { TorrentList, TorrentListItem } from "@/app/(main)/entry/_containers/tor
 import { TorrentSelectionType } from "@/app/(main)/entry/_containers/torrent-search/torrent-search-drawer"
 import { LuffyError } from "@/components/shared/luffy-error"
 import { ScrollAreaBox } from "@/components/shared/scroll-area-box"
+import { cn } from "@/components/ui/core/styling"
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react"
 import { useTranslation } from "react-i18next"
@@ -31,6 +32,8 @@ type TorrentPreviewList = {
     type: TorrentSelectionType
     torrentMetadata: Record<string, Torrent_TorrentMetadata> | undefined
     includedSpecialProviders?: string[]
+    searchAcrossProviders: boolean
+    isSpoiler: boolean
 }
 
 export const TorrentPreviewList = React.memo((
@@ -44,6 +47,8 @@ export const TorrentPreviewList = React.memo((
         type,
         torrentMetadata,
         includedSpecialProviders = [],
+        searchAcrossProviders,
+        isSpoiler,
     }: TorrentPreviewList) => {
     const { t } = useTranslation()
     // Use hooks for sorting and filtering
@@ -79,7 +84,12 @@ export const TorrentPreviewList = React.memo((
                 onSortChange={handleSortChange}
                 onFilterChange={handleFilterChange}
             />
-            <ScrollAreaBox className="h-[calc(100dvh_-_26rem)] bg-gray-950/60">
+            <ScrollAreaBox
+                className={cn(
+                    "bg-gray-950/60",
+                    searchAcrossProviders ? "h-[calc(100dvh_-_30rem)]" : "h-[calc(100dvh_-_26rem)]",
+                )}
+            >
                 <TorrentList>
                     {sortedPreviews.filter(Boolean).map(item => {
                         if (!item.torrent) return null
@@ -90,6 +100,7 @@ export const TorrentPreviewList = React.memo((
                                 torrent={item.torrent}
                                 media={entry.media}
                                 episode={item.episode}
+                                isSpoiler={isSpoiler}
                                 metadata={torrentMetadata?.[item.torrent.infoHash!]?.metadata}
                                 debridCached={((type === "download" || type === "debridstream-select" || type === "debridstream-select-file") && !!item.torrent.infoHash && !!debridInstantAvailability[item.torrent.infoHash])}
                                 isSelected={selectedTorrents.findIndex(n => n.infoHash === item.torrent!.infoHash) !== -1}

@@ -1,4 +1,5 @@
 import { useGetAnilistCacheLayerStatus, useToggleAnilistCacheLayerStatus } from "@/api/hooks/anilist.hooks"
+import { useListAnimeEntryEpisodeTabExtensions } from "@/api/hooks/extensions.hooks"
 import { useLocalSyncSimulatedDataToAnilist } from "@/api/hooks/local.hooks"
 import { __seaCommand_shortcuts } from "@/app/(main)/_features/sea-command/sea-command"
 import { SettingsCard } from "@/app/(main)/settings/_components/settings-card"
@@ -13,10 +14,13 @@ import { Switch } from "@/components/ui/switch"
 import { __isElectronDesktop__ } from "@/types/constants"
 import { useAtom } from "jotai/react"
 import React from "react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { FaRedo } from "react-icons/fa"
-import { LuCircleAlert, LuCloudUpload } from "react-icons/lu"
+import { LuCircleAlert, LuCloudUpload, LuDatabaseBackup, LuEyeOff, LuImageOff, LuImages, LuShield, LuStarOff, LuUserPen } from "react-icons/lu"
+import { MdDownloading } from "react-icons/md"
+import { RiMovieAiLine } from "react-icons/ri"
+import { TbAlertSquareRoundedOff, TbBrowserShare, TbChecklist, TbClockPlay, TbDownloadOff, TbProgressCheck, TbRating18Plus } from "react-icons/tb"
 import { useServerStatus } from "../../_hooks/use-server-status"
 
 type ServerSettingsProps = {
@@ -32,9 +36,36 @@ export function ServerSettings(props: ServerSettingsProps) {
     } = props
 
     const serverStatus = useServerStatus()
+    const { data: episodeTabExtensions } = useListAnimeEntryEpisodeTabExtensions()
 
     const [shortcuts, setShortcuts] = useAtom(__seaCommand_shortcuts)
     const f = useFormContext()
+    const defaultPlaybackSource = useWatch({ name: "defaultPlaybackSource" })
+
+    const defaultPlaybackSourceOptions = React.useMemo(() => {
+        const pluginOptions = Array.from(new Map((episodeTabExtensions ?? []).map(ext => [
+            `ext:${ext.id}`,
+            {
+                value: `ext:${ext.id}`,
+                label: ext.tabName ? `${ext.tabName} (${ext.name})` : ext.name,
+            },
+        ])).values()).sort((a, b) => a.label.localeCompare(b.label))
+
+        const options = [
+            { value: "-", label: t("settings.server.defaultPlaybackSourceOptions.automatic") },
+            { value: "library", label: t("settings.server.defaultPlaybackSourceOptions.localLibrary") },
+            ...(serverStatus?.debridSettings?.enabled ? [{ value: "debridstream", label: t("settings.server.defaultPlaybackSourceOptions.debridStreaming") }] : []),
+            ...(serverStatus?.torrentstreamSettings?.enabled ? [{ value: "torrentstream", label: t("settings.server.defaultPlaybackSourceOptions.torrentStreaming") }] : []),
+            ...(serverStatus?.settings?.library?.enableOnlinestream ? [{ value: "onlinestream", label: t("settings.server.defaultPlaybackSourceOptions.onlineStreaming") }] : []),
+            ...pluginOptions,
+        ]
+
+        if (!!defaultPlaybackSource && defaultPlaybackSource.startsWith("ext:") && !options.some(option => option.value === defaultPlaybackSource)) {
+            options.push({ value: defaultPlaybackSource, label: t("settings.server.defaultPlaybackSourceOptions.unavailablePlugin") })
+        }
+
+        return options
+    }, [episodeTabExtensions, serverStatus, defaultPlaybackSource])
 
     const { mutate: upload, isPending: isUploading } = useLocalSyncSimulatedDataToAnilist()
 
@@ -77,6 +108,7 @@ export function ServerSettings(props: ServerSettingsProps) {
                     label={t("settings.server.automaticallyUpdateProgress")}
                     help={t("settings.server.automaticallyUpdateProgressHelp")}
                     moreHelp={t("settings.server.desktopAndIntegratedPlayersOnly")}
+                    icon={<TbProgressCheck className="" />}
                 />
                 {/*<Separator />*/}
                 <Field.Switch
@@ -85,30 +117,95 @@ export function ServerSettings(props: ServerSettingsProps) {
                     label={t("settings.server.enableWatchHistory")}
                     help={t("settings.server.enableWatchHistoryHelp")}
                     moreHelp={t("settings.server.desktopAndIntegratedPlayersOnly")}
+                    icon={<TbClockPlay className="" />}
                 />
 
                 <Field.Switch
                     side="right"
                     name="disableAnimeCardTrailers"
                     label={t("settings.server.disableAnimeCardTrailers")}
-                    help=""
+                    help={t("settings.server.disableAnimeCardTrailersHelp")}
+                    icon={<LuImageOff className="" />}
                 />
 
+                <div data-settings-default-episode-source>
+                    <Field.Select
+                        name="defaultPlaybackSource"
+                        label={t("settings.server.defaultPlaybackSource")}
+                        help={t("settings.server.defaultPlaybackSourceHelp")}
+                        leftIcon={<RiMovieAiLine />}
+                        options={defaultPlaybackSourceOptions}
+                    />
+                </div>
+
                 <Separator />
+
+                    <div data-settings-hide-anime-spoilers>
+                        <Field.Switch
+                            side="right"
+                            label={t("settings.server.hideAnimeSpoilers")}
+                            help={t("settings.server.hideAnimeSpoilersHelp")}
+                            name="hideAnimeSpoilers"
+                            icon={<LuEyeOff className="" />}
+                        />
+                </div>
+
+                {f.watch("hideAnimeSpoilers") && (
+                    <div className="space-y-1 pl-4 border-l border-[--border] ml-2">
+                        <Field.Switch
+                            side="right"
+                            label={t("settings.server.hideAnimeSpoilerThumbnails")}
+                            name="hideAnimeSpoilerThumbnails"
+                        />
+
+                        <Field.Switch
+                            side="right"
+                            label={t("settings.server.hideAnimeSpoilerTitles")}
+                            name="hideAnimeSpoilerTitles"
+                        />
+
+                        <Field.Switch
+                            side="right"
+                            label={t("settings.server.hideAnimeSpoilerDescriptions")}
+                            name="hideAnimeSpoilerDescriptions"
+                        />
+
+                        <Field.Switch
+                            side="right"
+                            label={t("settings.server.hideAnimeSpoilerSkipNextEpisode")}
+                            help={t("settings.server.hideAnimeSpoilerSkipNextEpisodeHelp")}
+                            name="hideAnimeSpoilerSkipNextEpisode"
+                        />
+                    </div>
+                )}
 
                 <Field.Switch
                     side="right"
                     name="hideAudienceScore"
                     label={t("settings.server.hideAudienceScore")}
                     help={t("settings.server.hideAudienceScoreHelp")}
+                    icon={<LuStarOff className="" />}
                 />
+
 
                 <Field.Switch
                     side="right"
                     name="enableAdultContent"
                     label={t("settings.server.enableAdultContent")}
                     help={t("settings.server.enableAdultContentHelp")}
+                    icon={<TbRating18Plus className="" />}
                 />
+                {f.watch("enableAdultContent") && <div className="space-y-1 pl-4 border-l border-[--border] ml-2">
+                    <Field.Switch
+                        side="right"
+                        name="blurAdultContent"
+                        label="Blur adult content"
+                        fieldClass={cn(
+                            !f.watch("enableAdultContent") && "opacity-50",
+                        )}
+                    />
+                </div>}
+
                 <Field.Switch
                     side="right"
                     name="blurAdultContent"
@@ -118,6 +215,19 @@ export function ServerSettings(props: ServerSettingsProps) {
                         !f.watch("enableAdultContent") && "opacity-50",
                     )}
                 />
+
+                <Separator />
+
+                <div data-settings-enable-extension-secure-mode>
+                    <Field.Switch
+                        side="right"
+                        name="enableExtensionSecureMode"
+                        label={t("settings.server.enableExtensionSecureMode")}
+                        help={t("settings.server.enableExtensionSecureModeHelp")}
+                        icon={<LuShield className="" />}
+                    />
+                </div>
+
 
             </SettingsCard>
 
@@ -131,6 +241,7 @@ export function ServerSettings(props: ServerSettingsProps) {
                         name="autoSyncToLocalAccount"
                         label={t("settings.server.autoBackupListsFromAniList")}
                         help={t("settings.server.autoBackupListsFromAniListHelp")}
+                        icon={<LuUserPen className="" />}
                     />
                 </div>
                 <Separator />
@@ -158,6 +269,7 @@ export function ServerSettings(props: ServerSettingsProps) {
                     label={t("settings.server.downloadMetadataAutomaticallyForOfflineUse")}
                     help={t("settings.server.downloadMetadataAutomaticallyForOfflineUseHelp")}
                     moreHelp={t("settings.server.downloadMetadataAutomaticallyForOfflineUseMoreHelp")}
+                    icon={<MdDownloading className="" />}
                 />
 
                 <Field.Switch
@@ -165,6 +277,7 @@ export function ServerSettings(props: ServerSettingsProps) {
                     name="autoSaveCurrentMediaOffline"
                     label={t("settings.server.saveCurrentMediaOffline")}
                     help={t("settings.server.saveCurrentMediaOfflineHelp")}
+                    icon={<TbChecklist className="" />}
                 />
 
             </SettingsCard>
@@ -263,12 +376,14 @@ export function ServerSettings(props: ServerSettingsProps) {
                     side="right"
                     name="openWebURLOnStart"
                     label={t("settings.server.openLocalhostWebUrlOnStartup")}
+                    icon={<TbBrowserShare className="" />}
                 />
                 <Field.Switch
                     side="right"
                     name="disableNotifications"
                     label={t("settings.server.disableSystemNotifications")}
                     moreHelp={t("settings.server.disableSystemNotificationsMoreHelp")}
+                    icon={<TbAlertSquareRoundedOff className="" />}
                 />
                 <Field.Switch
                     side="right"
@@ -276,9 +391,10 @@ export function ServerSettings(props: ServerSettingsProps) {
                     label={t("settings.server.disableAniListCaching")}
                     help={t("settings.server.disableAniListCachingHelp")}
                     moreHelp={t("settings.server.disableAniListCachingMoreHelp")}
+                    icon={<LuDatabaseBackup className="" />}
                 />
                 {!f.watch("disableCacheLayer") && (
-                    <div>
+                    <div className="space-y-1 pl-4 border-l border-[--border] ml-2">
                         <Switch
                             value={!isApiWorking}
                             onValueChange={v => toggleCacheLayer()}
@@ -288,11 +404,13 @@ export function ServerSettings(props: ServerSettingsProps) {
                         />
                     </div>
                 )}
+                <Separator />
                 <Field.Switch
                     side="right"
                     name="useFallbackMetadataProvider"
                     label={t("settings.server.useFallbackMetadataProvider")}
                     help={t("settings.server.useFallbackMetadataProviderHelp")}
+                    icon={<LuImages className="" />}
                 />
                 {/*<Separator />*/}
                 {/*<Field.Switch*/}
@@ -316,6 +434,7 @@ export function ServerSettings(props: ServerSettingsProps) {
                         <span>{t("settings.server.doNotFetchUpdateNotesHelp")}</span>
                     </span>) : t("settings.server.doNotCheckForUpdatesHelp")}
                     moreHelp={__isElectronDesktop__ ? t("settings.server.doNotFetchUpdateNotesMoreHelp") : undefined}
+                    icon={<TbDownloadOff className="" />}
                 />
                 <Field.Select
                     label={t("settings.server.updateChannelExperimental")}

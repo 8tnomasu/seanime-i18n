@@ -359,7 +359,30 @@
                 "hideTopNavbarWeb": "隱藏頂部導覽列（Web 介面）",
                 "hideTopNavbarHelp": "切換為僅顯示側邊欄的模式。",
                 "noItemsSelected": "尚未選擇項目",
-                "unpinnedMenuItems": "未釘選的選單項目"
+                "unpinnedMenuItems": "未釘選的選單項目",
+                "preload": {
+                    "title": "?????",
+                    "help": "???????????????????????????? AniList rate limit?",
+                    "simulatedUserHelp": "??? AniList ?????????????? rate limit?"
+                },
+                "preloadOptions": {
+                    "disable": {
+                        "title": "??",
+                        "description": "?????????????"
+                    },
+                    "default": {
+                        "title": "??",
+                        "description": "????????????????????"
+                    },
+                    "faster": {
+                        "title": "??",
+                        "description": "????????????????"
+                    },
+                    "viewport": {
+                        "title": "????",
+                        "description": "??????????????????"
+                    }
+                }
             },
             "media": {
                 "watchContinuityWarning": "若要使用最近觀看排序，必須先啟用觀看連續性。",
@@ -550,7 +573,27 @@
                 "seanime": "Seanime",
                 "seanimeCanary": "Seanime（Canary）"
             },
-        "usingForkReleaseChannel": "更新檢查會使用 8tnomasu/seanime-i18n 的 GitHub Releases。"
+            "usingForkReleaseChannel": "更新檢查會使用 8tnomasu/seanime-i18n 的 GitHub Releases。",
+            "disableAnimeCardTrailersHelp": "??????????????",
+            "defaultPlaybackSource": "??????",
+            "defaultPlaybackSourceHelp": "?????????????? Seanime ??????????",
+            "defaultPlaybackSourceOptions": {
+                "automatic": "??",
+                "localLibrary": "?????",
+                "debridStreaming": "Debrid ??",
+                "torrentStreaming": "Torrent ??",
+                "onlineStreaming": "????",
+                "unavailablePlugin": "???? Extension ??"
+            },
+            "hideAnimeSpoilers": "??????",
+            "hideAnimeSpoilersHelp": "??????????????????????",
+            "hideAnimeSpoilerThumbnails": "??????",
+            "hideAnimeSpoilerTitles": "??????",
+            "hideAnimeSpoilerDescriptions": "??????",
+            "hideAnimeSpoilerSkipNextEpisode": "????????",
+            "hideAnimeSpoilerSkipNextEpisodeHelp": "??????????????????",
+            "enableExtensionSecureMode": "?? Extension ????",
+            "enableExtensionSecureModeHelp": "? Extension ????????????? Extension ??????????????"
         },
         "localAccount": {
             "autoSyncFromAniList": "從 AniList 自動同步",
@@ -1016,7 +1059,8 @@
             "saved": "已儲存 issue report",
             "screenshotAdded": "已將截圖加入報告",
             "startDomRecordingFailed": "啟動 DOM 錄製失敗",
-            "unableToCaptureScreenshot": "無法擷取截圖"
+            "unableToCaptureScreenshot": "無法擷取截圖",
+            "downloadFailed": "????????"
         },
         "playlists": {
             "created": "已建立播放清單",
@@ -1865,7 +1909,18 @@
                 "provider": "服務提供者",
                 "reloadRequired": "只有切換語言或 API Key 時才需要重新載入播放器。",
                 "targetLanguage": "目標語言",
-                "targetLanguageHelp": "選擇字幕要翻譯成的語言"
+                "targetLanguageHelp": "選擇字幕要翻譯成的語言",
+                "providerOptions": {
+                    "googleFree": "Google????",
+                    "openaiCompatible": "OpenAI ???? LLM"
+                },
+                "baseUrl": "Base URL",
+                "baseUrlPlaceholder": "???http://127.0.0.1:1234/v1",
+                "baseUrlHelp": "? OpenAI ????? LLM ??????",
+                "model": "Model",
+                "localModelPlaceholder": "???qwen2.5:14b ? llama3.1",
+                "apiKeyOptional": "API Key????",
+                "reloadRequiredDetailed": "???????Provider?Model?Base URL ? API Key ????????????"
             }
         },
         "screenshot": {
@@ -2014,7 +2069,9 @@
                 "findOtherProviders": "尋找其他提供者",
                 "manualMatch": "手動配對",
                 "switchToDub": "切換為配音",
-                "switchToSubs": "切換為字幕"
+                "switchToSubs": "切換為字幕",
+                "cancelTryingProviders": "?????? Provider",
+                "tryAllProviders": "???? Provider"
             },
             "cache": {
                 "description": "如果串流發生問題，可以清空快取。",
@@ -2379,7 +2436,9 @@
             "instant": "可在 Debrid 服務即時取得"
         },
         "download": {
-            "downloadingLocally": "正在下載到本機"
+            "downloadingLocally": "正在下載到本機",
+            "waitingForLocalFiles": "??????????",
+            "preparingLocalFiles": "????????..."
         },
         "errors": {
             "connectionTitle": "連線失敗",
@@ -2836,7 +2895,8 @@
             "loadAnotherFile": "載入其他檔案",
             "loadReportFile": "載入報告檔案",
             "startRecording": "開始錄製",
-            "stopAndSave": "停止並儲存"
+            "stopAndSave": "停止並儲存",
+            "saving": "???..."
         },
         "console": {
             "searchPlaceholder": "搜尋 console 記錄..."

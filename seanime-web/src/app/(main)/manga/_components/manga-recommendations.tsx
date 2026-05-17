@@ -2,12 +2,14 @@ import { AL_MangaDetailsById_Media, Manga_Entry, Nullish } from "@/api/generated
 import { MediaCardGrid } from "@/app/(main)/_features/media/_components/media-card-grid"
 import { MediaEntryCard } from "@/app/(main)/_features/media/_components/media-entry-card"
 import { getMediaFormatLabel, getMediaRelationTypeLabel } from "@/i18n/labels"
+import { MediaEntryDetailsSkeleton } from "@/app/(main)/_features/media/_components/media-entry-page-loading-display"
 import React from "react"
 import { useTranslation } from "react-i18next"
 
 type MangaRecommendationsProps = {
     entry: Nullish<Manga_Entry>
     details: Nullish<AL_MangaDetailsById_Media>
+    loading?: boolean
     maxCol?: number
 }
 
@@ -17,6 +19,7 @@ export function MangaRecommendations(props: MangaRecommendationsProps) {
     const {
         entry,
         details,
+        loading,
         maxCol,
         ...rest
     } = props
@@ -26,10 +29,11 @@ export function MangaRecommendations(props: MangaRecommendationsProps) {
 
     const recommendations = details?.recommendations?.edges?.map(edge => edge?.node?.mediaRecommendation)?.filter(Boolean)?.slice(0, 6) || []
 
+    if (loading && !details) return <MediaEntryDetailsSkeleton isMangaPage showCharacters={false} />
     if (!entry || !details) return null
 
     return (
-        <div className="space-y-4" data-manga-recommendations-container>
+        <div className="space-y-4 animate-in fade-in-0 duration-200" data-manga-recommendations-container>
             {!!anime?.length && (
                 <>
                     <h2>{t("mediaDetail.sections.relations")}</h2>
