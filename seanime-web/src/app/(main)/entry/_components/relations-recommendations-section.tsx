@@ -1,6 +1,7 @@
 import { AL_AnimeDetailsById_Media, Anime_Entry, Nullish } from "@/api/generated/types"
 import { MediaCardGrid } from "@/app/(main)/_features/media/_components/media-card-grid"
 import { MediaEntryCard } from "@/app/(main)/_features/media/_components/media-entry-card"
+import { MediaEntryDetailsSkeleton } from "@/app/(main)/_features/media/_components/media-entry-page-loading-display"
 import { useServerStatus } from "@/app/(main)/_hooks/use-server-status"
 import { getMediaFormatLabel, getMediaRelationTypeLabel } from "@/i18n/labels"
 import React from "react"
@@ -9,6 +10,7 @@ import { useTranslation } from "react-i18next"
 type RelationsRecommendationsSectionProps = {
     entry: Nullish<Anime_Entry>
     details: Nullish<AL_AnimeDetailsById_Media>
+    loading?: boolean
     containerRef?: React.RefObject<HTMLElement | null>
     maxCol?: number
 }
@@ -19,6 +21,7 @@ export function RelationsRecommendationsSection(props: RelationsRecommendationsS
     const {
         entry,
         details,
+        loading,
         containerRef,
         maxCol,
         ...rest
@@ -40,10 +43,11 @@ export function RelationsRecommendationsSection(props: RelationsRecommendationsS
     const recommendations = React.useMemo(() => details?.recommendations?.edges?.map(edge => edge?.node?.mediaRecommendation)?.filter(Boolean) || [],
         [details?.recommendations?.edges])
 
+    if (loading && !details) return <MediaEntryDetailsSkeleton showCharacters={false} />
     if (!entry || !details) return null
 
     return (
-        <>
+        <div className="space-y-4 animate-in fade-in-0 duration-200">
             {/*{(!!sourceManga || relations.length > 0 || recommendations.length > 0) && <Separator />}*/}
             {(!!sourceManga || relations.length > 0) && (
                 <>
@@ -90,6 +94,6 @@ export function RelationsRecommendationsSection(props: RelationsRecommendationsS
                     })}
                 </MediaCardGrid>
             </>}
-        </>
+        </div>
     )
 }

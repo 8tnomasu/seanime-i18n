@@ -22,7 +22,8 @@ import { getCollectionStatusLabel, getMediaSeasonLabel, getMediaStatusLabel } fr
 import { motion } from "motion/react"
 import React from "react"
 import { useTranslation } from "react-i18next"
-import { BiCalendarAlt, BiSolidStar, BiStar } from "react-icons/bi"
+import { BiSolidStar, BiStar } from "react-icons/bi"
+import { LuCalendar } from "react-icons/lu"
 import { MdOutlineSegment } from "react-icons/md"
 import { RiSignalTowerFill } from "react-icons/ri"
 import { useWindowScroll, useWindowSize } from "react-use"
@@ -70,7 +71,7 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
             className="__meta-page-header relative group/media-page-header"
             data-media-page-header
         >
@@ -82,7 +83,7 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
             {(ts.enableMediaPageBlurredBackground) && <div
                 data-media-page-header-blurred-background
                 className={cn(
-                    "fixed opacity-0 transition-opacity duration-1000 top-0 left-0 w-full h-full z-[4] bg-[--background] rounded-xl",
+                    "fixed opacity-0 transition-opacity duration-300 top-0 left-0 w-full h-full z-[4] bg-[--background] rounded-xl",
                     shouldShowBlurredBackground && "opacity-100",
                 )}
             >
@@ -111,8 +112,8 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
                 data-media-page-header-banner
                 className={cn(
                     "w-full scroll-locked-offset flex-none object-cover object-center z-[3] bg-[--background] h-[20rem]",
-                    ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small ? "lg:h-[28rem]" : "h-[20rem] lg:h-[32rem] 2xl:h-[34rem]",
-                    ts.libraryScreenCustomBackgroundImage ? "absolute -top-[5rem]" : "fixed transition-opacity top-0 duration-1000",
+                    ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small ? "lg:h-[26rem]" : "h-[20rem] lg:h-[30rem] 2xl:h-[30rem]",
+                    ts.libraryScreenCustomBackgroundImage ? "absolute -top-[5rem]" : "fixed transition-opacity top-0 duration-300",
                     !ts.libraryScreenCustomBackgroundImage && y > 100 && (ts.enableMediaPageBlurredBackground ? "opacity-0" : shouldDimBanner
                         ? "opacity-15"
                         : (y > 300 ? "opacity-5" : "opacity-15")),
@@ -150,11 +151,11 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
                     )}
                     initial={{ scale: 1, y: 0 }}
                     animate={{
-                        scale: !ts.libraryScreenCustomBackgroundImage ? Math.min(1 + y * 0.0002, 1.03) : 1,
-                        y: isMobile ? 0 : Math.max(y * -0.9, -10),
+                        // scale: !ts.libraryScreenCustomBackgroundImage ? Math.min(1 + y * 0.0002, 1.03) : 1,
+                        // y: isMobile ? 0 : Math.max(y * -0.9, -10),
                     }}
                     exit={{ scale: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                     {(!!bannerImage) && <MotionImage
                         data-media-page-header-banner-image
@@ -168,9 +169,9 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
                             "object-cover object-center scroll-locked-offset z-[1]",
                             // shouldDimBanner && "!opacity-30",
                         )}
-                        initial={{ scale: 1.05, x: 0, y: -10, opacity: 0 }}
+                        initial={{ scale: 1, x: 0, y: -0, opacity: 0 }}
                         animate={{ scale: 1, x: 0, y: 1, opacity: shouldDimBanner ? 0.3 : 1 }}
-                        transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
                     />}
 
                     {shouldBlurBanner && <div
@@ -182,16 +183,16 @@ export function MediaPageHeader(props: MediaPageHeaderProps) {
                     <div
                         data-media-page-header-banner-left-gradient
                         className={cn(
-                            "hidden lg:block max-w-[60rem] lg:max-w-[100rem] xl:max-w-[90%] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background]  transition-opacity to-transparent",
-                            "opacity-95 duration-1000",
+                            "hidden lg:block max-w-[60rem] lg:max-w-[100rem] xl:max-w-[90%] lg:group-hover/media-page-header:max-w-[110rem] xl:group-hover/media-page-header:max-w-[95%] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background] transition-all to-transparent",
+                            "opacity-95 lg:group-hover/media-page-header:opacity-100 duration-500 ease-out",
                             // y > 300 && "opacity-70",
                         )}
                     />
                     <div
                         data-media-page-header-banner-right-gradient
                         className={cn(
-                            "hidden lg:block max-w-[60rem] xl:max-w-[80rem] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background] from-25% transition-opacity to-transparent",
-                            "opacity-50 duration-500",
+                            "hidden lg:block max-w-[60rem] xl:max-w-[80rem] lg:group-hover/media-page-header:max-w-[70rem] xl:group-hover/media-page-header:max-w-[90rem] w-full z-[2] h-full absolute left-0 bg-gradient-to-r from-[--background] from-25% transition-all to-transparent",
+                            "opacity-50 lg:group-hover/media-page-header:opacity-65 duration-500 ease-out",
                         )}
                     />
                 </motion.div>
@@ -244,14 +245,14 @@ export function MediaPageHeaderDetailsContainer(props: MediaPageHeaderDetailsCon
                     opacity: (width >= 1024 && y > 400) ? Math.max(1 - y * 0.006, 0.1) : 1,
                     y: (width >= 1024 && y > 200) ? Math.max(y * -0.05, -40) : 0,
                 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 className="relative z-[4]"
             >
                 <motion.div
                     initial={{ opacity: 0, x: 0 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
                     className="relative z-[4]"
                     data-media-page-header-details-container
                 >
@@ -272,9 +273,8 @@ export function MediaPageHeaderDetailsContainer(props: MediaPageHeaderDetailsCon
                                 exit: { opacity: 0 },
                                 transition: {
                                     type: "spring",
-                                    damping: 20,
-                                    stiffness: 100,
-                                    delay: 0.1,
+                                    damping: 26,
+                                    stiffness: 220,
                                 },
                             }}
                             className="space-y-4"
@@ -314,6 +314,7 @@ type MediaPageHeaderEntryDetailsProps = {
     media: AL_BaseAnime | AL_BaseManga
     type: "anime" | "manga"
     offlineAnilistAnimeEntryModal?: React.ReactNode
+    after?: React.ReactNode
 }
 
 export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsProps) {
@@ -336,6 +337,7 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
         listData,
         media,
         type,
+        after,
         offlineAnilistAnimeEntryModal,
         ...rest
     } = props
@@ -403,99 +405,106 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                     <div className="space-y-2" data-media-page-header-entry-details-title-container>
                         <TextGenerateEffect
                             className={cn(
-                                "[text-shadow:_0_1px_10px_rgb(0_0_0_/_20%)] text-white line-clamp-2 pb-1 text-center lg:text-left text-pretty text-3xl 2xl:text-5xl xl:max-w-[50vw]",
+                                "[text-shadow:_0_1px_10px_rgb(0_0_0_/_20%)] text-white/95 line-clamp-2 pb-1 text-center lg:text-left text-pretty text-[1.5rem] lg:text-[2rem] 2xl:text-[2.6rem] 2xl:leading-[3rem] xl:max-w-[50vw]",
                                 smallerTitle && "text-3xl 2xl:text-3xl",
                             )}
                             words={title || ""}
                         />
                         {(!!englishTitle && title?.toLowerCase() !== englishTitle?.toLowerCase()) &&
-                            <h4 className="text-gray-200 line-clamp-1 text-center lg:text-left xl:max-w-[50vw]">{englishTitle}</h4>}
+                            <p className="text-[--muted] line-clamp-1 font-bold text-md 2xl:text-[1.4rem] text-center lg:text-left xl:max-w-[50vw]">{englishTitle}</p>}
                         {(!!romajiTitle && title?.toLowerCase() !== romajiTitle?.toLowerCase()) &&
-                            <h4 className="text-gray-200 line-clamp-1 text-center lg:text-left xl:max-w-[50vw]">{romajiTitle}</h4>}
+                            <p className="text-[--muted] line-clamp-1 font-bold text-md 2xl:text-[1.4rem] text-center lg:text-left xl:max-w-[50vw]">{romajiTitle}</p>}
                     </div>
 
-                    {/*DATE*/}
-                    {!!startDate?.year && (
+                    <div className="flex flex-wrap gap-3 lg:gap-4 items-center justify-center lg:justify-start">
+
+
                         <div
-                            className="flex gap-4 items-center flex-wrap justify-center lg:justify-start"
-                            data-media-page-header-entry-details-date-container
+                            className="flex flex-wrap gap-2 md:gap-4 items-center justify-center lg:justify-start"
+                            data-media-page-header-entry-details-more-info
                         >
-                            <p className="text-lg text-white flex gap-1 items-center">
-                                <BiCalendarAlt /> {new Intl.DateTimeFormat(i18n.resolvedLanguage || "en-US", {
-                                year: "numeric",
-                                month: "short",
-                            }).format(new Date(startDate?.year || 0, startDate?.month ? startDate?.month - 1 : 0))}{!!season
-                                ? ` - ${getMediaSeasonLabel(t, season)}`
-                                : ""}
-                            </p>
+                            <MediaPageHeaderScoreAndProgress
+                                score={listData?.score}
+                                progress={listData?.progress}
+                                episodes={progressTotal}
+                            />
 
-                            {((status !== "FINISHED" && type === "anime") || type === "manga") && <Badge
-                                size="lg"
-                                intent={status === "RELEASING" ? "primary" : "gray"}
-                                className="bg-transparent border-transparent dark:text-brand-200 px-0 rounded-none"
-                                leftIcon={<RiSignalTowerFill />}
-                                data-media-page-header-entry-details-date-badge
-                            >
-                                {mediaStatusLabel}
-                            </Badge>}
+                            <AnilistMediaEntryModal listData={listData} media={media} type={type} />
 
-                            {ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small && <Popover
-                                trigger={
-                                    <IconButton
-                                        intent="white-subtle"
-                                        className="rounded-full"
-                                        size="sm"
-                                        icon={<MdOutlineSegment />}
-                                    />
-                                }
-                                className="max-w-[40rem] bg-[--background] p-4 w-[20rem] lg:w-[40rem] text-md"
-                            >
-                                <span className="transition-colors">{descriptionText}</span>
-                            </Popover>}
-                        </div>
-                    )}
-
-
-                    {/*LIST*/}
-                    <div className="flex gap-2 md:gap-4 items-center justify-center lg:justify-start" data-media-page-header-entry-details-more-info>
-
-                        <MediaPageHeaderScoreAndProgress
-                            score={listData?.score}
-                            progress={listData?.progress}
-                            episodes={progressTotal}
-                        />
-
-                        <AnilistMediaEntryModal listData={listData} media={media} type={type} />
-
-                        {(listData?.status || listData?.repeat) &&
-                            <div
-                            data-media-page-header-entry-details-status
-                            className="text-base text-white md:text-md font-medium tracking-wide flex items-center"
-                            >{listStatusLabel}
-                                {listData?.repeat && <Tooltip
-                                    trigger={<Badge
-                                        size="md"
-                                        intent="gray"
-                                        className="ml-3"
-                                        data-media-page-header-entry-details-repeating-badge
+                            {(listData?.status || listData?.repeat) &&
+                                <div
+                                    data-media-page-header-entry-details-status
+                                    className="text-base text-white md:text-md font-medium tracking-wide flex items-center"
+                                >{listStatusLabel}
+                                    {listData?.repeat && <Tooltip
+                                        trigger={<Badge
+                                            size="md"
+                                            intent="gray"
+                                            className="ml-3"
+                                            data-media-page-header-entry-details-repeating-badge
+                                        >
+                                            {listData?.repeat}
+                                        </Badge>}
                                     >
-                                        {listData?.repeat}
+                                        {type === "anime"
+                                            ? t("mediaDetail.metadata.rewatchCount", { count: listData?.repeat })
+                                            : t("mediaDetail.metadata.rereadCount", { count: listData?.repeat })}
+                                    </Tooltip>}
+                                </div>}
+                        </div>
 
-                                    </Badge>}
+                        {!!startDate?.year && <>
+                            <div className="hidden lg:flex h-5 relative w-0.5 bg-[--border] rounded-full"></div>
+
+                            <div
+                                className="flex gap-2 lg:gap-4 items-center flex-wrap justify-center lg:justify-start"
+                                data-media-page-header-entry-details-date-container
+                            >
+                                <p className="text-lg text-[--foreground] flex gap-1 items-center">
+                                    <LuCalendar /> {new Intl.DateTimeFormat(i18n.resolvedLanguage || "en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                }).format(new Date(startDate?.year || 0, startDate?.month ? startDate?.month - 1 : 0))}{!!season
+                                    ? ` - ${getMediaSeasonLabel(t, season)}`
+                                    : ""}
+                                </p>
+
+                                {((status !== "FINISHED" && type === "anime") || type === "manga") && <Badge
+                                    size="lg"
+                                    intent={status === "RELEASING" ? "primary" : "gray"}
+                                    className="bg-transparent border-transparent dark:text-brand-200 px-0 py-0 rounded-none flex-none"
+                                    leftIcon={<RiSignalTowerFill />}
+                                    data-media-page-header-entry-details-date-badge
                                 >
-                                    {type === "anime"
-                                        ? t("mediaDetail.metadata.rewatchCount", { count: listData?.repeat })
-                                        : t("mediaDetail.metadata.rereadCount", { count: listData?.repeat })}
-                                </Tooltip>}
-                            </div>}
+                                    {mediaStatusLabel}
+                                </Badge>}
+
+                                {ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small && <Popover
+                                    trigger={
+                                        <IconButton
+                                            intent="white-subtle"
+                                            className="rounded-full"
+                                            size="sm"
+                                            icon={<MdOutlineSegment />}
+                                        />
+                                    }
+                                    className="max-w-[40rem] bg-[--background] p-4 w-[20rem] lg:w-[40rem] text-md"
+                                >
+                                    <span className="transition-colors">{descriptionText}</span>
+                                </Popover>}
+                            </div>
+                        </>}
 
                     </div>
 
-                    {ts.mediaPageBannerSize !== ThemeMediaPageBannerSize.Small && <Popover
+                    {children}
+
+                    {<Popover
                         trigger={<div
                             className={cn(
-                                "cursor-pointer max-h-16 line-clamp-3 col-span-2 left-[-.5rem] text-[--muted] 2xl:max-w-[50vw] hover:text-white transition-colors duration-500 text-sm pr-2",
+                                "cursor-pointer line-clamp-3 col-span-2 left-[-.5rem] text-[--muted] 2xl:max-w-[50vw] hover:text-[--foreground] transition-colors duration-500 text-sm pr-2",
                                 "bg-transparent rounded-[--radius-md] text-center lg:text-left",
+                                ts.mediaPageBannerSize === ThemeMediaPageBannerSize.Small && "max-h-auto line-clamp-2 2xl:max-w-[40vw]",
                             )}
                             data-media-page-header-details-description-trigger
                         >
@@ -507,7 +516,7 @@ export function MediaPageHeaderEntryDetails(props: MediaPageHeaderEntryDetailsPr
                         <span className="transition-colors">{descriptionText}</span>
                     </Popover>}
 
-                    {children}
+                    {after}
 
                 </div>
 

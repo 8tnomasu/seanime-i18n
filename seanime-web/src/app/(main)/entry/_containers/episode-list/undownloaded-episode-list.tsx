@@ -13,9 +13,10 @@ import { useTranslation } from "react-i18next"
 import { BiCalendarAlt, BiDownload } from "react-icons/bi"
 import { EpisodeItemInfoModalButton } from "./episode-item"
 
-export function UndownloadedEpisodeList({ downloadInfo, media, maxCol }: {
+export function UndownloadedEpisodeList({ downloadInfo, media, watchedProgress, maxCol }: {
     downloadInfo: Anime_EntryDownloadInfo | undefined,
     media: AL_BaseAnime
+    watchedProgress?: number
     maxCol?: number
 }) {
     const { t, i18n } = useTranslation()
@@ -52,6 +53,7 @@ export function UndownloadedEpisodeList({ downloadInfo, media, maxCol }: {
                             title={episode.displayTitle}
                             episodeTitle={episode.episodeTitle}
                             episodeNumber={episode.episodeNumber}
+                            watchedProgress={watchedProgress}
                             progressNumber={episode.progressNumber}
                             description={episode.episodeMetadata?.summary || episode.episodeMetadata?.overview}
                             action={<>

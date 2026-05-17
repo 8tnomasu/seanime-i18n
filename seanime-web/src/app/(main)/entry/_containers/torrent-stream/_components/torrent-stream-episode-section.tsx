@@ -95,6 +95,7 @@ export function TorrentStreamEpisodeSection(props: TorrentStreamEpisodeSectionPr
                                 // meta={episode.episodeMetadata?.airDate ?? undefined}
                                 isInvalid={episode.isInvalid}
                                 progressTotal={episode.baseAnime?.episodes}
+                                watchedProgress={entry.listData?.progress}
                                 progressNumber={episode.progressNumber}
                                 episodeNumber={episode.episodeNumber}
                                 length={episode.episodeMetadata?.length}
@@ -144,6 +145,7 @@ export function TorrentStreamEpisodeSection(props: TorrentStreamEpisodeSectionPr
                             isWatched={!!entry.listData?.progress && entry.listData.progress >= (episode?.progressNumber || 0)}
                             className="flex-none w-full"
                             episodeNumber={episode?.episodeNumber}
+                            watchedProgress={entry.listData?.progress}
                             progressNumber={episode?.progressNumber}
                             action={<>
                                 <MediaEpisodeInfoModal

@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	Version              = "3.7.1"
-	ReleaseVersion       = "3.7.1-i18n.1"
-	VersionName          = "Minamo"
+	Version              = "3.8.2"
+	ReleaseVersion       = "3.8.2-i18n.1"
+	VersionName          = "Kanata"
 	GcTime               = time.Minute * 30
 	ConfigFileName       = "config.toml"
 	MalClientId          = "51cb4294feb400f3ddc66a30f9b9a00f"

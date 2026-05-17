@@ -29,7 +29,7 @@ export const TorrentList = ({ children }: { children?: React.ReactNode }) => {
     )
 }
 
-export const TorrentListItem = ({ torrent, metadata, debridCached, onClick, isSelected, episode, media, overrideProps, extensionName }: {
+export const TorrentListItem = ({ torrent, metadata, debridCached, onClick, isSelected, episode, media, overrideProps, extensionName, isSpoiler }: {
     torrent: HibikeTorrent_AnimeTorrent,
     metadata: Habari_Metadata | undefined,
     debridCached: boolean | undefined,
@@ -39,6 +39,7 @@ export const TorrentListItem = ({ torrent, metadata, debridCached, onClick, isSe
     onClick: () => void
     overrideProps?: Partial<TorrentPreviewItemProps>
     extensionName?: string
+    isSpoiler: boolean
 }) => {
     const { t } = useTranslation()
 
@@ -59,6 +60,7 @@ export const TorrentListItem = ({ torrent, metadata, debridCached, onClick, isSe
             metadata={overrideProps?.metadata ?? metadata}
             resolution={overrideProps?.resolution ?? torrent.resolution}
             debridCached={overrideProps?.debridCached ?? debridCached}
+            isSpoiler={isSpoiler}
             onClick={onClick}
         >
             <div className="flex flex-wrap gap-2 items-center lg:absolute bottom-0 left-0 right-0">
@@ -106,6 +108,7 @@ type TorrentPreviewItemProps = {
     metadata?: Habari_Metadata
     resolution?: string
     debridCached?: boolean
+    isSpoiler: boolean
 }
 
 const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
@@ -124,7 +127,7 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
         displayName,
         children,
         action,
-        image,
+        image: _image,
         fallbackImage,
         isBestRelease,
         confirmed,
@@ -132,7 +135,10 @@ const TorrentPreviewItem = memo((props: TorrentPreviewItemProps) => {
         metadata,
         resolution: _resolution,
         debridCached,
+        isSpoiler,
     } = props
+
+    const image = isSpoiler ? undefined : _image
 
     const resolution = _resolution || metadata?.video_resolution
 

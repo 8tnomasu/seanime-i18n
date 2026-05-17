@@ -67,6 +67,8 @@ const translationSettingsSchema = defineSchema(({ z, presets }) => z.object({
     vcTranslateProvider: z.string().default("google"),
     vcTranslateTargetLanguage: z.string().default("en"),
     vcTranslateApiKey: z.string().default(""),
+    vcTranslateBaseUrl: z.string().default(""),
+    vcTranslateModel: z.string().default(""),
 }))
 
 const TRANSLATION_TARGET_LANGUAGE_OPTIONS = [
@@ -224,6 +226,8 @@ export function VideoCorePreferencesModal({ isWebPlayer }: { isWebPlayer: boolea
     const [tab, setTab] = useState("keybinds")
     const { mutate: saveMediaPlayerSettings } = useSaveMediaPlayerSettings()
     const serverStatus = useServerStatus()
+    const mediaPlayerSettings = serverStatus?.settings?.mediaPlayer
+    const translateProvider = mediaPlayerSettings?.vcTranslateProvider || "google"
     const translationFormRef = useRef<UseFormReturn<any>>(null)
 
     const [settings, setSettings] = useAtom(vc_settings)
@@ -317,14 +321,19 @@ export function VideoCorePreferencesModal({ isWebPlayer }: { isWebPlayer: boolea
 
     function handleSaveTranslationSettings(data: z.infer<typeof translationSettingsSchema>) {
         const currentMediaPlayer = serverStatus?.settings?.mediaPlayer!
+        const translateModel = data.vcTranslateProvider === "openai" && (!data.vcTranslateModel || data.vcTranslateModel === "local-model")
+            ? "gpt-4o-mini"
+            : data.vcTranslateModel
 
         saveMediaPlayerSettings({
             mediaPlayer: {
                 ...currentMediaPlayer,
                 vcTranslate: data.vcTranslate,
-                vcTranslateTargetLanguage: data.vcTranslateTargetLanguage.toLowerCase(),
+                vcTranslateTargetLanguage: data.vcTranslateTargetLanguage,
                 vcTranslateProvider: data.vcTranslateProvider,
                 vcTranslateApiKey: data.vcTranslateApiKey,
+                vcTranslateBaseUrl: data.vcTranslateBaseUrl,
+                vcTranslateModel: translateModel,
             },
         }, {
             onSuccess: () => {
@@ -708,15 +717,23 @@ export function VideoCorePreferencesModal({ isWebPlayer }: { isWebPlayer: boolea
                         schema={translationSettingsSchema}
                         onSubmit={handleSaveTranslationSettings}
                         defaultValues={{
-                            vcTranslate: serverStatus?.settings?.mediaPlayer?.vcTranslate ?? false,
-                            vcTranslateProvider: serverStatus?.settings?.mediaPlayer?.vcTranslateProvider || "deepl",
-                            vcTranslateTargetLanguage: serverStatus?.settings?.mediaPlayer?.vcTranslateTargetLanguage?.toLowerCase() || "en",
-                            vcTranslateApiKey: serverStatus?.settings?.mediaPlayer?.vcTranslateApiKey || "",
+                            vcTranslate: mediaPlayerSettings?.vcTranslate ?? false,
+                            vcTranslateProvider: translateProvider,
+                            vcTranslateTargetLanguage: mediaPlayerSettings?.vcTranslateTargetLanguage || "en",
+                            vcTranslateApiKey: mediaPlayerSettings?.vcTranslateApiKey || "",
+                            vcTranslateBaseUrl: mediaPlayerSettings?.vcTranslateBaseUrl || "http://localhost:1234/v1",
+                            vcTranslateModel: mediaPlayerSettings?.vcTranslateModel || (translateProvider === "openai"
+                                ? "gpt-4o-mini"
+                                : "local-model"),
                         }}
                         stackClass="space-y-4 relative"
                         mRef={translationFormRef}
                     >
-                        {(f) => (
+                        {(f) => {
+                            const provider = f.watch("vcTranslateProvider")
+                            const usesOpenAIProvider = provider === "openai" || provider === "openai-compatible"
+
+                            return (
                             <div className="space-y-4">
                                 <div className="space-y-4">
                                     <Field.Switch
@@ -730,14 +747,16 @@ export function VideoCorePreferencesModal({ isWebPlayer }: { isWebPlayer: boolea
                                             label={t("player.preferences.translation.provider")}
                                             name="vcTranslateProvider"
                                             options={[
+                                                { value: "google", label: t("player.preferences.translation.providerOptions.googleFree") },
                                                 { value: "deepl", label: "DeepL" },
                                                 { value: "openai", label: "OpenAI" },
+                                                { value: "openai-compatible", label: t("player.preferences.translation.providerOptions.openaiCompatible") },
                                             ]}
                                             contentClass="z-[999]"
                                         />
                                     </div>
 
-                                    {f.watch("vcTranslateProvider") === "deepl" && (
+                                    {provider === "deepl" && (
                                         <p>
                                             {t("player.preferences.translation.deepLNote")}
                                         </p>
@@ -757,19 +776,44 @@ export function VideoCorePreferencesModal({ isWebPlayer }: { isWebPlayer: boolea
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Field.Text
-                                            label={t("player.preferences.translation.apiKey")}
-                                            name="vcTranslateApiKey"
-                                            placeholder={t("player.preferences.translation.apiKeyPlaceholder")}
-                                            onKeyDown={(e) => e.stopPropagation()}
-                                            onInput={(e) => e.stopPropagation()}
-                                            type="password"
-                                        />
+                                        {provider === "openai-compatible" && (
+                                            <Field.Text
+                                                label={t("player.preferences.translation.baseUrl")}
+                                                name="vcTranslateBaseUrl"
+                                                placeholder={t("player.preferences.translation.baseUrlPlaceholder")}
+                                                onKeyDown={(e) => e.stopPropagation()}
+                                                onInput={(e) => e.stopPropagation()}
+                                                help={t("player.preferences.translation.baseUrlHelp")}
+                                            />
+                                        )}
+                                        {usesOpenAIProvider && (
+                                            <Field.Text
+                                                label={t("player.preferences.translation.model")}
+                                                name="vcTranslateModel"
+                                                placeholder={provider === "openai-compatible"
+                                                    ? t("player.preferences.translation.localModelPlaceholder")
+                                                    : "gpt-4o-mini"}
+                                                onKeyDown={(e) => e.stopPropagation()}
+                                                onInput={(e) => e.stopPropagation()}
+                                            />
+                                        )}
+                                        {provider !== "google" && (
+                                            <Field.Text
+                                                label={provider === "openai-compatible"
+                                                    ? t("player.preferences.translation.apiKeyOptional")
+                                                    : t("player.preferences.translation.apiKey")}
+                                                name="vcTranslateApiKey"
+                                                placeholder={t("player.preferences.translation.apiKeyPlaceholder")}
+                                                onKeyDown={(e) => e.stopPropagation()}
+                                                onInput={(e) => e.stopPropagation()}
+                                                type="password"
+                                            />
+                                        )}
                                     </div>
                                 </div>
 
                                 <p className="text-[--muted]">
-                                    {t("player.preferences.translation.reloadRequired")}
+                                    {t("player.preferences.translation.reloadRequiredDetailed")}
                                 </p>
 
                                 <div className="flex items-center justify-end pt-6">
@@ -790,7 +834,8 @@ export function VideoCorePreferencesModal({ isWebPlayer }: { isWebPlayer: boolea
                                     </div>
                                 </div>
                             </div>
-                        )}
+                            )
+                        }}
                     </Form>
                 </TabsContent>
             </Tabs>
@@ -1214,7 +1259,8 @@ export function VideoCoreKeybindingController(props: {
 
         // Enable next track
         audioTracks[nextIndex].enabled = true
-        audioManager?.selectTrack(nextIndex)
+        audioTracks.dispatchEvent?.(new Event("change"))
+        audioManager.syncSelectedTrack()
 
         const trackName = audioTracks[nextIndex].label || audioTracks[nextIndex].language || t("player.overlay.track", { number: nextIndex + 1 })
         showOverlayFeedback({ message: t("player.overlay.audioTrack", { trackName }) })

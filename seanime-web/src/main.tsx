@@ -1,31 +1,101 @@
+import { useIsSimulatedUser } from "@/app/(main)/_hooks/use-server-status"
 import { ClientProviders, queryClient, store } from "@/app/client-providers"
 import i18n from "@/i18n"
 import "./app/globals.css"
+import { __navigationPreloadModeAtom, getActualNavigationPreloadMode, NavigationPreloadMode } from "@/lib/navigation-preload-settings"
+import { __isElectronDesktop__ } from "@/types/constants"
 import { createRouter, RouterProvider } from "@tanstack/react-router"
+import { useAtomValue } from "jotai/react"
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 import { LuffyError } from "./components/shared/luffy-error"
 import { Button } from "./components/ui/button"
+import { getDenshiViewTransition } from "./lib/router/view-transitions"
 import { routeTree } from "./routeTree.gen"
 import "@fontsource-variable/inter/index.css"
 
-const router = createRouter({
-    routeTree,
-    // defaultPreload: import.meta.env.PROD ? "intent" : false,
-    defaultPreload: false, // anilist rate limits
-    context: {
-        queryClient,
-        store,
-    },
-    scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
-})
+type RouterPreloadMode = false | "intent" | "viewport"
+
+function createAppRouter(defaultPreload: RouterPreloadMode, defaultPreloadDelay?: number) {
+    return createRouter({
+        routeTree,
+        defaultPreload,
+        defaultPreloadDelay,
+        context: {
+            queryClient,
+            store,
+        },
+        scrollRestoration: false,
+        defaultViewTransition: getDenshiViewTransition(),
+        defaultPreloadStaleTime: 30 * 1000,
+    })
+}
+
+type AppRouter = ReturnType<typeof createAppRouter>
+
+const intentRouter = createAppRouter("intent")
+const fasterIntentRouter = createAppRouter("intent", 0)
+const viewportRouter = createAppRouter("viewport")
+const disabledRouter = createAppRouter(false)
+
+const routersByPreloadMode: Record<NavigationPreloadMode, AppRouter> = {
+    disable: disabledRouter,
+    default: intentRouter,
+    faster: fasterIntentRouter,
+    viewport: viewportRouter,
+}
 
 declare module "@tanstack/react-router" {
     interface Register {
-        router: typeof router
+        router: AppRouter
     }
+}
+
+function AppRouterProvider() {
+    const _preloadMode = useAtomValue(__navigationPreloadModeAtom)
+    const isSimulatedUser = useIsSimulatedUser()
+    const preloadMode = getActualNavigationPreloadMode(_preloadMode, isSimulatedUser)
+
+    return <RouterProvider router={routersByPreloadMode[preloadMode]} />
+}
+
+function DesktopStartupReady() {
+    React.useEffect(() => {
+        if (!__isElectronDesktop__ || window.location.pathname.startsWith("/splashscreen") || !window.electron?.startup?.ready) {
+            return
+        }
+
+        let sent = false
+        let ff = 0
+        let sf = 0
+        let fallbackId = 0
+
+        const sendReady = () => {
+            if (sent) return
+
+            sent = true
+            window.electron?.startup?.ready()
+        }
+
+        ff = window.requestAnimationFrame(() => {
+            sf = window.requestAnimationFrame(() => {
+                sendReady()
+            })
+        })
+
+        fallbackId = window.setTimeout(() => {
+            sendReady()
+        }, 500)
+
+        return () => {
+            window.cancelAnimationFrame(ff)
+            window.cancelAnimationFrame(sf)
+            window.clearTimeout(fallbackId)
+        }
+    }, [])
+
+    return null
 }
 
 function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
@@ -83,7 +153,8 @@ ReactDOM.createRoot(document.getElementById("root")!, {
 }).render(
     <ErrorBoundary FallbackComponent={RootErrorFallback}>
         <ClientProviders>
-            <RouterProvider router={router} />
+            <DesktopStartupReady />
+            <AppRouterProvider />
         </ClientProviders>
     </ErrorBoundary>,
 )

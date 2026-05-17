@@ -12,7 +12,7 @@ The upstream Seanime application checks GitHub Releases for updates. In this for
 
 The Web UI updater and Denshi desktop updater should check `8tnomasu/seanime-i18n` GitHub Releases instead of upstream `5rahim/seanime` releases.
 
-Version comparison must support fork tags such as `v3.7.0-i18n.3`.
+Version comparison must support fork tags such as `v3.8.2-i18n.1`.
 
 ## Consequences
 
@@ -21,6 +21,6 @@ Version comparison must support fork tags such as `v3.7.0-i18n.3`.
 - Upstream release versions are not used directly for in-app update checks.
 - During upstream sync, updater source changes must not be reverted accidentally.
 
-## 繁中摘要
+## Maintainer note
 
-本 fork 的更新檢查必須追蹤 `8tnomasu/seanime-i18n` 的 GitHub Releases，而不是 upstream Seanime，避免使用者被更新到不含本 fork 修正的原版。
+During upstream sync, keep updater checks, release notes fetches, and Denshi feed URLs pointed at `8tnomasu/seanime-i18n`. Do not revert them to upstream Seanime release sources.

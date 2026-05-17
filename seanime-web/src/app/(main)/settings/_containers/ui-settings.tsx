@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/components/ui/core/styling"
 import { defineSchema, Field, Form } from "@/components/ui/form"
 import { appLanguageAtom, SUPPORTED_LANGUAGES, type AppLanguage } from "@/i18n"
+import { RadioGroup } from "@/components/ui/radio-group"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { NativeSelect } from "@/components/ui/native-select"
 import { ANIME_COLLECTION_SORTING_OPTIONS, CONTINUE_WATCHING_SORTING_OPTIONS, MANGA_COLLECTION_SORTING_OPTIONS } from "@/lib/helpers/filtering"
+import { __navigationPreloadModeAtom, type NavigationPreloadMode } from "@/lib/navigation-preload-settings"
 import { THEME_COLOR_BANK } from "@/lib/theme/theme-bank"
 import {
     THEME_DEFAULT_VALUES,
@@ -29,7 +31,7 @@ import { useFormContext, UseFormReturn, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { z } from "zod"
-import { useServerStatus } from "../../_hooks/use-server-status"
+import { useIsSimulatedUser, useServerStatus } from "../../_hooks/use-server-status"
 import { SettingsCard } from "../_components/settings-card"
 import { SettingsIsDirty } from "../_components/settings-submit-button"
 
@@ -94,6 +96,33 @@ const tabContentClass = cn(
     "space-y-4 animate-in fade-in-0 duration-300",
 )
 
+const navigationPreloadOptions: Array<{
+    value: NavigationPreloadMode
+    titleKey: string
+    descriptionKey: string
+}> = [
+    {
+        value: "disable",
+        titleKey: "settings.ui.navigation.preloadOptions.disable.title",
+        descriptionKey: "settings.ui.navigation.preloadOptions.disable.description",
+    },
+    {
+        value: "default",
+        titleKey: "settings.ui.navigation.preloadOptions.default.title",
+        descriptionKey: "settings.ui.navigation.preloadOptions.default.description",
+    },
+    {
+        value: "faster",
+        titleKey: "settings.ui.navigation.preloadOptions.faster.title",
+        descriptionKey: "settings.ui.navigation.preloadOptions.faster.description",
+    },
+    {
+        value: "viewport",
+        titleKey: "settings.ui.navigation.preloadOptions.viewport.title",
+        descriptionKey: "settings.ui.navigation.preloadOptions.viewport.description",
+    },
+]
+
 
 export function UISettings() {
     const { t } = useTranslation()
@@ -101,9 +130,10 @@ export function UISettings() {
     const serverStatus = useServerStatus()
 
     const { mutate, isPending } = useUpdateTheme()
-    const [fixBorderRenderingArtifacts, setFixBorerRenderingArtifacts] = useAtom(__ui_fixBorderRenderingArtifacts)
     const [language, setLanguage] = useAtom(appLanguageAtom)
+    const [navigationPreloadMode, setNavigationPreloadMode] = useAtom(__navigationPreloadModeAtom)
     const [enableLivePreview, setEnableLivePreview] = useState(false)
+    const isSimulatedUser = useIsSimulatedUser()
 
     const [tab, setTab] = useAtom(selectUISettingTabAtom)
 
@@ -623,6 +653,38 @@ export function UISettings() {
                         </TabsContent>
 
                         <TabsContent value="navigation" className={tabContentClass}>
+
+                            <SettingsCard title={t("settings.ui.navigation.preload.title")}>
+
+                                <RadioGroup
+                                    label={t("settings.ui.navigation.preload.title")}
+                                    value={isSimulatedUser ? "disable" : navigationPreloadMode}
+                                    disabled={isSimulatedUser}
+                                    onValueChange={(value) => setNavigationPreloadMode(value as NavigationPreloadMode)}
+                                    options={navigationPreloadOptions.map(option => ({
+                                        value: option.value,
+                                        label: (
+                                            <div className="flex flex-col gap-0.5">
+                                                <span>{t(option.titleKey)}</span>
+                                                <span className="text-xs leading-4 text-[--muted]">
+                                                    {t(option.descriptionKey)}
+                                                </span>
+                                            </div>
+                                        ),
+                                    }))}
+                                    stackClass="space-y-2"
+                                    itemContainerClass="items-start rounded-[--radius-md] border border-[--border]/60 px-3 py-2"
+                                    itemLabelClass="flex flex-col gap-0.5"
+                                    help={t("settings.ui.navigation.preload.help")}
+                                />
+
+                                {isSimulatedUser && (
+                                    <p className="text-sm text-orange-300/80">
+                                        {t("settings.ui.navigation.preload.simulatedUserHelp")}
+                                    </p>
+                                )}
+
+                            </SettingsCard>
 
                             <SettingsCard title={t("settings.common.sidebar")}>
 

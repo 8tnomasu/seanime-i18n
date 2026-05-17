@@ -359,7 +359,30 @@
                 "hideTopNavbarWeb": "Hide top navbar (Web interface)",
                 "hideTopNavbarHelp": "Switches to sidebar-only mode.",
                 "noItemsSelected": "No items selected",
-                "unpinnedMenuItems": "Unpinned menu items"
+                "unpinnedMenuItems": "Unpinned menu items",
+                "preload": {
+                    "title": "Navigation preloading",
+                    "help": "Applies to media pages on this client. More aggressive preloading may hit AniList rate limits faster.",
+                    "simulatedUserHelp": "Disabled when using Seanime without an AniList account to avoid rate limits."
+                },
+                "preloadOptions": {
+                    "disable": {
+                        "title": "Disabled",
+                        "description": "Only load data after opening the page."
+                    },
+                    "default": {
+                        "title": "Default",
+                        "description": "Preload likely next views during normal navigation."
+                    },
+                    "faster": {
+                        "title": "Faster",
+                        "description": "Use more eager preloading for quicker route transitions."
+                    },
+                    "viewport": {
+                        "title": "Viewport",
+                        "description": "Preload entries as they appear on screen."
+                    }
+                }
             },
             "media": {
                 "watchContinuityWarning": "Watch continuity needs to be enabled to use the last watched sorting options.",
@@ -550,7 +573,27 @@
                 "seanime": "Seanime",
                 "seanimeCanary": "Seanime (Canary)"
             },
-        "usingForkReleaseChannel": "Update checks use GitHub Releases from 8tnomasu/seanime-i18n."
+            "usingForkReleaseChannel": "Update checks use GitHub Releases from 8tnomasu/seanime-i18n.",
+            "disableAnimeCardTrailersHelp": "Hide trailer previews shown on anime cards.",
+            "defaultPlaybackSource": "Default playback source",
+            "defaultPlaybackSourceHelp": "Choose which source Seanime should prefer when multiple playback sources are available.",
+            "defaultPlaybackSourceOptions": {
+                "automatic": "Automatic",
+                "localLibrary": "Local library",
+                "debridStreaming": "Debrid streaming",
+                "torrentStreaming": "Torrent streaming",
+                "onlineStreaming": "Online streaming",
+                "unavailablePlugin": "Unavailable extension source"
+            },
+            "hideAnimeSpoilers": "Hide anime spoilers",
+            "hideAnimeSpoilersHelp": "Hide future episode thumbnails, titles, and descriptions based on your watch progress.",
+            "hideAnimeSpoilerThumbnails": "Hide spoiler thumbnails",
+            "hideAnimeSpoilerTitles": "Hide spoiler titles",
+            "hideAnimeSpoilerDescriptions": "Hide spoiler descriptions",
+            "hideAnimeSpoilerSkipNextEpisode": "Treat the next episode as safe",
+            "hideAnimeSpoilerSkipNextEpisodeHelp": "Do not hide the immediate next episode when spoiler hiding is enabled.",
+            "enableExtensionSecureMode": "Enable extension secure mode",
+            "enableExtensionSecureModeHelp": "Apply stricter security restrictions to extensions. Some extensions may need extra permissions or lose functionality."
         },
         "localAccount": {
             "autoSyncFromAniList": "Auto sync from AniList",
@@ -1016,7 +1059,8 @@
             "saved": "Issue report saved",
             "screenshotAdded": "Screenshot added to report",
             "startDomRecordingFailed": "Failed to start DOM recording",
-            "unableToCaptureScreenshot": "Unable to capture screenshot"
+            "unableToCaptureScreenshot": "Unable to capture screenshot",
+            "downloadFailed": "Failed to download issue report"
         },
         "playlists": {
             "created": "Playlist created",
@@ -1865,7 +1909,18 @@
                 "provider": "Provider",
                 "reloadRequired": "Reloading the player is required only when switching languages or API Key.",
                 "targetLanguage": "Target Language",
-                "targetLanguageHelp": "Select the language you want subtitles to be translated to"
+                "targetLanguageHelp": "Select the language you want subtitles to be translated to",
+                "providerOptions": {
+                    "googleFree": "Google (free)",
+                    "openaiCompatible": "OpenAI-compatible local LLM"
+                },
+                "baseUrl": "Base URL",
+                "baseUrlPlaceholder": "e.g. http://127.0.0.1:1234/v1",
+                "baseUrlHelp": "Used by OpenAI-compatible local LLM servers.",
+                "model": "Model",
+                "localModelPlaceholder": "e.g. qwen2.5:14b or llama3.1",
+                "apiKeyOptional": "API Key (optional)",
+                "reloadRequiredDetailed": "Reload the player after changing the translation language, provider, model, base URL, or API key."
             }
         },
         "screenshot": {
@@ -2014,7 +2069,9 @@
                 "findOtherProviders": "Find other providers",
                 "manualMatch": "Manual match",
                 "switchToDub": "Switch to dub",
-                "switchToSubs": "Switch to subs"
+                "switchToSubs": "Switch to subs",
+                "cancelTryingProviders": "Cancel trying providers",
+                "tryAllProviders": "Try all providers"
             },
             "cache": {
                 "description": "Empty the cache if you are experiencing issues with the stream.",
@@ -2379,7 +2436,9 @@
             "instant": "Instantly available on Debrid service"
         },
         "download": {
-            "downloadingLocally": "Downloading locally"
+            "downloadingLocally": "Downloading locally",
+            "waitingForLocalFiles": "Waiting for local files",
+            "preparingLocalFiles": "Preparing local files..."
         },
         "errors": {
             "connectionTitle": "Failed to connect",
@@ -2836,7 +2895,8 @@
             "loadAnotherFile": "Load another file",
             "loadReportFile": "Load report file",
             "startRecording": "Start recording",
-            "stopAndSave": "Stop and save"
+            "stopAndSave": "Stop and save",
+            "saving": "Saving..."
         },
         "console": {
             "searchPlaceholder": "Search console logs..."

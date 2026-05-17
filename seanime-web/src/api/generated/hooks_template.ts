@@ -17,7 +17,7 @@
 //         method: API_ENDPOINTS.ANILIST.GetAnimeCollection.methods[1],
 //         mutationKey: [API_ENDPOINTS.ANILIST.GetAnimeCollection.key],
 //         onSuccess: async () => {
-// 
+//
 //         },
 //     })
 // }
@@ -37,7 +37,7 @@
 //         method: API_ENDPOINTS.ANILIST.GetRawAnimeCollection.methods[1],
 //         mutationKey: [API_ENDPOINTS.ANILIST.GetRawAnimeCollection.key],
 //         onSuccess: async () => {
-// 
+//
 //         },
 //     })
 // }
@@ -934,6 +934,17 @@
 //     })
 // }
 
+// export function useSetExternalExtensionDisabled() {
+//     return useServerMutation<boolean, SetExternalExtensionDisabled_Variables>({
+//         endpoint: API_ENDPOINTS.EXTENSIONS.SetExternalExtensionDisabled.endpoint,
+//         method: API_ENDPOINTS.EXTENSIONS.SetExternalExtensionDisabled.methods[0],
+//         mutationKey: [API_ENDPOINTS.EXTENSIONS.SetExternalExtensionDisabled.key],
+//         onSuccess: async () => {
+//
+//         },
+//     })
+// }
+
 // export function useListExtensionData() {
 //     return useServerQuery<Array<Extension_Extension>>({
 //         endpoint: API_ENDPOINTS.EXTENSIONS.ListExtensionData.endpoint,
@@ -1004,6 +1015,15 @@
 //         endpoint: API_ENDPOINTS.EXTENSIONS.ListAnimeTorrentProviderExtensions.endpoint,
 //         method: API_ENDPOINTS.EXTENSIONS.ListAnimeTorrentProviderExtensions.methods[0],
 //         queryKey: [API_ENDPOINTS.EXTENSIONS.ListAnimeTorrentProviderExtensions.key],
+//         enabled: true,
+//     })
+// }
+
+// export function useListAnimeEntryEpisodeTabExtensions() {
+//     return useServerQuery<Array<ExtensionRepo_PluginEpisodeTabExtensionItem>>({
+//         endpoint: API_ENDPOINTS.EXTENSIONS.ListAnimeEntryEpisodeTabExtensions.endpoint,
+//         method: API_ENDPOINTS.EXTENSIONS.ListAnimeEntryEpisodeTabExtensions.methods[0],
+//         queryKey: [API_ENDPOINTS.EXTENSIONS.ListAnimeEntryEpisodeTabExtensions.key],
 //         enabled: true,
 //     })
 // }
@@ -1809,6 +1829,15 @@
 //         onSuccess: async () => {
 // 
 //         },
+//     })
+// }
+
+// export function useMediastreamLocalSubtitles() {
+//     return useServerQuery<Array<Util_LocalSubtitleFile>>({
+//         endpoint: API_ENDPOINTS.MEDIASTREAM.MediastreamLocalSubtitles.endpoint,
+//         method: API_ENDPOINTS.MEDIASTREAM.MediastreamLocalSubtitles.methods[0],
+//         queryKey: [API_ENDPOINTS.MEDIASTREAM.MediastreamLocalSubtitles.key],
+//         enabled: true,
 //     })
 // }
 
@@ -2786,6 +2815,17 @@
 //         mutationKey: [API_ENDPOINTS.TORRENTSTREAM.GetTorrentstreamBatchHistory.key],
 //         onSuccess: async () => {
 // 
+//         },
+//     })
+// }
+
+// export function useDeleteTorrentstreamBatchHistory() {
+//     return useServerMutation<boolean, DeleteTorrentstreamBatchHistory_Variables>({
+//         endpoint: API_ENDPOINTS.TORRENTSTREAM.DeleteTorrentstreamBatchHistory.endpoint,
+//         method: API_ENDPOINTS.TORRENTSTREAM.DeleteTorrentstreamBatchHistory.methods[0],
+//         mutationKey: [API_ENDPOINTS.TORRENTSTREAM.DeleteTorrentstreamBatchHistory.key],
+//         onSuccess: async () => {
+//
 //         },
 //     })
 // }

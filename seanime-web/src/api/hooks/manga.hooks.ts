@@ -27,6 +27,7 @@ import {
     Nullish,
 } from "@/api/generated/types"
 import i18n from "@/i18n"
+import { getEntryPreloadStaleTime } from "@/lib/entry-preloader"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -73,6 +74,7 @@ export function useGetMangaEntry(id: Nullish<string | number>) {
         method: API_ENDPOINTS.MANGA.GetMangaEntry.methods[0],
         queryKey: [API_ENDPOINTS.MANGA.GetMangaEntry.key, String(id)],
         enabled: !!id,
+        staleTime: getEntryPreloadStaleTime("manga", id),
     })
 }
 
@@ -82,6 +84,7 @@ export function useGetMangaEntryDetails(id: Nullish<string | number>) {
         method: API_ENDPOINTS.MANGA.GetMangaEntryDetails.methods[0],
         queryKey: [API_ENDPOINTS.MANGA.GetMangaEntryDetails.key, String(id)],
         enabled: !!id,
+        staleTime: getEntryPreloadStaleTime("manga", id),
     })
 }
 
